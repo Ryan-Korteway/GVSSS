@@ -1,0 +1,55 @@
+worked on launch image briefly for 5 minutes, 10:20 to 10:25 pm on 1-10-17
+
+Git bootcamp: 1-11-17 about an hour. Screenshot:
+
+Git boot camp answers
+
+Scavenger hunt exercise 
+Q1 What files existed as of commit 4b40046 (Adding aliases)? Hint: use the checkout command.
+first command, git checkout 4b40046
+second command: ls to show the files in the folder
+results:
+baz.c		cat.c		dog.c		foo.c		goat.c		names.txt
+
+Q2 Which commit introduced the line bahhhhh into goat.c? Who wrote that line? Hint: look at the mystery commits!
+command: git blame goat.c
+result: 4a2e1f2b (Kenny Yu 2013-09-14 15:17:35 -0400 2) bahhhhh
+
+Q3 Make sure you're on master (git checkout master). Which commit removed the file foo.c?
+
+mystery3?
+
+merging exercise, incomplete due to technical nonissue?
+git merge origin/merge-excercise
+merge: origin/merge-excercise - not something we can merge
+
+
+final output
+$ git lg
+* 916957a - (HEAD -> pull-request, origin/pull-request, origin/master, origin/HEAD, master) Revert "Adding aliases" (9 minutes ago) <Ryan Korteway>
+* b6ac207 - added more dog noises to dog.c (22 minutes ago) <Ryan Korteway>
+* 921723b - added simpsons (27 minutes ago) <Ryan Korteway>
+* 64454d7 - added cheese (30 minutes ago) <Ryan Korteway>
+* 032b4cb - added info.csv (3 years, 3 months ago) <Kenny Yu>
+* 21c2ab9 - update README to point to hcs wiki (3 years, 3 months ago) <Kenny Yu>
+* 701962d - Update README.md (3 years, 3 months ago) <Kenny Yu>
+* cb20ea9 - Initial commit (3 years, 3 months ago) <Kenny Yu>
+* c98ac8b - mystery4 (3 years, 4 months ago) <Kenny Yu>
+* 4a2e1f2 - mystery3 (3 years, 4 months ago) <Kenny Yu>
+* ea23a14 - mystery2 (3 years, 4 months ago) <Kenny Yu>
+* 06aae4b - mystery1 (3 years, 4 months ago) <Kenny Yu>
+| * b26d6aa - (origin/merge-exercise) added squirtle's family (3 years, 3 months ago) <Kenny Yu>
+| * ead6bf6 - added bulbasaur's family (3 years, 3 months ago) <Kenny Yu>
+| * 4bcd101 - added charmander's family (3 years, 3 months ago) <Kenny Yu>
+| * 2957f3e - Adding pokemon to dog.c (3 years, 4 months ago) <Kenny Yu>
+|/  
+* 4b40046 - Adding aliases (3 years, 4 months ago) <Kenny Yu>
+* ca9321f - Added names.txt (3 years, 4 months ago) <Kenny Yu>
+* d068c7d - Removed bar.c (3 years, 4 months ago) <Kenny Yu>
+* f6f7928 - Add kitty to cat.c (3 years, 4 months ago) <Kenny Yu>
+* e1ebe64 - Added cat (3 years, 4 months ago) <Kenny Yu>
+* 657231d - Added dog (3 years, 4 months ago) <Kenny Yu>
+* 8ad8411 - Added goat (3 years, 4 months ago) <Kenny Yu>
+* 259aae7 - Added baz (3 years, 4 months ago) <Kenny Yu>
+* e17d953 - Added lines to bar and foo (3 years, 4 months ago) <Kenny Yu>
+* 3461acf - Initial commit (3 years, 4 months ago) <Kenny Yu>
