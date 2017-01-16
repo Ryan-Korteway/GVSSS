@@ -1,2 +1,2 @@
-# GVSSS
-The Grand Valley Student Shuttle Service Repository for use by Team Uberish during their CIS 467 Capstone Course
+# GVB
+The Grand Valley Bandwagon Repository for use by Team Uberish during their CIS 467 Capstone Course
