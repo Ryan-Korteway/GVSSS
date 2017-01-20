@@ -1,0 +1,5 @@
+##
+## Ignore these files when pulling/pushing
+##
+GVB_Prospectus.docx
+nick_git_bootcamp.png
