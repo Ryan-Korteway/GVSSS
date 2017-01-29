@@ -141,11 +141,18 @@ class SignInViewController: UIViewController, GIDSignInDelegate, GIDSignInUIDele
         ref.child("userStates").child("\(userID)").observeSingleEvent(of: .value, with: { (snapshot) in
             //if the user is found in user state, then they are signInApproved, otherwise they need to register to add themselves to users or drivers and either way get an entry with their UID and a 
             //boolean value based on their choice into the database.
-            if(snapshot.value! as! Bool == true || snapshot.value! as! Bool == false  ) {
-                 self.performSegue(withIdentifier: "signInApproved", sender: self)
-            } else {
-                self.performSegue(withIdentifier: "needsToRegister", sender: self)
-            }
+            
+                guard snapshot.value! is Bool else {
+                    self.performSegue(withIdentifier: "needsToRegister", sender: self)
+                    return //not sure if necessary but it silences the auto compilier.
+                }
+            
+                //if(result == true || result == false) {
+                self.performSegue(withIdentifier: "signInApproved", sender: self)
+                //} else {
+                  // self.performSegue(withIdentifier: "needsToRegister", sender: self)
+                //}
+            
             
         }) { (error) in //hopefully them not being found in userstate will return an error that can then be used to allow the person to register.
             print("directUser ERROR: \(error.localizedDescription)")
