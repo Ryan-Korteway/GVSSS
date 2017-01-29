@@ -19,13 +19,15 @@ class RegistrationViewController: UIViewController {
     @IBOutlet var phoneField: UITextField!
     @IBOutlet var emailField: UITextField!
     @IBOutlet var registerButton: UIButton!
+   
+    var currentUser : FIRUser?
     
     var ref: FIRDatabaseReference = FIRDatabase.database().reference()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let currentUser = FIRAuth.auth()?.currentUser
+        currentUser = FIRAuth.auth()?.currentUser
         
         self.emailField.text = currentUser?.email
         
@@ -55,9 +57,11 @@ class RegistrationViewController: UIViewController {
 
     @IBAction func onRegisterTap(_ sender: Any) {
         
-        // Again hardcoded 0001 will need to change.
-        self.ref.child("users/0001/name").setValue(self.fNameField.text)
-        self.ref.child("users/0001/phone").setValue(self.phoneField.text)
+        // the users/riders/ will have to change if someone selected the drivers option instead, IE /users/drivers/\(currentUser.uid)/name etc and with that comes many more fields they need to populate.
+        self.ref.child("users/riders/\(currentUser?.uid)/name").setValue(self.fNameField.text) //string interpolation here, inserting the text value of a variable into the string path.
+        self.ref.child("users/riders/\(currentUser?.uid)/phone").setValue(self.phoneField.text)
+        self.ref.child("users/riders/\(currentUser?.uid)/driver_found").setValue(false)
+        self.ref.child("users/riders/\(currentUser?.uid)/driver_UID").setValue("")
         
         // Obviously will need to check fields are formatted correctly
         // and data successfully transferred before segue.

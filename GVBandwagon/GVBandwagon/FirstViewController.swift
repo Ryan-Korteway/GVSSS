@@ -20,7 +20,7 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
     
     var containerDelegate: ContainerDelegate? = nil
     
-    let userid = "0001"
+    let userid = "0001" //hardcoded values, should be the fireauth current user stuff.
     let pickerData: [String] = ["Allendale", "Meijer", "Downtown"]
     
     let ref = FIRDatabase.database().reference(withPath: "users")
@@ -82,7 +82,7 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
     }
     
     func updateUserInfo(name: String, phone: String) {
-        self.ref.child("\(self.userid)/name").setValue(name)
+        self.ref.child("\(self.userid)/name").setValue(name) //not sure about this self.userid stuff etc.
         self.ref.child("\(self.userid)/phone").setValue(phone)
     }
     
