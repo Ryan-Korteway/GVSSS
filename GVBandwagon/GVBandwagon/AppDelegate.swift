@@ -7,15 +7,31 @@
 //
 
 import UIKit
+import Firebase
+import GoogleSignIn
+import Google
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
+    
+    // Overriding init() and putting FIRApp.configure() here to ensure it's configured before
+    // the first view controller tries to retreive a reference to it.
+    override init() {
+        super.init()
+        FIRApp.configure()
+        // not really needed unless you really need it FIRDatabase.database().persistenceEnabled = true
+        
+        // Moved to didFinish... below
+        //GIDSignIn.sharedInstance().clientID = FIRApp.defaultApp()?.options.clientID
+        //GIDSignIn.sharedInstance().delegate = self
+    }
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        
         return true
     }
 
@@ -40,7 +56,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
-
-
+    
+    // Added
+    @available(iOS 9.0, *)
+    func application(_ application: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any])
+        -> Bool {
+            return GIDSignIn.sharedInstance().handle(url,
+                                                     sourceApplication:options[UIApplicationOpenURLOptionsKey.sourceApplication] as? String,
+                                                     annotation: [:])
+    }
+    
+    // Added for iOS 8 and older users
+    func application(_ application: UIApplication, open url: URL, sourceApplication: String?, annotation: Any) -> Bool {
+        return GIDSignIn.sharedInstance().handle(url,
+                                                 sourceApplication: sourceApplication,
+                                                 annotation: annotation)
+    }
+    
 }
 

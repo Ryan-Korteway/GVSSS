@@ -15,6 +15,23 @@
 		0B197CED1E32815200392B40 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0B197CEB1E32815200392B40 /* LaunchScreen.storyboard */; };
 		0B197CF81E32815200392B40 /* GVBandwagonTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B197CF71E32815200392B40 /* GVBandwagonTests.swift */; };
 		0B197D031E32815200392B40 /* GVBandwagonUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B197D021E32815200392B40 /* GVBandwagonUITests.swift */; };
+		0B3DE4FA1E3BB45A00733810 /* gvbwlogo.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 0B3DE4F91E3BB45A00733810 /* gvbwlogo.jpg */; };
+		0B3DE4FC1E3BB57C00733810 /* SignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B3DE4FB1E3BB57C00733810 /* SignInViewController.swift */; };
+		0B6935291E3CE6C300F551CB /* RegistrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B6935281E3CE6C300F551CB /* RegistrationViewController.swift */; };
+		0B69352A1E3CE6C300F551CB /* RegistrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B6935281E3CE6C300F551CB /* RegistrationViewController.swift */; };
+		0B69352B1E3CE6C300F551CB /* RegistrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B6935281E3CE6C300F551CB /* RegistrationViewController.swift */; };
+		0B69352D1E3D145100F551CB /* ContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B69352C1E3D145100F551CB /* ContainerViewController.swift */; };
+		0B69352E1E3D145100F551CB /* ContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B69352C1E3D145100F551CB /* ContainerViewController.swift */; };
+		0B69352F1E3D145100F551CB /* ContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B69352C1E3D145100F551CB /* ContainerViewController.swift */; };
+		0B6935311E3D158400F551CB /* MenuTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B6935301E3D158400F551CB /* MenuTableViewController.swift */; };
+		0B6935321E3D158400F551CB /* MenuTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B6935301E3D158400F551CB /* MenuTableViewController.swift */; };
+		0B6935331E3D158400F551CB /* MenuTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B6935301E3D158400F551CB /* MenuTableViewController.swift */; };
+		0BE676301E3D78B5009675F2 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0BE6762F1E3D78B5009675F2 /* GoogleService-Info.plist */; };
+		0BE676311E3D78B5009675F2 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0BE6762F1E3D78B5009675F2 /* GoogleService-Info.plist */; };
+		0BE676321E3D78B5009675F2 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0BE6762F1E3D78B5009675F2 /* GoogleService-Info.plist */; };
+		8D7CC2232AD3A68143663BA2 /* Pods_GVBandwagonTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A09C8C265162B5784985937B /* Pods_GVBandwagonTests.framework */; };
+		E95A7E4BE11C558326F54189 /* Pods_GVBandwagon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1F2583AB45790452F36E20D /* Pods_GVBandwagon.framework */; };
+		F6DE74CD78E1BC3122901C57 /* Pods_GVBandwagonUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA1A2D62894C2D5E93F3B906 /* Pods_GVBandwagonUITests.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +66,22 @@
 		0B197CFE1E32815200392B40 /* GVBandwagonUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GVBandwagonUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0B197D021E32815200392B40 /* GVBandwagonUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GVBandwagonUITests.swift; sourceTree = "<group>"; };
 		0B197D041E32815200392B40 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		0B3DE4F91E3BB45A00733810 /* gvbwlogo.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = gvbwlogo.jpg; sourceTree = "<group>"; };
+		0B3DE4FB1E3BB57C00733810 /* SignInViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignInViewController.swift; sourceTree = "<group>"; };
+		0B6935281E3CE6C300F551CB /* RegistrationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegistrationViewController.swift; sourceTree = "<group>"; };
+		0B69352C1E3D145100F551CB /* ContainerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContainerViewController.swift; sourceTree = "<group>"; };
+		0B6935301E3D158400F551CB /* MenuTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuTableViewController.swift; sourceTree = "<group>"; };
+		0BC8F62D1E3A795A00E94F5B /* GVBandwagon.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GVBandwagon.entitlements; sourceTree = "<group>"; };
+		0BE6762F1E3D78B5009675F2 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		1456442C274CA1E608152DE7 /* Pods-GVBandwagon.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GVBandwagon.release.xcconfig"; path = "Pods/Target Support Files/Pods-GVBandwagon/Pods-GVBandwagon.release.xcconfig"; sourceTree = "<group>"; };
+		1FBE53FF6CE82D3A9B6283BB /* Pods-GVBandwagonTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GVBandwagonTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-GVBandwagonTests/Pods-GVBandwagonTests.release.xcconfig"; sourceTree = "<group>"; };
+		6EA9EDCC8B7D08BD0D8F9580 /* Pods-GVBandwagonTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GVBandwagonTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-GVBandwagonTests/Pods-GVBandwagonTests.debug.xcconfig"; sourceTree = "<group>"; };
+		92439C4256939807408E1F10 /* Pods-GVBandwagonUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GVBandwagonUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-GVBandwagonUITests/Pods-GVBandwagonUITests.release.xcconfig"; sourceTree = "<group>"; };
+		A09C8C265162B5784985937B /* Pods_GVBandwagonTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GVBandwagonTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA1A2D62894C2D5E93F3B906 /* Pods_GVBandwagonUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GVBandwagonUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		BBB63040EEFB4BA3004B7062 /* Pods-GVBandwagonUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GVBandwagonUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-GVBandwagonUITests/Pods-GVBandwagonUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		C956A4DD338348886D7E4358 /* Pods-GVBandwagon.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GVBandwagon.debug.xcconfig"; path = "Pods/Target Support Files/Pods-GVBandwagon/Pods-GVBandwagon.debug.xcconfig"; sourceTree = "<group>"; };
+		D1F2583AB45790452F36E20D /* Pods_GVBandwagon.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GVBandwagon.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,6 +89,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E95A7E4BE11C558326F54189 /* Pods_GVBandwagon.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -63,6 +97,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8D7CC2232AD3A68143663BA2 /* Pods_GVBandwagonTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -70,6 +105,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F6DE74CD78E1BC3122901C57 /* Pods_GVBandwagonUITests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -79,10 +115,13 @@
 		0B197CD41E32815100392B40 = {
 			isa = PBXGroup;
 			children = (
+				0B3DE4F81E3BB44200733810 /* Assets */,
 				0B197CDF1E32815200392B40 /* GVBandwagon */,
 				0B197CF61E32815200392B40 /* GVBandwagonTests */,
 				0B197D011E32815200392B40 /* GVBandwagonUITests */,
 				0B197CDE1E32815200392B40 /* Products */,
+				254410CC4B664F28DA2BA22A /* Pods */,
+				2791765E40BA1D3EE3482B42 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -99,12 +138,18 @@
 		0B197CDF1E32815200392B40 /* GVBandwagon */ = {
 			isa = PBXGroup;
 			children = (
+				0BC8F62D1E3A795A00E94F5B /* GVBandwagon.entitlements */,
 				0B197CE01E32815200392B40 /* AppDelegate.swift */,
+				0B3DE4FB1E3BB57C00733810 /* SignInViewController.swift */,
+				0B6935281E3CE6C300F551CB /* RegistrationViewController.swift */,
+				0B6935301E3D158400F551CB /* MenuTableViewController.swift */,
+				0B69352C1E3D145100F551CB /* ContainerViewController.swift */,
 				0B197CE21E32815200392B40 /* FirstViewController.swift */,
 				0B197CE41E32815200392B40 /* SecondViewController.swift */,
 				0B197CE61E32815200392B40 /* Main.storyboard */,
 				0B197CE91E32815200392B40 /* Assets.xcassets */,
 				0B197CEB1E32815200392B40 /* LaunchScreen.storyboard */,
+				0BE6762F1E3D78B5009675F2 /* GoogleService-Info.plist */,
 				0B197CEE1E32815200392B40 /* Info.plist */,
 			);
 			path = GVBandwagon;
@@ -128,6 +173,37 @@
 			path = GVBandwagonUITests;
 			sourceTree = "<group>";
 		};
+		0B3DE4F81E3BB44200733810 /* Assets */ = {
+			isa = PBXGroup;
+			children = (
+				0B3DE4F91E3BB45A00733810 /* gvbwlogo.jpg */,
+			);
+			name = Assets;
+			sourceTree = "<group>";
+		};
+		254410CC4B664F28DA2BA22A /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				C956A4DD338348886D7E4358 /* Pods-GVBandwagon.debug.xcconfig */,
+				1456442C274CA1E608152DE7 /* Pods-GVBandwagon.release.xcconfig */,
+				6EA9EDCC8B7D08BD0D8F9580 /* Pods-GVBandwagonTests.debug.xcconfig */,
+				1FBE53FF6CE82D3A9B6283BB /* Pods-GVBandwagonTests.release.xcconfig */,
+				BBB63040EEFB4BA3004B7062 /* Pods-GVBandwagonUITests.debug.xcconfig */,
+				92439C4256939807408E1F10 /* Pods-GVBandwagonUITests.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		2791765E40BA1D3EE3482B42 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				D1F2583AB45790452F36E20D /* Pods_GVBandwagon.framework */,
+				A09C8C265162B5784985937B /* Pods_GVBandwagonTests.framework */,
+				AA1A2D62894C2D5E93F3B906 /* Pods_GVBandwagonUITests.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -135,9 +211,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 0B197D071E32815200392B40 /* Build configuration list for PBXNativeTarget "GVBandwagon" */;
 			buildPhases = (
+				DF3ABD5D99555EAC2EE16A35 /* [CP] Check Pods Manifest.lock */,
 				0B197CD91E32815100392B40 /* Sources */,
 				0B197CDA1E32815100392B40 /* Frameworks */,
 				0B197CDB1E32815100392B40 /* Resources */,
+				8340B3123EFB686497153864 /* [CP] Embed Pods Frameworks */,
+				1DC34A584BF9B2C27853E3F5 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -152,9 +231,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 0B197D0A1E32815200392B40 /* Build configuration list for PBXNativeTarget "GVBandwagonTests" */;
 			buildPhases = (
+				4027037F52726B21250A993D /* [CP] Check Pods Manifest.lock */,
 				0B197CEF1E32815200392B40 /* Sources */,
 				0B197CF01E32815200392B40 /* Frameworks */,
 				0B197CF11E32815200392B40 /* Resources */,
+				3EEBE9BD7EFF578257E3A853 /* [CP] Embed Pods Frameworks */,
+				7C1161F45EC9C46EB9822F33 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -170,9 +252,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 0B197D0D1E32815200392B40 /* Build configuration list for PBXNativeTarget "GVBandwagonUITests" */;
 			buildPhases = (
+				E2D5CB47A7CBA182B7BF696F /* [CP] Check Pods Manifest.lock */,
 				0B197CFA1E32815200392B40 /* Sources */,
 				0B197CFB1E32815200392B40 /* Frameworks */,
 				0B197CFC1E32815200392B40 /* Resources */,
+				C7E776EE03E0457B2A3BD879 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -196,7 +280,13 @@
 				TargetAttributes = {
 					0B197CDC1E32815100392B40 = {
 						CreatedOnToolsVersion = 8.2.1;
+						DevelopmentTeam = VH242F6P8Y;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.Keychain = {
+								enabled = 0;
+							};
+						};
 					};
 					0B197CF21E32815200392B40 = {
 						CreatedOnToolsVersion = 8.2.1;
@@ -237,7 +327,9 @@
 			files = (
 				0B197CED1E32815200392B40 /* LaunchScreen.storyboard in Resources */,
 				0B197CEA1E32815200392B40 /* Assets.xcassets in Resources */,
+				0BE676301E3D78B5009675F2 /* GoogleService-Info.plist in Resources */,
 				0B197CE81E32815200392B40 /* Main.storyboard in Resources */,
+				0B3DE4FA1E3BB45A00733810 /* gvbwlogo.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -245,6 +337,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0BE676311E3D78B5009675F2 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -252,19 +345,147 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0BE676321E3D78B5009675F2 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		1DC34A584BF9B2C27853E3F5 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-GVBandwagon/Pods-GVBandwagon-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		3EEBE9BD7EFF578257E3A853 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-GVBandwagonTests/Pods-GVBandwagonTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		4027037F52726B21250A993D /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		7C1161F45EC9C46EB9822F33 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-GVBandwagonTests/Pods-GVBandwagonTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		8340B3123EFB686497153864 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-GVBandwagon/Pods-GVBandwagon-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C7E776EE03E0457B2A3BD879 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-GVBandwagonUITests/Pods-GVBandwagonUITests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		DF3ABD5D99555EAC2EE16A35 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		E2D5CB47A7CBA182B7BF696F /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		0B197CD91E32815100392B40 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0B3DE4FC1E3BB57C00733810 /* SignInViewController.swift in Sources */,
+				0B6935311E3D158400F551CB /* MenuTableViewController.swift in Sources */,
 				0B197CE51E32815200392B40 /* SecondViewController.swift in Sources */,
 				0B197CE11E32815200392B40 /* AppDelegate.swift in Sources */,
 				0B197CE31E32815200392B40 /* FirstViewController.swift in Sources */,
+				0B69352D1E3D145100F551CB /* ContainerViewController.swift in Sources */,
+				0B6935291E3CE6C300F551CB /* RegistrationViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -272,6 +493,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0B6935321E3D158400F551CB /* MenuTableViewController.swift in Sources */,
+				0B69352A1E3CE6C300F551CB /* RegistrationViewController.swift in Sources */,
+				0B69352E1E3D145100F551CB /* ContainerViewController.swift in Sources */,
 				0B197CF81E32815200392B40 /* GVBandwagonTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -280,6 +504,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0B6935331E3D158400F551CB /* MenuTableViewController.swift in Sources */,
+				0B69352B1E3CE6C300F551CB /* RegistrationViewController.swift in Sources */,
+				0B69352F1E3D145100F551CB /* ContainerViewController.swift in Sources */,
 				0B197D031E32815200392B40 /* GVBandwagonUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -414,8 +641,10 @@
 		};
 		0B197D081E32815200392B40 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = C956A4DD338348886D7E4358 /* Pods-GVBandwagon.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = VH242F6P8Y;
 				INFOPLIST_FILE = GVBandwagon/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = nicolasheady.GVBandwagon;
@@ -426,8 +655,10 @@
 		};
 		0B197D091E32815200392B40 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1456442C274CA1E608152DE7 /* Pods-GVBandwagon.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = VH242F6P8Y;
 				INFOPLIST_FILE = GVBandwagon/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = nicolasheady.GVBandwagon;
@@ -438,6 +669,7 @@
 		};
 		0B197D0B1E32815200392B40 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6EA9EDCC8B7D08BD0D8F9580 /* Pods-GVBandwagonTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -452,6 +684,7 @@
 		};
 		0B197D0C1E32815200392B40 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1FBE53FF6CE82D3A9B6283BB /* Pods-GVBandwagonTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -466,6 +699,7 @@
 		};
 		0B197D0E1E32815200392B40 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = BBB63040EEFB4BA3004B7062 /* Pods-GVBandwagonUITests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				INFOPLIST_FILE = GVBandwagonUITests/Info.plist;
@@ -479,6 +713,7 @@
 		};
 		0B197D0F1E32815200392B40 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 92439C4256939807408E1F10 /* Pods-GVBandwagonUITests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				INFOPLIST_FILE = GVBandwagonUITests/Info.plist;
@@ -509,6 +744,7 @@
 				0B197D091E32815200392B40 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		0B197D0A1E32815200392B40 /* Build configuration list for PBXNativeTarget "GVBandwagonTests" */ = {
 			isa = XCConfigurationList;
@@ -517,6 +753,7 @@
 				0B197D0C1E32815200392B40 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		0B197D0D1E32815200392B40 /* Build configuration list for PBXNativeTarget "GVBandwagonUITests" */ = {
 			isa = XCConfigurationList;
@@ -525,6 +762,7 @@
 				0B197D0F1E32815200392B40 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
