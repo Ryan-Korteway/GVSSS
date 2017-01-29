@@ -59,23 +59,23 @@ class RegistrationViewController: UIViewController {
         
         //leaving out the latitude and longitude fields since they are sprint two, location and destination fields need a spot to be updated in the accounts page in the future.
         
-        self.ref.child("userStates").child("\(self.currentUser?.uid)").observeSingleEvent(of: .value, with: { (snapshot) in
+        self.ref.child("userStates").child("\(self.currentUser!.uid)").observeSingleEvent(of: .value, with: { (snapshot) in
             if(snapshot.value! as! Bool == true){
-                self.ref.child("users/drivers/\(self.currentUser?.uid)/name").setValue(self.fNameField.text)
-                self.ref.child("users/drivers/\(self.currentUser?.uid)/phone").setValue(self.phoneField.text)
-                self.ref.child("users/drivers/\(self.currentUser?.uid)/rider_found").setValue(false)
-                self.ref.child("users/drivers/\(self.currentUser?.uid)/rider_UIDs").setValue({})
-                self.ref.child("users/drivers/\(self.currentUser?.uid)/location").setValue("start")
-                self.ref.child("users/drivers/\(self.currentUser?.uid)/destination").setValue("stop") //fields to enter these values by hand needed in the UI at some point.
-                self.ref.child("users/drivers/\(self.currentUser?.uid)/total_riders").setValue(0) //gets incremented by one for each rider the driver drives.
-                self.ref.child("users/drivers/\(self.currentUser?.uid)/rider_score").setValue(0) //gets incremented by value from rider, 1-5 for each ride the driver gives.
+                self.ref.child("users/drivers/\(self.currentUser!.uid)/name").setValue(self.fNameField.text)
+                self.ref.child("users/drivers/\(self.currentUser!.uid)/phone").setValue(self.phoneField.text)
+                self.ref.child("users/drivers/\(self.currentUser!.uid)/rider_found").setValue(false)
+                self.ref.child("users/drivers/\(self.currentUser!.uid)/rider_UIDs").setValue(" ")
+                self.ref.child("users/drivers/\(self.currentUser!.uid)/location").setValue("start")
+                self.ref.child("users/drivers/\(self.currentUser!.uid)/destination").setValue("stop") //fields to enter these values by hand needed in the UI at some point.
+                self.ref.child("users/drivers/\(self.currentUser!.uid)/total_riders").setValue(0) //gets incremented by one for each rider the driver drives.
+                self.ref.child("users/drivers/\(self.currentUser!.uid)/rider_score").setValue(0) //gets incremented by value from rider, 1-5 for each ride the driver gives.
             } else {
-                self.ref.child("users/riders/\(self.currentUser?.uid)/name").setValue(self.fNameField.text)
-                self.ref.child("users/riders/\(self.currentUser?.uid)/phone").setValue(self.phoneField.text)
-                self.ref.child("users/riders/\(self.currentUser?.uid)/driver_found").setValue(false)
-                self.ref.child("users/riders/\(self.currentUser?.uid)/driver_UID").setValue("none")
-                self.ref.child("users/riders/\(self.currentUser?.uid)/location").setValue("start")
-                self.ref.child("users/riders/\(self.currentUser?.uid)/destination").setValue("stop") //fields to enter these values by hand needed in the UI at some point.
+                self.ref.child("users/riders/\(self.currentUser!.uid)/name").setValue(self.fNameField.text)
+                self.ref.child("users/riders/\(self.currentUser!.uid)/phone").setValue(self.phoneField.text)
+                self.ref.child("users/riders/\(self.currentUser!.uid)/driver_found").setValue(false)
+                self.ref.child("users/riders/\(self.currentUser!.uid)/driver_UID").setValue("none")
+                self.ref.child("users/riders/\(self.currentUser!.uid)/location").setValue("start")
+                self.ref.child("users/riders/\(self.currentUser!.uid)/destination").setValue("stop") //fields to enter these values by hand needed in the UI at some point.
             }
             
             // Obviously will need to check fields are formatted correctly

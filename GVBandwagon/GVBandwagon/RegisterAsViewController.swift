@@ -17,13 +17,12 @@ class RegisterAsViewController: UIViewController {
     var currentUser : FIRUser?
     
     @IBAction func RiderButton(_ sender: UIButton) {
-        self.ref.child("userStates").child("\(currentUser?.uid)").setValue(false)
+        self.ref.child("userStates").child("\(currentUser!.uid)").setValue(false)
     }
     
     @IBAction func DriverButton(_ sender: UIButton) {
-        self.ref.child("userStates").child("\(currentUser?.uid)").setValue(true)
+        self.ref.child("userStates").child("\(currentUser!.uid)").setValue(true)
     }
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
