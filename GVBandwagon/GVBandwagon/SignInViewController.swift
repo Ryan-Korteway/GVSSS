@@ -1,0 +1,155 @@
+//
+//  SignInViewController.swift
+//  GVBandwagon
+//
+//  Created by Nicolas Heady on 1/27/17.
+//  Copyright © 2017 Nicolas Heady. All rights reserved.
+//
+
+import UIKit
+import Firebase
+import GoogleSignIn
+import Google
+
+class SignInViewController: UIViewController, GIDSignInDelegate, GIDSignInUIDelegate {
+
+    @IBOutlet var googleSignInButton: GIDSignInButton!
+    var isUserLoggedIn = false
+    var ref: FIRDatabaseReference!
+    
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        print("\nSIGNIN viewDidLoad called.\n")
+        
+        // Sign in
+        // Initialize sign-in
+        var configureError: NSError?
+        GGLContext.sharedInstance().configureWithError(&configureError)
+        assert(configureError == nil, "Error configuring Google services: \(configureError)")
+        
+        GIDSignIn.sharedInstance().clientID = FIRApp.defaultApp()?.options.clientID
+        GIDSignIn.sharedInstance().delegate = self
+        
+        ref = FIRDatabase.database().reference()
+        
+        /*
+        // If user is authorized/logged in, skip the login view.
+        let currentUser = FIRAuth.auth()?.currentUser
+        if currentUser != nil
+        {
+            print("\nSign In: USER IS NOT NIL. ID: \(currentUser?.uid)\n")
+        }
+        else
+        {
+            print("\nAppDelegate: USER IS NIL...LOADING LOGIN SCREEN\n")
+        }
+        // Sign in end
+        */
+        
+        // Set UI delegate of GDSignIn object.
+        GIDSignIn.sharedInstance().uiDelegate = self
+        
+        // TODO(developer) Configure the sign-in button look/feel
+        self.googleSignInButton.style = GIDSignInButtonStyle.wide
+        
+        // Check if user has a valid login/auth session.
+        // If so, send them to RIDE view.
+        FIRAuth.auth()!.addStateDidChangeListener() { auth, user in
+            if user != nil {
+                print(user?.email ?? "no email found")
+                print(user?.description ?? "no desc found")
+                print(user?.uid ?? "no uid found")
+            }
+        }
+        
+    }
+
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+    
+
+    /*
+    // MARK: - Navigation
+
+    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        // Get the new view controller using segue.destinationViewController.
+        // Pass the selected object to the new view controller.
+    }
+    */
+
+  
+    
+    // Added
+    @available(iOS 9.0, *)
+    func application(_ application: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any])
+        -> Bool {
+            return GIDSignIn.sharedInstance().handle(url,
+                                                     sourceApplication:options[UIApplicationOpenURLOptionsKey.sourceApplication] as? String,
+                                                     annotation: [:])
+    }
+    
+    // Added for iOS 8 and older users
+    func application(_ application: UIApplication, open url: URL, sourceApplication: String?, annotation: Any) -> Bool {
+        return GIDSignIn.sharedInstance().handle(url,
+                                                 sourceApplication: sourceApplication,
+                                                 annotation: annotation)
+    }
+    
+    // GIDSignInDelegate functions defined here. For handling actual sign in.
+    func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error?) {
+        // ...
+        if let error = error {
+            // ...
+            print("didSignInForUser ERROR: \(error.localizedDescription)")
+            return
+        }
+        
+        
+        guard let authentication = user.authentication else { return }
+        let credential = FIRGoogleAuthProvider.credential(withIDToken: authentication.idToken,
+                                                          accessToken: authentication.accessToken)
+        // ...
+        FIRAuth.auth()?.signIn(with: credential) { (user, error) in
+            // ...
+            if let error = error {
+                // ...
+                return
+            }
+            self.directUserToCorrectView()
+        }
+    }
+    
+    func signIn(signIn: GIDSignIn!, didDisconnectWithUser user:GIDGoogleUser!,
+                withError error: NSError!) {
+        // Perform any operations when the user disconnects from app here.
+        // ...
+    }
+    
+    func directUserToCorrectView() {
+        // Check if user has registered already.
+        // Firebase rule to add: auth != null && auth.uid == root.child('users').child(auth.uid).exists()
+        // Hardcoded for 0001 so need to change:
+        //let userID = FIRAuth.auth()?.currentUser?.uid
+        ref.child("users").child("0001").observeSingleEvent(of: .value, with: { (snapshot) in
+            // Get user values
+            let value = snapshot.value as? NSDictionary
+            let phone = value?["phone"] as? String ?? ""
+            //let user = User.init(username: username)
+            
+            if (phone.isEmpty) {
+                self.performSegue(withIdentifier: "needsToRegister", sender: self)
+            } else {
+                self.performSegue(withIdentifier: "signInApproved", sender: self)
+            }
+            
+            // ...
+        }) { (error) in
+            print("directUser ERROR: \(error.localizedDescription)")
+        }
+    }
+
+}

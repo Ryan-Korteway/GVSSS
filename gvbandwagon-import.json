@@ -1,0 +1,28 @@
+{
+	"users": {
+		"0001": {
+			"name": "Nicolas Heady",
+			"email": "headyn@mail.gvsu.edu",
+			"phone": "3136567860"
+		},
+		"0002": {
+			"name": "Ryan Korteway",
+			"email": "unknown",
+			"phone": "0000000000"
+		},
+		"0003": {
+			"name": "Mike Christensen",
+			"email": "unknown",
+			"phone": "0000000000"
+		}
+	},
+
+	"activedrivers": {
+		"0001": "Nicolas Heady",
+		"0002": "Ryan Korteway"
+	},
+
+	"activeriders": {
+		"0003": "Mike Christensen"
+	}
+}
