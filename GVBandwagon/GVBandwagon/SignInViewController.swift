@@ -116,14 +116,14 @@ class SignInViewController: UIViewController, GIDSignInDelegate, GIDSignInUIDele
         FIRAuth.auth()?.signIn(with: credential) { (user, error) in
             // ...
             if let error = error {
-                // ...
+                print("sign in error: \(error.localizedDescription)")
                 return
             }
             self.directUserToCorrectView()
         }
     }
     
-    func signIn(signIn: GIDSignIn!, didDisconnectWithUser user:GIDGoogleUser!,
+    @nonobjc func signIn(signIn: GIDSignIn!, didDisconnectWithUser user:GIDGoogleUser!,
                 withError error: NSError!) {
         // Perform any operations when the user disconnects from app here.
         // ...
@@ -133,23 +133,25 @@ class SignInViewController: UIViewController, GIDSignInDelegate, GIDSignInUIDele
         // Check if user has registered already.
         // Firebase rule to add: auth != null && auth.uid == root.child('users').child(auth.uid).exists()
         // Hardcoded for 0001 so need to change:
-        //let userID = FIRAuth.auth()?.currentUser?.uid
-        ref.child("users").child("0001").observeSingleEvent(of: .value, with: { (snapshot) in
-            // Get user values
-            let value = snapshot.value as? NSDictionary
-            let phone = value?["phone"] as? String ?? ""
-            //let user = User.init(username: username)
-            
-            if (phone.isEmpty) {
-                self.performSegue(withIdentifier: "needsToRegister", sender: self)
+        
+        //also needs path updating check for riders or drivers path, query for true or false from the users state
+        
+        let userID = FIRAuth.auth()?.currentUser?.uid
+        
+        ref.child("userStates").child("\(userID)").observeSingleEvent(of: .value, with: { (snapshot) in
+            //if the user is found in user state, then they are signInApproved, otherwise they need to register to add themselves to users or drivers and either way get an entry with their UID and a 
+            //boolean value based on their choice into the database.
+            if(snapshot.value! as! Bool == true || snapshot.value! as! Bool == false  ) {
+                 self.performSegue(withIdentifier: "signInApproved", sender: self)
             } else {
-                self.performSegue(withIdentifier: "signInApproved", sender: self)
+                self.performSegue(withIdentifier: "needsToRegister", sender: self)
             }
             
-            // ...
-        }) { (error) in
+        }) { (error) in //hopefully them not being found in userstate will return an error that can then be used to allow the person to register.
             print("directUser ERROR: \(error.localizedDescription)")
+            
+            self.performSegue(withIdentifier: "needsToRegister", sender: self)
+    
         }
     }
-
 }

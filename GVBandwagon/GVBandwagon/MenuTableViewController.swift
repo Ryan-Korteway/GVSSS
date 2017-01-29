@@ -20,6 +20,8 @@ class MenuTableViewController: UITableViewController {
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
     }
 
+    //TODO tapping drive mode should change the rider to driver mode/state in the userstates table and change the label from ride mode to drive mode if possible.
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
