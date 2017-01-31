@@ -65,16 +65,14 @@ class RegistrationViewController: UIViewController {
             self.ref.child("users/\(self.currentUser!.uid)/phone").setValue(self.phoneField.text)
             self.ref.child("users/\(self.currentUser!.uid)/location").setValue("start")
             self.ref.child("users/\(self.currentUser!.uid)/destination").setValue("stop")
-            
-            if(snapshot.value! as! Bool == true){
-                self.ref.child("users/\(self.currentUser!.uid)/driver/rider_found").setValue(false)
-                //self.ref.child("users/\(self.currentUser!.uid)/rider_UIDs").setValue() //rider_UID's should be added and removed as riders sign up to use the driver as their ride to the destination.
-                self.ref.child("users/\(self.currentUser!.uid)/driver/total_riders").setValue(0) //gets incremented by one for each rider the driver drives.
-                self.ref.child("users/\(self.currentUser!.uid)/driver/rider_score").setValue(0) //gets incremented by value from rider, 1-5 for each ride the driver gives.
-            } else {
-                self.ref.child("users/\(self.currentUser!.uid)/rider/driver_found").setValue(false)
-                self.ref.child("users/\(self.currentUser!.uid)/rider/driver_UID").setValue("none")
-            }
+        
+            self.ref.child("users/\(self.currentUser!.uid)/driver/rider_found").setValue(false)
+            //self.ref.child("users/\(self.currentUser!.uid)/rider_UIDs").setValue() //rider_UID's should be added and removed as riders sign up to use the driver as their ride to the destination.
+            self.ref.child("users/\(self.currentUser!.uid)/driver/total_riders").setValue(0) //gets incremented by one for each rider the driver drives.
+            self.ref.child("users/\(self.currentUser!.uid)/driver/rider_score").setValue(0) //gets incremented by value from rider, 1-5 for each ride the driver gives.
+        
+            self.ref.child("users/\(self.currentUser!.uid)/rider/driver_found").setValue(false)
+            self.ref.child("users/\(self.currentUser!.uid)/rider/driver_UID").setValue("none")
             
             // Obviously will need to check fields are formatted correctly
             // and data successfully transferred before segue.
