@@ -347,7 +347,7 @@
         <!--Register as-->
         <scene sceneID="tvt-IS-d1y">
             <objects>
-                <viewController storyboardIdentifier="accountType" title="Register as" id="t5K-Rs-jIh" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="accountType" title="Register as" id="t5K-Rs-jIh" customClass="RegisterAsViewController" customModule="GVBandwagon" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Z13-n7-6Za"/>
                         <viewControllerLayoutGuide type="bottom" id="yj2-p7-sOq"/>
@@ -368,6 +368,7 @@
                                 <fontDescription key="fontDescription" name="Futura-MediumItalic" family="Futura" pointSize="46"/>
                                 <state key="normal" title="Rider"/>
                                 <connections>
+                                    <action selector="RiderButton:" destination="t5K-Rs-jIh" eventType="touchUpInside" id="DVr-Vg-baR"/>
                                     <segue destination="cTV-XR-ie3" kind="show" id="JZw-DP-dT2"/>
                                 </connections>
                             </button>
@@ -376,6 +377,10 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="Futura-MediumItalic" family="Futura" pointSize="46"/>
                                 <state key="normal" title="Driver"/>
+                                <connections>
+                                    <action selector="DriverButton:" destination="t5K-Rs-jIh" eventType="touchUpInside" id="ZWd-42-Zh6"/>
+                                    <segue destination="cTV-XR-ie3" kind="show" id="W9u-9l-6Si"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -527,6 +532,7 @@
         <image name="second" width="30" height="30"/>
     </resources>
     <inferredMetricsTieBreakers>
+        <segue reference="JZw-DP-dT2"/>
         <segue reference="4gI-rb-loU"/>
     </inferredMetricsTieBreakers>
 </document>

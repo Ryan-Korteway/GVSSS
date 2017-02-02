@@ -19,13 +19,15 @@ class RegistrationViewController: UIViewController {
     @IBOutlet var phoneField: UITextField!
     @IBOutlet var emailField: UITextField!
     @IBOutlet var registerButton: UIButton!
+   
+    var currentUser : FIRUser?
     
     var ref: FIRDatabaseReference = FIRDatabase.database().reference()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let currentUser = FIRAuth.auth()?.currentUser
+        currentUser = FIRAuth.auth()?.currentUser
         
         self.emailField.text = currentUser?.email
         
@@ -55,13 +57,30 @@ class RegistrationViewController: UIViewController {
 
     @IBAction func onRegisterTap(_ sender: Any) {
         
-        // Again hardcoded 0001 will need to change.
-        self.ref.child("users/0001/name").setValue(self.fNameField.text)
-        self.ref.child("users/0001/phone").setValue(self.phoneField.text)
+        //leaving out the latitude and longitude fields since they are sprint two, location and destination fields need a spot to be updated in the accounts page in the future.
         
-        // Obviously will need to check fields are formatted correctly
-        // and data successfully transferred before segue.
+        self.ref.child("userStates").child("\(self.currentUser!.uid)").observeSingleEvent(of: .value, with: { (snapshot) in
+            
+            self.ref.child("users/\(self.currentUser!.uid)/name").setValue(self.fNameField.text! + " " + self.lNameField.text!)
+            self.ref.child("users/\(self.currentUser!.uid)/phone").setValue(self.phoneField.text)
+            self.ref.child("users/\(self.currentUser!.uid)/location").setValue("start")
+            self.ref.child("users/\(self.currentUser!.uid)/destination").setValue("stop")
+        
+            self.ref.child("users/\(self.currentUser!.uid)/driver/rider_found").setValue(false)
+            //self.ref.child("users/\(self.currentUser!.uid)/rider_UIDs").setValue() //rider_UID's should be added and removed as riders sign up to use the driver as their ride to the destination.
+            self.ref.child("users/\(self.currentUser!.uid)/driver/total_riders").setValue(0) //gets incremented by one for each rider the driver drives.
+            self.ref.child("users/\(self.currentUser!.uid)/driver/rider_score").setValue(0) //gets incremented by value from rider, 1-5 for each ride the driver gives.
+        
+            self.ref.child("users/\(self.currentUser!.uid)/rider/driver_found").setValue(false)
+            self.ref.child("users/\(self.currentUser!.uid)/rider/driver_UID").setValue("none")
+            
+            // Obviously will need to check fields are formatted correctly
+            // and data successfully transferred before segue.
         self.performSegue(withIdentifier: "toContainer", sender: self)
+            
+            }) { (error) in
+                print("Update Error, \(error.localizedDescription)")
+        }
     }
     
 }

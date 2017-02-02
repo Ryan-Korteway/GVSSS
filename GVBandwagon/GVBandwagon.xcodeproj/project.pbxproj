@@ -29,6 +29,7 @@
 		0BE676301E3D78B5009675F2 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0BE6762F1E3D78B5009675F2 /* GoogleService-Info.plist */; };
 		0BE676311E3D78B5009675F2 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0BE6762F1E3D78B5009675F2 /* GoogleService-Info.plist */; };
 		0BE676321E3D78B5009675F2 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0BE6762F1E3D78B5009675F2 /* GoogleService-Info.plist */; };
+		85365DE51E3E8ACB003709C3 /* RegisterAsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85365DE41E3E8ACB003709C3 /* RegisterAsViewController.swift */; };
 		8D7CC2232AD3A68143663BA2 /* Pods_GVBandwagonTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A09C8C265162B5784985937B /* Pods_GVBandwagonTests.framework */; };
 		E95A7E4BE11C558326F54189 /* Pods_GVBandwagon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1F2583AB45790452F36E20D /* Pods_GVBandwagon.framework */; };
 		F6DE74CD78E1BC3122901C57 /* Pods_GVBandwagonUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA1A2D62894C2D5E93F3B906 /* Pods_GVBandwagonUITests.framework */; };
@@ -76,6 +77,7 @@
 		1456442C274CA1E608152DE7 /* Pods-GVBandwagon.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GVBandwagon.release.xcconfig"; path = "Pods/Target Support Files/Pods-GVBandwagon/Pods-GVBandwagon.release.xcconfig"; sourceTree = "<group>"; };
 		1FBE53FF6CE82D3A9B6283BB /* Pods-GVBandwagonTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GVBandwagonTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-GVBandwagonTests/Pods-GVBandwagonTests.release.xcconfig"; sourceTree = "<group>"; };
 		6EA9EDCC8B7D08BD0D8F9580 /* Pods-GVBandwagonTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GVBandwagonTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-GVBandwagonTests/Pods-GVBandwagonTests.debug.xcconfig"; sourceTree = "<group>"; };
+		85365DE41E3E8ACB003709C3 /* RegisterAsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegisterAsViewController.swift; sourceTree = "<group>"; };
 		92439C4256939807408E1F10 /* Pods-GVBandwagonUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GVBandwagonUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-GVBandwagonUITests/Pods-GVBandwagonUITests.release.xcconfig"; sourceTree = "<group>"; };
 		A09C8C265162B5784985937B /* Pods_GVBandwagonTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GVBandwagonTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA1A2D62894C2D5E93F3B906 /* Pods_GVBandwagonUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GVBandwagonUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -147,6 +149,7 @@
 				0B197CE21E32815200392B40 /* FirstViewController.swift */,
 				0B197CE41E32815200392B40 /* SecondViewController.swift */,
 				0B197CE61E32815200392B40 /* Main.storyboard */,
+				85365DE41E3E8ACB003709C3 /* RegisterAsViewController.swift */,
 				0B197CE91E32815200392B40 /* Assets.xcassets */,
 				0B197CEB1E32815200392B40 /* LaunchScreen.storyboard */,
 				0BE6762F1E3D78B5009675F2 /* GoogleService-Info.plist */,
@@ -480,6 +483,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0B3DE4FC1E3BB57C00733810 /* SignInViewController.swift in Sources */,
+				85365DE51E3E8ACB003709C3 /* RegisterAsViewController.swift in Sources */,
 				0B6935311E3D158400F551CB /* MenuTableViewController.swift in Sources */,
 				0B197CE51E32815200392B40 /* SecondViewController.swift in Sources */,
 				0B197CE11E32815200392B40 /* AppDelegate.swift in Sources */,

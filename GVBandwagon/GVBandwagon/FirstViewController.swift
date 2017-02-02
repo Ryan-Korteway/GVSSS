@@ -20,10 +20,13 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
     
     var containerDelegate: ContainerDelegate? = nil
     
-    let userid = "0001"
+    //let userid = "0001" //hardcoded values, should be the fireauth current user stuff.
+    let currentUser = FIRAuth.auth()?.currentUser
     let pickerData: [String] = ["Allendale", "Meijer", "Downtown"]
     
-    let ref = FIRDatabase.database().reference(withPath: "users")
+    let ref_R = FIRDatabase.database().reference(withPath: "users/riders")
+    let ref_D = FIRDatabase.database().reference(withPath: "users/drivers")
+    let ref = FIRDatabase.database().reference()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -82,8 +85,21 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
     }
     
     func updateUserInfo(name: String, phone: String) {
-        self.ref.child("\(self.userid)/name").setValue(name)
-        self.ref.child("\(self.userid)/phone").setValue(phone)
+        let userID = FIRAuth.auth()?.currentUser?.uid
+        ref.child("userStates").child("\(userID)").observeSingleEvent(of: .value, with: { (snapshot) in
+            if(snapshot.value! as! Bool == true) {
+                self.ref_D.child("\(self.currentUser?.uid)/name").setValue(name)
+                self.ref_D.child("\(self.currentUser?.uid)/phone").setValue(phone)
+                //lats longs, locations and destinations all can be added and updated from here
+            } else {
+                self.ref_R.child("\(self.currentUser?.uid)/name").setValue(name)
+                self.ref_R.child("\(self.currentUser?.uid)/phone").setValue(phone)
+                //lats longs, locations and destinations all can be added and updated from here
+            }
+        }) { (error) in
+            print(error.localizedDescription)
+        }
+        
     }
     
     @IBAction func onMenuTapped(_ sender: Any) {
