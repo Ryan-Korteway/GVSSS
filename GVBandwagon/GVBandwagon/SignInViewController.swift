@@ -136,23 +136,26 @@ class SignInViewController: UIViewController, GIDSignInDelegate, GIDSignInUIDele
         
         //also needs path updating check for riders or drivers path, query for true or false from the users state
         
-        let userID = FIRAuth.auth()?.currentUser?.uid
+        let userID = FIRAuth.auth()!.currentUser!.uid
         
         ref.child("userStates").child("\(userID)").observeSingleEvent(of: .value, with: { (snapshot) in
             //if the user is found in user state, then they are signInApproved, otherwise they need to register to add themselves to users or drivers and either way get an entry with their UID and a 
             //boolean value based on their choice into the database.
             
-                guard snapshot.value! is Bool else {
+            guard snapshot.value! is Bool else { //this was working at one point and now isnt. not sure what happened...
+                    print(snapshot.value!)
                     self.performSegue(withIdentifier: "needsToRegister", sender: self)
                     return //not sure if necessary but it silences the auto compilier.
                 }
+            print(snapshot.value!)
             
-                //if(result == true || result == false) {
+            self.performSegue(withIdentifier: "signInApproved", sender: self)
+            
+            /* if(ref.child("users").child("\(userID)").) {
                 self.performSegue(withIdentifier: "signInApproved", sender: self)
-                //} else {
-                  // self.performSegue(withIdentifier: "needsToRegister", sender: self)
-                //}
-            
+            } else {
+                self.performSegue(withIdentifier: "needsToRegister", sender: self)
+            } */
             
         }) { (error) in //hopefully them not being found in userstate will return an error that can then be used to allow the person to register.
             print("directUser ERROR: \(error.localizedDescription)")

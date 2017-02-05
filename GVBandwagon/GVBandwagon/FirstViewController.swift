@@ -21,17 +21,15 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
     var containerDelegate: ContainerDelegate? = nil
     
     //let userid = "0001" //hardcoded values, should be the fireauth current user stuff.
-    let currentUser = FIRAuth.auth()?.currentUser
+    let currentUser = FIRAuth.auth()!.currentUser
     let pickerData: [String] = ["Allendale", "Meijer", "Downtown"]
     
-    let ref_R = FIRDatabase.database().reference(withPath: "users/riders")
-    let ref_D = FIRDatabase.database().reference(withPath: "users/drivers")
     let ref = FIRDatabase.database().reference()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
         
+    
         /*
         ref.observe(.value, with: { snapshot in
             print(snapshot.value!)
@@ -44,8 +42,95 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
         self.toPickerView.delegate = self
         self.toPickerView.dataSource = self
         
-    }
+        // COPY FOR POP UP'S ABOUT RIDER DRIVR OFFERS STARTS HERE.
+       
+        let driverRef = FIRDatabase.database().reference(withPath: "users/\(currentUser!.uid)/driver/")
+        let riderRef = FIRDatabase.database().reference(withPath: "users/\(currentUser!.uid)/rider/")
+        var riderfirst = true;
+        var driverfirst = true;
+        
+        driverRef.child("rider_found").observe(.value, with: { (snapshot) in
+            //let postDict = snapshot.value as? [String : AnyObject] ?? [:]
+            if (driverfirst) {
+                driverfirst = false;
+            } else {
+                    //may need to further restrict the alert so that it does not pop up when the riderfound value is being reset to false.
+                
+                if(snapshot.value! as! Bool) {
+                    
+                        driverRef.child("rider_uid").observeSingleEvent(of: .value, with: { (snapshot) in
+                            
+                            let user = self.ref.child("users/\(snapshot.value!)").queryEqual(toValue: "name")
+                            
+                            let alert = UIAlertController(title:"Rider Found", message:"Would you like to give \(user) a ride?.",
+                                preferredStyle: .actionSheet)
+                            
+                            let yesAction = UIAlertAction(title:"Yes", style:.default) { action -> Void in
+                                //code for the action can go here. so accepts or deny's
+                                self.ref.child("users/\(snapshot.value!)/rider/driver_uid").setValue(self.currentUser!.uid)
+                                self.ref.child("users/\(snapshot.value!)/rider/driver_found").setValue(true)
+                            }
+                            
+                            let noAction = UIAlertAction(title:"No", style:.default) { action -> Void in
+                                //code for the action can go here. so accepts or deny's
+                                self.ref.child("users/\(snapshot.value!)/rider/driver_uid").setValue("none")
+                                self.ref.child("users/\(snapshot.value!)/rider/driver_found").setValue(true)
+                            }
+                            
+                            alert.addAction(yesAction)
+                            alert.addAction(noAction)
+                            self.present(alert, animated:true, completion:nil)
+                            driverRef.child("rider_found").setValue(false)
 
+                        })
+                }
+            }
+        })
+
+        riderRef.child("driver_found").observe(.value, with: { (snapshot) in
+            //let postDict = snapshot.value as? [String : AnyObject] ?? [:]
+            if (riderfirst) {
+                riderfirst = false;
+            } else {
+                //may need to further restrict the alert so that it does not pop up when the riderfound value is being reset to false.
+                
+                if(snapshot.value! as! Bool) {
+                    riderRef.child("driver_uid").observeSingleEvent(of: .value, with: { (snapshot) in
+                    //inner if for accepted, else for rejected.
+                    if( snapshot.value! as! String == "none") {
+                        let alert = UIAlertController(title:"Driver Alert", message:"We are sorry but this driver is unavailable.", preferredStyle: .actionSheet);
+                        
+                        let defaultAction = UIAlertAction(title:"OK", style:.default) { action -> Void in
+                            //code for the action can go here. so accepts or deny's
+                            riderRef.child("driver_found").setValue(false)
+                        }
+                        
+                        alert.addAction(defaultAction);
+                        self.present(alert, animated:true, completion:nil);
+                        
+                    } else {
+                        
+                        let alert = UIAlertController(title:"Driver Alert", message:"The driver has accepted.", preferredStyle: .actionSheet);
+                        //maybe add a see profile action that triggers a seque to a page that pre fills itself with the drivers info based on his UID?
+                        
+                        let defaultAction = UIAlertAction(title:"OK", style:.default) { action -> Void in
+                            //code for the action can go here. so accepts or deny's
+                            riderRef.child("driver_found").setValue(false)
+                        }
+                        
+                        alert.addAction(defaultAction);
+                        self.present(alert, animated:true, completion:nil);
+                    } //inner else end
+
+                    
+                }) //inner snapshot end
+                
+               } //outer if end
+           } //outer else end
+        }) //observe end        COPY STOPS HERE
+        
+    } //end of view did load.
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -85,21 +170,10 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
     }
     
     func updateUserInfo(name: String, phone: String) {
-        let userID = FIRAuth.auth()?.currentUser?.uid
-        ref.child("userStates").child("\(userID)").observeSingleEvent(of: .value, with: { (snapshot) in
-            if(snapshot.value! as! Bool == true) {
-                self.ref_D.child("\(self.currentUser?.uid)/name").setValue(name)
-                self.ref_D.child("\(self.currentUser?.uid)/phone").setValue(phone)
-                //lats longs, locations and destinations all can be added and updated from here
-            } else {
-                self.ref_R.child("\(self.currentUser?.uid)/name").setValue(name)
-                self.ref_R.child("\(self.currentUser?.uid)/phone").setValue(phone)
-                //lats longs, locations and destinations all can be added and updated from here
-            }
-        }) { (error) in
-            print(error.localizedDescription)
-        }
+        let userID = FIRAuth.auth()!.currentUser!.uid
         
+        self.ref.child("users/\(userID)/name").setValue(name)
+        self.ref.child("users/\(userID)/phone").setValue(phone)
     }
     
     @IBAction func onMenuTapped(_ sender: Any) {
@@ -117,7 +191,7 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
     @IBAction func onSignOutTapped(_ sender: Any) {
         let firebaseAuth = FIRAuth.auth()
         do {
-            try firebaseAuth?.signOut()
+            try firebaseAuth!.signOut()
             performSegue(withIdentifier: "signOutSegue", sender: self)
         } catch let signOutError as NSError {
             print ("Error signing out: %@", signOutError)
