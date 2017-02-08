@@ -21,7 +21,6 @@ class RegistrationViewController: UIViewController {
     @IBOutlet var registerButton: UIButton!
    
     var currentUser : FIRUser?
-    
     var ref: FIRDatabaseReference = FIRDatabase.database().reference()
     
     override func viewDidLoad() {

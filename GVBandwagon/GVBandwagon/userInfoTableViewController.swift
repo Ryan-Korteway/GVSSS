@@ -1,15 +1,23 @@
 //
-//  MenuTableViewController.swift
+//  userInfoTableViewController.swift
 //  GVBandwagon
 //
-//  Created by Nicolas Heady on 1/28/17.
+//  Created by Nicolas Heady on 2/7/17.
 //  Copyright © 2017 Nicolas Heady. All rights reserved.
 //
 
 import UIKit
+import Firebase
 
-class MenuTableViewController: UITableViewController {
+class userInfoTableViewController: UITableViewController {
 
+    @IBOutlet var fNameField: UITextField!
+    @IBOutlet var lNameField: UITextField!
+    @IBOutlet var phoneField: UITextField!
+    
+    var currentUser : FIRUser?
+    var ref: FIRDatabaseReference = FIRDatabase.database().reference()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -18,10 +26,28 @@ class MenuTableViewController: UITableViewController {
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+        
+        self.currentUser = FIRAuth.auth()?.currentUser
+        let userID = self.currentUser?.uid
+        self.fNameField.text = currentUser?.displayName
+        print("What is display name? : \(currentUser?.displayName)")
+        
+        self.ref.child("users").child(userID!).observeSingleEvent(of: .value, with: { (snapshot) in
+            // Get user value
+            let value = snapshot.value as? NSDictionary
+            let fname = value?["name"] as? String ?? ""
+            //let user = User.init(username: username)
+            let phone = value?["phone"] as? String ?? ""
+            
+            self.fNameField.text = fname
+            self.phoneField.text = phone
+            
+            // ...
+        }) { (error) in
+            print(error.localizedDescription)
+        }
     }
 
-    //TODO tapping drive mode should change the rider to driver mode/state in the userstates table and change the label from ride mode to drive mode if possible.
-    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -31,32 +57,22 @@ class MenuTableViewController: UITableViewController {
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 1
+        return 4
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return 4
+        return 1
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if (indexPath.row == 0) {
-            return 80
+        if (indexPath.section == 0) {
+            return 75
         } else {
-            return 50
+            return 44
         }
     }
-    
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if (indexPath.row == 1) {
-            //enter account
-        } else if (indexPath.row == 2) {
-            //enter drive mode
-        } else {
-            //enter help
-        }
-    }
-    
+
     /*
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
@@ -111,4 +127,23 @@ class MenuTableViewController: UITableViewController {
         // Pass the selected object to the new view controller.
     }
     */
+    
+    override func viewWillDisappear(_ animated : Bool) {
+        super.viewWillDisappear(animated)
+        
+        if (self.isMovingFromParentViewController) {
+            
+            print("Updating...")
+            
+            self.ref.child("users").child("\(self.currentUser!.uid)").observeSingleEvent(of: .value, with: { (snapshot) in
+                
+                self.ref.child("users/\(self.currentUser!.uid)/name").setValue(self.fNameField.text! + " " + self.lNameField.text!)
+                self.ref.child("users/\(self.currentUser!.uid)/phone").setValue(self.phoneField.text)
+                
+            }) { (error) in
+                print("Update Error, \(error.localizedDescription)")
+            }
+        }
+    }
+
 }

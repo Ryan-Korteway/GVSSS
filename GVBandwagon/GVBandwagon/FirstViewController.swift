@@ -10,11 +10,13 @@ import UIKit
 import Firebase
 import GoogleSignIn
 
-class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
+class FirstViewController: UIViewController {
 
-    @IBOutlet var submitButton: UIButton!
-    @IBOutlet var fromPickerView: UIPickerView!
-    @IBOutlet var toPickerView: UIPickerView!
+
+    @IBOutlet var fromContainerView: UIView!
+    @IBOutlet var fromView: UIView!
+    @IBOutlet var toView: UIView!
+    @IBOutlet var toContainerView: UIView!
     @IBOutlet var menuButton: UIBarButtonItem!
     @IBOutlet var signOutButton: UIBarButtonItem!
     
@@ -29,18 +31,8 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
     override func viewDidLoad() {
         super.viewDidLoad()
         
-    
-        /*
-        ref.observe(.value, with: { snapshot in
-            print(snapshot.value!)
-        })
-         */
-        
-        // Connect data:
-        self.fromPickerView.delegate = self
-        self.fromPickerView.dataSource = self
-        self.toPickerView.delegate = self
-        self.toPickerView.dataSource = self
+        self.fromContainerView.frame = CGRect(x: self.fromContainerView.frame.origin.x, y: self.fromContainerView.frame.origin.y, width: self.fromContainerView.frame.width, height: 0)
+        self.toContainerView.frame = CGRect(x: self.toContainerView.frame.origin.x, y: self.toContainerView.frame.origin.y, width: self.toContainerView.frame.width, height: 0)
         
         // COPY FOR POP UP'S ABOUT RIDER DRIVR OFFERS STARTS HERE.
        
@@ -140,33 +132,6 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
         // Dispose of any resources that can be recreated.
     }
     
-    // Picker view delegate functions:
-    // The number of columns of data
-    func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        return 1
-    }
-    
-    // The number of rows of data
-    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return pickerData.count
-    }
-    
-    // The data to return for the row and component (column) that's being passed in
-    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return pickerData[row]
-    }
-    
-    // Catpure the picker view selection
-    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        // This method is triggered whenever the user makes a change to the picker selection.
-        // The parameter named row and component represents what was selected.
-        if (pickerView == self.fromPickerView) {
-            print("Picker view selected: fromPickerView: \(pickerData[row])")
-        } else {
-            print("Picker view selected: toPickerView: \(pickerData[row])")
-        }
-    }
-    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesBegan(touches, with: event)
         
@@ -211,6 +176,37 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
         if (menuOpen) {
             self.containerDelegate?.hideMenu()
         }
+    }
+    
+    
+    // For these two, add animation to move labels at the same time.
+    
+    @IBAction func onFromViewTapped(_ sender: Any) {
+        var frameHeight: CGFloat = 0
+        
+        if (self.fromContainerView.frame.height == 0) {
+            frameHeight = 250
+        }
+        
+        UIView.animate(withDuration: 0.3, animations: {
+            self.fromContainerView.frame = CGRect(x: self.fromContainerView.frame.origin.x, y: self.fromContainerView.frame.origin.y, width: self.fromContainerView.frame.width, height: frameHeight)
+        }, completion: { (Bool) -> Void in
+            // what to do when completed animation.
+        })
+    }
+    
+    @IBAction func onToViewTapped(_ sender: Any) {
+        var frameHeight: CGFloat = 0
+        
+        if (self.toContainerView.frame.height == 0) {
+            frameHeight = 250
+        }
+        
+        UIView.animate(withDuration: 0.3, animations: {
+            self.toContainerView.frame = CGRect(x: self.toContainerView.frame.origin.x, y: self.toContainerView.frame.origin.y, width: self.toContainerView.frame.width, height: frameHeight)
+        }, completion: { (Bool) -> Void in
+            // what to do when completed animation.
+        })
     }
     
     
