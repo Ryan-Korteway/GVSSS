@@ -31,6 +31,10 @@ class FirstViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        /* Link to pay on venmo
+        UIApplication.shared.open(NSURL(string:"https://venmo.com/?txn=pay&audience=private&recipients=@michael-christensen-20&amount=3&note=GVB") as! URL, options: [:], completionHandler: nil)
+         */
+        
         self.fromContainerView.frame = CGRect(x: self.fromContainerView.frame.origin.x, y: self.fromContainerView.frame.origin.y, width: self.fromContainerView.frame.width, height: 0)
         self.toContainerView.frame = CGRect(x: self.toContainerView.frame.origin.x, y: self.toContainerView.frame.origin.y, width: self.toContainerView.frame.width, height: 0)
         

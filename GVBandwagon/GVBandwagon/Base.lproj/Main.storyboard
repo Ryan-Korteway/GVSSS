@@ -893,7 +893,7 @@
             <objects>
                 <navigationController title="Account Navigation" automaticallyAdjustsScrollViewInsets="NO" id="qie-e8-3Lv" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="o1k-9W-jfW">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="o1k-9W-jfW">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -961,7 +961,7 @@
             <objects>
                 <navigationController title="Help Navigation" automaticallyAdjustsScrollViewInsets="NO" id="QKe-sZ-Rbw" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="b3b-uB-DMY">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="b3b-uB-DMY">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
