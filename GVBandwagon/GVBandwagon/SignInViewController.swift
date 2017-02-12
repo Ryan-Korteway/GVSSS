@@ -139,25 +139,29 @@ class SignInViewController: UIViewController, GIDSignInDelegate, GIDSignInUIDele
         let userID = FIRAuth.auth()!.currentUser!.uid
         
         ref.child("userStates").child("\(userID)").observeSingleEvent(of: .value, with: { (snapshot) in
-            //if the user is found in user state, then they are signInApproved, otherwise they need to register to add themselves to users or drivers and either way get an entry with their UID and a 
-            //boolean value based on their choice into the database.
+            //if the user is found in user state, then they are signInApproved, 
+            //otherwise they need to register to add themselves to users or drivers 
+            //and either way get an entry with their UID and a boolean value based on their choice into the database.
             
-            guard snapshot.value! is Bool else { //this was working at one point and now isnt. not sure what happened...
-                    print(snapshot.value!)
+            guard snapshot.value! is Bool else {
                     self.performSegue(withIdentifier: "needsToRegister", sender: self)
-                    return //not sure if necessary but it silences the auto compilier.
+                    return
                 }
-            print(snapshot.value!)
+            
+            //right here could do a check for if its true and thus the user is a driver, then they get added to active drivers.
+            if(snapshot.value! as! Bool) {
+                let tempRef = self.ref.child("activedrivers/\(userID)/")
+                tempRef.setValue(NSDate().description)
+                //sleep(2)
+                //tempRef.removeValue()
+                tempRef.onDisconnectRemoveValue() //on disconnect seems to only work when its a total loss of internet connection and not just the app being closed, will probably
+                //just need/want to put something into the "prepare to disappear" functions of each view controller to try and see if the app is about to be backgrounded and we want to remove the 
+                //driver from the active drivers section of the DB because if the app is not open, then we cannot pop up asking if they want to give a user a ride.
+            }
             
             self.performSegue(withIdentifier: "signInApproved", sender: self)
             
-            /* if(ref.child("users").child("\(userID)").) {
-                self.performSegue(withIdentifier: "signInApproved", sender: self)
-            } else {
-                self.performSegue(withIdentifier: "needsToRegister", sender: self)
-            } */
-            
-        }) { (error) in //hopefully them not being found in userstate will return an error that can then be used to allow the person to register.
+        }) { (error) in
             print("directUser ERROR: \(error.localizedDescription)")
             
             self.performSegue(withIdentifier: "needsToRegister", sender: self)

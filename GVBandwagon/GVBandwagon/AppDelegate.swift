@@ -15,12 +15,14 @@ import Google
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
+    var ref: FIRDatabaseReference!
     
     // Overriding init() and putting FIRApp.configure() here to ensure it's configured before
     // the first view controller tries to retreive a reference to it.
     override init() {
         super.init()
         FIRApp.configure()
+        ref = FIRDatabase.database().reference()
         // not really needed unless you really need it FIRDatabase.database().persistenceEnabled = true
         
         // Moved to didFinish... below
@@ -43,10 +45,43 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationDidEnterBackground(_ application: UIApplication) {
         // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+        
+        if(FIRAuth.auth()!.currentUser == nil) {
+            return
+        } else {
+        
+            let userID = FIRAuth.auth()!.currentUser!.uid
+            
+            ref.child("userStates").child("\(userID)").observeSingleEvent(of: .value, with: { (snapshot) in
+            
+            if(snapshot.value! as! Bool) {
+                let tempRef = self.ref.child("activedrivers/\(userID)/")
+                tempRef.removeValue()
+            }
+
+            })
+        }
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {
         // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
+        
+        if(FIRAuth.auth()!.currentUser == nil) { //use a guard and uid is string otherwise dont run, like sign in.
+            return
+        } else {
+            
+            let userID = FIRAuth.auth()!.currentUser!.uid
+            
+            ref.child("userStates").child("\(userID)").observeSingleEvent(of: .value, with: { (snapshot) in
+                
+                if(snapshot.value! as! Bool) {
+                    let tempRef = self.ref.child("activedrivers/\(userID)/")
+                    tempRef.removeValue()
+                }
+                
+            })
+        }
+
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {
@@ -55,6 +90,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+        
+        if(FIRAuth.auth()!.currentUser == nil) { //use a guard and uid is string otherwise dont run, like sign in.
+            return
+        } else {
+            
+            let userID = FIRAuth.auth()!.currentUser!.uid
+            
+            ref.child("userStates").child("\(userID)").observeSingleEvent(of: .value, with: { (snapshot) in
+                
+                if(snapshot.value! as! Bool) {
+                    let tempRef = self.ref.child("activedrivers/\(userID)/")
+                    tempRef.removeValue()
+                }
+                
+            })
+        }
     }
     
     // Added

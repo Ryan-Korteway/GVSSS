@@ -193,6 +193,20 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
     }
     
     @IBAction func onSignOutTapped(_ sender: Any) {
+
+        let userID = FIRAuth.auth()!.currentUser!.uid
+        
+        ref.child("userStates").child("\(userID)").observeSingleEvent(of: .value, with: { (snapshot) in
+            
+            if(snapshot.value! as! Bool) {
+                let tempRef = self.ref.child("activedrivers/\(userID)/")
+                tempRef.removeValue()
+            }
+            
+        })
+        
+        sleep(1) //one second delay needed to allow for the tempRef.removevalue to run before the sign out occurs. 
+
         let firebaseAuth = FIRAuth.auth()
         do {
             try firebaseAuth!.signOut()
