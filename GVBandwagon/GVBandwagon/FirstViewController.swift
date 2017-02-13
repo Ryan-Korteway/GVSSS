@@ -24,6 +24,12 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
     let currentUser = FIRAuth.auth()!.currentUser
     let pickerData: [String] = ["Allendale", "Meijer", "Downtown"]
     
+    var userFrom = "nowhere"
+    var userTo = "somewhere"
+    
+    var waiting = true
+    var accepted = false
+    
     let ref = FIRDatabase.database().reference()
     
     override func viewDidLoad() {
@@ -42,14 +48,14 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
         self.toPickerView.delegate = self
         self.toPickerView.dataSource = self
         
-        // COPY FOR POP UP'S ABOUT RIDER DRIVR OFFERS STARTS HERE.
+        // COPY FOR POP UP'S ABOUT RIDER DRIVER OFFERS STARTS HERE. >>>>> might be able to relocate these to "application will enter foreground" to make them app wide?!!
        
         let driverRef = FIRDatabase.database().reference(withPath: "users/\(currentUser!.uid)/driver/")
         let riderRef = FIRDatabase.database().reference(withPath: "users/\(currentUser!.uid)/rider/")
         var riderfirst = true;
         var driverfirst = true;
         
-        driverRef.child("rider_found").observe(.value, with: { (snapshot) in
+        driverRef.child("rider_found").observe(.value, with: { (snapshot) in //RIDER ACCEPTANCE MUST REMOVE DRIVERS FROM ACTIVE DRIVERS!!!
             //let postDict = snapshot.value as? [String : AnyObject] ?? [:]
             if (driverfirst) {
                 driverfirst = false;
@@ -109,6 +115,9 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
                             riderRef.child("driver_found").setValue(false)
                         }
                         
+                        self.accepted = false;
+                        self.waiting = false;
+                        
                         alert.addAction(defaultAction);
                         self.present(alert, animated:true, completion:nil);
                         
@@ -121,6 +130,9 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
                             //code for the action can go here. so accepts or deny's
                             riderRef.child("driver_found").setValue(false)
                         }
+                        
+                        self.accepted = true;
+                        self.waiting = false;
                         
                         alert.addAction(defaultAction);
                         self.present(alert, animated:true, completion:nil);
@@ -161,8 +173,10 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
         // This method is triggered whenever the user makes a change to the picker selection.
         // The parameter named row and component represents what was selected.
         if (pickerView == self.fromPickerView) {
+            userFrom = pickerData[row]
             print("Picker view selected: fromPickerView: \(pickerData[row])")
         } else {
+            userTo = pickerData[row]
             print("Picker view selected: toPickerView: \(pickerData[row])")
         }
     }
@@ -227,6 +241,89 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
         }
     }
     
-    
-}
+    @IBAction func FindDriver(_ sender: Any) {
+        
+        //performing a query through active drivers to get an array of all the UID's, then use the uid's to do a query to find drivers with the right location/destination and update their riders found to true and with the riders UID
+        
+        var poss_drivers: NSArray = [] //these are apparently not string arrays
+        var match_drivers: NSArray = []
+        
+        ref.child("activedrivers").queryOrdered(byChild: "jointime").observe(.value, with: { snapshot in
+            
+            for driver in snapshot.children {
+                print((driver as! FIRDataSnapshot).key)
+                poss_drivers = poss_drivers.adding([(driver as! FIRDataSnapshot).key]) as NSArray
+                print(poss_drivers[0])
+            }
+        })
+        
+        if (poss_drivers.count == 0) { //poss_drivers count is not increasing, despite having elements being added to the array according to the print statements....
+            let alert = UIAlertController(title:"Search Alert", message:"We are sorry but there are no drivers available. Please try again with a different set of criteria.", preferredStyle: .actionSheet);
+            
+            let defaultAction = UIAlertAction(title:"OK", style:.default) { action -> Void in
+            }
+            
+            alert.addAction(defaultAction);
+            self.present(alert, animated:true, completion:nil);
+            return
+        }
+        
+        for drv in poss_drivers {
+            var locMatch = false
+            var destMatch = false
+            //do a query/observe to see if they have the right values, if so add them to match_drivers
+            
+            ref.child("users/\(drv)/destination").observeSingleEvent(of: .value, with: { snapshot in
+                if(snapshot.value! as! String == self.userTo) {
+                    destMatch = true
+                } else {
+                    destMatch = false
+                }
+            })
+            
+            ref.child("users/\(drv)/location").observeSingleEvent(of: .value, with: { snapshot in
+                if(snapshot.value! as! String == self.userFrom) {
+                    locMatch = true
+                } else {
+                    locMatch = false
+                }
+            })
+            
+            if( locMatch && destMatch) {
+                match_drivers = match_drivers.adding(drv) as NSArray
+            }
+        }
+        
+        //after we find the array of matching drivers, we need to loop through them and send each a ride request and to wait for their response,
+        for request in match_drivers {
+            //set the appropriate fields and then do an observe on the driver found/uid field to see if accepted or not and thus we can break out or if we need to loop again and then wait....
+            
+            self.ref.child("users/\(request)/driver/rider_uid").setValue(currentUser!.uid)
+            self.ref.child("users/\(request)/driver/rider_found").setValue(true)
+            
+            //infinite while loop that waits for a flipping of a global boolean that the pop up accepts and turn downs change?...
+            while(self.waiting) {
+                //waiting while loop
+            }//end while
+            
+            if (self.accepted) {
+                self.waiting = true
+                return
+            }//end if
+            
+        }// end for request
+        
+        self.waiting = true
+        
+        //if we get this far and self.accepted is false then we have no accepted drivers, show a pop up.
+        let alert = UIAlertController(title:"Search Alert", message:"We are sorry but there are no drivers available. Please try again with a different set of criteria.", preferredStyle: .actionSheet);
+        
+        let defaultAction = UIAlertAction(title:"OK", style:.default) { action -> Void in
+        }
+        
+        alert.addAction(defaultAction);
+        self.present(alert, animated:true, completion:nil);
+        return
+    }
 
+} //end of the class/file.

@@ -55,7 +55,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             ref.child("userStates").child("\(userID)").observeSingleEvent(of: .value, with: { (snapshot) in
             
             if(snapshot.value! as! Bool) {
-                let tempRef = self.ref.child("activedrivers/\(userID)/")
+                let tempRef = self.ref.child("activedrivers/\(userID)/jointime/")
                 tempRef.removeValue()
             }
 
@@ -75,8 +75,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             ref.child("userStates").child("\(userID)").observeSingleEvent(of: .value, with: { (snapshot) in
                 
                 if(snapshot.value! as! Bool) {
-                    let tempRef = self.ref.child("activedrivers/\(userID)/")
-                    tempRef.removeValue()
+                    let tempRef = self.ref.child("activedrivers/\(userID)/jointime/")
+                    tempRef.setValue(NSDate().description)
                 }
                 
             })
@@ -100,7 +100,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             ref.child("userStates").child("\(userID)").observeSingleEvent(of: .value, with: { (snapshot) in
                 
                 if(snapshot.value! as! Bool) {
-                    let tempRef = self.ref.child("activedrivers/\(userID)/")
+                    let tempRef = self.ref.child("activedrivers/\(userID)/jointime/")
                     tempRef.removeValue()
                 }
                 

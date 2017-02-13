@@ -150,13 +150,8 @@ class SignInViewController: UIViewController, GIDSignInDelegate, GIDSignInUIDele
             
             //right here could do a check for if its true and thus the user is a driver, then they get added to active drivers.
             if(snapshot.value! as! Bool) {
-                let tempRef = self.ref.child("activedrivers/\(userID)/")
+                let tempRef = self.ref.child("activedrivers/\(userID)/jointime/")
                 tempRef.setValue(NSDate().description)
-                //sleep(2)
-                //tempRef.removeValue()
-                tempRef.onDisconnectRemoveValue() //on disconnect seems to only work when its a total loss of internet connection and not just the app being closed, will probably
-                //just need/want to put something into the "prepare to disappear" functions of each view controller to try and see if the app is about to be backgrounded and we want to remove the 
-                //driver from the active drivers section of the DB because if the app is not open, then we cannot pop up asking if they want to give a user a ride.
             }
             
             self.performSegue(withIdentifier: "signInApproved", sender: self)

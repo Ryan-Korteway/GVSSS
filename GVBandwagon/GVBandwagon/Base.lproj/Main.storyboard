@@ -66,6 +66,9 @@
                                 <rect key="frame" x="122" y="532" width="132" height="40"/>
                                 <fontDescription key="fontDescription" name="Futura-MediumItalic" family="Futura" pointSize="21"/>
                                 <state key="normal" title="Find a Driver!"/>
+                                <connections>
+                                    <action selector="FindDriver:" destination="9pv-A4-QxB" eventType="touchUpInside" id="KkV-yK-v8p"/>
+                                </connections>
                             </button>
                             <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ysw-Rn-Q0C">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="60"/>
