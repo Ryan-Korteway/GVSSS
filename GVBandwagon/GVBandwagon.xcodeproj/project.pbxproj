@@ -16,6 +16,9 @@
 		0B197D031E32815200392B40 /* GVBandwagonUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B197D021E32815200392B40 /* GVBandwagonUITests.swift */; };
 		0B3DE4FA1E3BB45A00733810 /* gvbwlogo.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 0B3DE4F91E3BB45A00733810 /* gvbwlogo.jpg */; };
 		0B3DE4FC1E3BB57C00733810 /* SignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B3DE4FB1E3BB57C00733810 /* SignInViewController.swift */; };
+		0B556BBB1E5115D100EAE537 /* RideFromTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B556BBA1E5115D100EAE537 /* RideFromTableViewController.swift */; };
+		0B556BBD1E5115E000EAE537 /* RideToTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B556BBC1E5115E000EAE537 /* RideToTableViewController.swift */; };
+		0B556BBF1E51390400EAE537 /* DriveViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B556BBE1E51390400EAE537 /* DriveViewController.swift */; };
 		0B6935291E3CE6C300F551CB /* RegistrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B6935281E3CE6C300F551CB /* RegistrationViewController.swift */; };
 		0B69352A1E3CE6C300F551CB /* RegistrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B6935281E3CE6C300F551CB /* RegistrationViewController.swift */; };
 		0B69352B1E3CE6C300F551CB /* RegistrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B6935281E3CE6C300F551CB /* RegistrationViewController.swift */; };
@@ -71,12 +74,15 @@
 		0B197D041E32815200392B40 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0B3DE4F91E3BB45A00733810 /* gvbwlogo.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = gvbwlogo.jpg; sourceTree = "<group>"; };
 		0B3DE4FB1E3BB57C00733810 /* SignInViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignInViewController.swift; sourceTree = "<group>"; };
+		0B556BBA1E5115D100EAE537 /* RideFromTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RideFromTableViewController.swift; sourceTree = "<group>"; };
+		0B556BBC1E5115E000EAE537 /* RideToTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RideToTableViewController.swift; sourceTree = "<group>"; };
+		0B556BBE1E51390400EAE537 /* DriveViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DriveViewController.swift; sourceTree = "<group>"; };
 		0B6935281E3CE6C300F551CB /* RegistrationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegistrationViewController.swift; sourceTree = "<group>"; };
 		0B69352C1E3D145100F551CB /* ContainerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContainerViewController.swift; sourceTree = "<group>"; };
 		0B6935301E3D158400F551CB /* MenuTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuTableViewController.swift; sourceTree = "<group>"; };
 		0BABBF701E4A275F00108DC2 /* RideViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RideViewController.swift; sourceTree = "<group>"; };
 		0BABBF721E4A84A600108DC2 /* accountTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = accountTableViewController.swift; sourceTree = "<group>"; };
-		0BABBF741E4A8F5F00108DC2 /* HelpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HelpViewController.swift; sourceTree = "<group>"; };
+		0BABBF741E4A8F5F00108DC2 /* HelpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HelpViewController.swift; path = ../HelpViewController.swift; sourceTree = "<group>"; };
 		0BABBF761E4A912D00108DC2 /* userInfoTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = userInfoTableViewController.swift; sourceTree = "<group>"; };
 		0BC8F62D1E3A795A00E94F5B /* GVBandwagon.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GVBandwagon.entitlements; sourceTree = "<group>"; };
 		0BE6762F1E3D78B5009675F2 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -123,7 +129,6 @@
 		0B197CD41E32815100392B40 = {
 			isa = PBXGroup;
 			children = (
-				0BABBF741E4A8F5F00108DC2 /* HelpViewController.swift */,
 				0B3DE4F81E3BB44200733810 /* Assets */,
 				0B197CDF1E32815200392B40 /* GVBandwagon */,
 				0B197CF61E32815200392B40 /* GVBandwagonTests */,
@@ -155,10 +160,14 @@
 				0B69352C1E3D145100F551CB /* ContainerViewController.swift */,
 				0B197CE21E32815200392B40 /* FirstViewController.swift */,
 				0B197CE61E32815200392B40 /* Main.storyboard */,
+				0B556BBE1E51390400EAE537 /* DriveViewController.swift */,
+				0B556BBA1E5115D100EAE537 /* RideFromTableViewController.swift */,
+				0B556BBC1E5115E000EAE537 /* RideToTableViewController.swift */,
 				0BABBF761E4A912D00108DC2 /* userInfoTableViewController.swift */,
 				0BABBF721E4A84A600108DC2 /* accountTableViewController.swift */,
 				0BABBF701E4A275F00108DC2 /* RideViewController.swift */,
 				85365DE41E3E8ACB003709C3 /* RegisterAsViewController.swift */,
+				0BABBF741E4A8F5F00108DC2 /* HelpViewController.swift */,
 				0B197CE91E32815200392B40 /* Assets.xcassets */,
 				0B197CEB1E32815200392B40 /* LaunchScreen.storyboard */,
 				0BE6762F1E3D78B5009675F2 /* GoogleService-Info.plist */,
@@ -492,10 +501,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				0B3DE4FC1E3BB57C00733810 /* SignInViewController.swift in Sources */,
+				0B556BBF1E51390400EAE537 /* DriveViewController.swift in Sources */,
 				85365DE51E3E8ACB003709C3 /* RegisterAsViewController.swift in Sources */,
 				0B6935311E3D158400F551CB /* MenuTableViewController.swift in Sources */,
 				0B197CE11E32815200392B40 /* AppDelegate.swift in Sources */,
+				0B556BBD1E5115E000EAE537 /* RideToTableViewController.swift in Sources */,
 				0BABBF771E4A912D00108DC2 /* userInfoTableViewController.swift in Sources */,
+				0B556BBB1E5115D100EAE537 /* RideFromTableViewController.swift in Sources */,
 				0B197CE31E32815200392B40 /* FirstViewController.swift in Sources */,
 				0BABBF731E4A84A600108DC2 /* accountTableViewController.swift in Sources */,
 				0B69352D1E3D145100F551CB /* ContainerViewController.swift in Sources */,

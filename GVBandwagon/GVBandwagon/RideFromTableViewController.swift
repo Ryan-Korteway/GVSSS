@@ -1,19 +1,17 @@
 //
-//  MenuTableViewController.swift
+//  RideFromTableViewController.swift
 //  GVBandwagon
 //
-//  Created by Nicolas Heady on 1/28/17.
+//  Created by Nicolas Heady on 2/12/17.
 //  Copyright © 2017 Nicolas Heady. All rights reserved.
 //
 
 import UIKit
 
-class MenuTableViewController: UITableViewController {
+class RideFromTableViewController: UITableViewController {
     
-    var containerDelegate: ContainerDelegate?
+    var rideDelegate: RideSceneDelegate?
 
-    @IBOutlet var modeLabel: UILabel!
-    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -24,8 +22,6 @@ class MenuTableViewController: UITableViewController {
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
     }
 
-    //TODO tapping drive mode should change the rider to driver mode/state in the userstates table and change the label from ride mode to drive mode if possible.
-    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -35,39 +31,28 @@ class MenuTableViewController: UITableViewController {
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 1
+        return 3
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return 4
-    }
-    
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if (indexPath.row == 0) {
-            return 80
-        } else {
-            return 50
-        }
+        return 1
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if (indexPath.row == 1) {
-            //enter account
-        } else if (indexPath.row == 2) {
-            // Call swap mode in the delegate
-            
-            // Change name of this cell label to "ride mode" if it's "drive mode", and vice versa
-            if (self.modeLabel.text == "drive mode") {
-                self.modeLabel.text = "ride mode"
-            } else {
-                self.modeLabel.text = "drive mode"
-            }
-        } else {
-            //enter help
+        var from = "Null"
+        print("Cell tapped")
+        if (indexPath.section == 0) {
+            from = "Allendale"
+        } else if (indexPath.section == 1) {
+            from = "Meijer"
+        } else if (indexPath.section == 2) {
+            from = "Downtown"
         }
+        self.rideDelegate?.startingFrom = from
+        self.rideDelegate?.onFromViewTapped(Any.self)
     }
-    
+
     /*
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
@@ -122,4 +107,5 @@ class MenuTableViewController: UITableViewController {
         // Pass the selected object to the new view controller.
     }
     */
+
 }
