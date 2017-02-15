@@ -10,7 +10,14 @@ import UIKit
 import Firebase
 import GoogleSignIn
 
-class FirstViewController: UIViewController {
+protocol RideSceneDelegate {
+    var startingFrom: String {get set}
+    var goingTo: String {get set}
+    func onFromViewTapped(_ sender: Any)
+    func onToViewTapped(_ sender: Any)
+}
+
+class FirstViewController: UIViewController, RideSceneDelegate {
 
 
     @IBOutlet var fromContainerView: UIView!
@@ -19,8 +26,16 @@ class FirstViewController: UIViewController {
     @IBOutlet var toContainerView: UIView!
     @IBOutlet var menuButton: UIBarButtonItem!
     @IBOutlet var signOutButton: UIBarButtonItem!
+    @IBOutlet var findDriverButton: UIButton!
+    @IBOutlet var superViewTapGesture: UITapGestureRecognizer!
     
-    var containerDelegate: ContainerDelegate? = nil
+    var fromTableViewController: RideFromTableViewController?
+    var toTableViewController: RideToTableViewController?
+    
+    var containerDelegate: ContainerDelegate?
+    
+    var startingFrom: String = "Null"
+    var goingTo: String = "Null"
     
     //let userid = "0001" //hardcoded values, should be the fireauth current user stuff.
     let currentUser = FIRAuth.auth()!.currentUser
@@ -173,6 +188,7 @@ class FirstViewController: UIViewController {
     
     
     @IBAction func onViewTapped(_ sender: Any) {
+        print("View has been tapped.")
         guard let menuOpen = self.containerDelegate?.menuShown else {
             print("containerDelegate or it's menuShown field is nil!")
             return
@@ -187,13 +203,39 @@ class FirstViewController: UIViewController {
     
     @IBAction func onFromViewTapped(_ sender: Any) {
         var frameHeight: CGFloat = 0
+        //var moveToLabelBy: CGFloat = -250
+        var toViewAlpha: CGFloat = 1
+        self.superViewTapGesture.isEnabled = true
         
         if (self.fromContainerView.frame.height == 0) {
             frameHeight = 250
+            //moveToLabelBy = 250
+            toViewAlpha = 0
+            
+            // We need to disable this tap GR so we can click the cells
+            // in the container view.
+            self.superViewTapGesture.isEnabled = false
         }
         
         UIView.animate(withDuration: 0.3, animations: {
             self.fromContainerView.frame = CGRect(x: self.fromContainerView.frame.origin.x, y: self.fromContainerView.frame.origin.y, width: self.fromContainerView.frame.width, height: frameHeight)
+            //self.toView.frame  = CGRect(x: self.toView.frame.origin.x, y: self.toView.frame.origin.y + moveToLabelBy, width: self.toView.frame.width, height: self.toView.frame.height)
+            self.toView.alpha = toViewAlpha
+            
+            /* TODO: Attempts to dim surrounding views */
+            //self.view.backgroundColor = UIColor.black
+            //self.view.backgroundColor?.withAlphaComponent(0.5)
+            
+            // get your window screen size
+            //let screenRect = UIScreen.main.bounds
+            //create a new view with the same size
+            //let coverView = UIView(frame: screenRect)
+            // change the background color to black and the opacity to 0.6
+            //coverView.backgroundColor = UIColor.black
+            //coverView.backgroundColor = coverView.backgroundColor?.withAlphaComponent(0.6)
+            // add this new view to your main view
+            //self.view.addSubview(coverView)
+            
         }, completion: { (Bool) -> Void in
             // what to do when completed animation.
         })
@@ -201,18 +243,52 @@ class FirstViewController: UIViewController {
     
     @IBAction func onToViewTapped(_ sender: Any) {
         var frameHeight: CGFloat = 0
+        var buttonAlpha: CGFloat = 1
+        self.superViewTapGesture.isEnabled = true
         
         if (self.toContainerView.frame.height == 0) {
             frameHeight = 250
+            buttonAlpha = 0
+            
+            // We need to disable this tap GR so we can click the cells
+            // in the container view.
+            self.superViewTapGesture.isEnabled = false
         }
         
         UIView.animate(withDuration: 0.3, animations: {
             self.toContainerView.frame = CGRect(x: self.toContainerView.frame.origin.x, y: self.toContainerView.frame.origin.y, width: self.toContainerView.frame.width, height: frameHeight)
+            
+            // Hide the button
+            self.findDriverButton.alpha = buttonAlpha
+            
         }, completion: { (Bool) -> Void in
             // what to do when completed animation.
         })
     }
     
+    @IBAction func onFindTapped(_ sender: Any) {
+        if (self.startingFrom == "Null" || self.goingTo == "Null") {
+            // Display a pop telling the user they must select a From and To location
+            print("Select a FROM and TO location.")
+            return
+        } else {
+            // Send the locations to Firebase
+            print("Leaving from \(self.startingFrom)")
+            print("Going to \(self.goingTo)")
+        }
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "toFromTableVC" {
+            self.fromTableViewController = segue.destination as? RideFromTableViewController
+            self.fromTableViewController?.rideDelegate = self
+        }
+        
+        if segue.identifier == "toToTableVC" {
+            self.toTableViewController = segue.destination as? RideToTableViewController
+            self.toTableViewController?.rideDelegate = self
+        }
+    }
     
 }
 

@@ -14,6 +14,11 @@ class userInfoTableViewController: UITableViewController {
     @IBOutlet var fNameField: UITextField!
     @IBOutlet var lNameField: UITextField!
     @IBOutlet var phoneField: UITextField!
+    @IBOutlet var emailField: UITextField!
+    @IBOutlet var venmoField: UITextField!
+    @IBOutlet var makeField: UITextField!
+    @IBOutlet var colorField: UITextField!
+    @IBOutlet var modelField: UITextField!
     
     var currentUser : FIRUser?
     var ref: FIRDatabaseReference = FIRDatabase.database().reference()
@@ -29,7 +34,7 @@ class userInfoTableViewController: UITableViewController {
         
         self.currentUser = FIRAuth.auth()?.currentUser
         let userID = self.currentUser?.uid
-        self.fNameField.text = currentUser?.displayName
+        //self.fNameField.text = currentUser?.displayName
         print("What is display name? : \(currentUser?.displayName)")
         
         self.ref.child("users").child(userID!).observeSingleEvent(of: .value, with: { (snapshot) in
@@ -38,6 +43,7 @@ class userInfoTableViewController: UITableViewController {
             let fname = value?["name"] as? String ?? ""
             //let user = User.init(username: username)
             let phone = value?["phone"] as? String ?? ""
+            self.emailField.text = self.currentUser?.email
             
             self.fNameField.text = fname
             self.phoneField.text = phone
@@ -57,7 +63,7 @@ class userInfoTableViewController: UITableViewController {
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 4
+        return 7
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -66,8 +72,8 @@ class userInfoTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if (indexPath.section == 0) {
-            return 75
+        if (indexPath.section == 0 || indexPath.section == 6) {
+            return 100
         } else {
             return 44
         }
