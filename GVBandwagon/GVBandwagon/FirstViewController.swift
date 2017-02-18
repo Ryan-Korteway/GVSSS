@@ -269,6 +269,11 @@ class FirstViewController: UIViewController, RideSceneDelegate {
         })
     }
     
+    
+    // TODO: Ryan, here you could hardcode some lats/longs (location objects) to use for
+    // storing in Firebase, etc. Instead of getting the users current location, just
+    // use the hardcoded location, then everything else with Firebase should be as usual.
+    // Feel free to change anything in this function:
     @IBAction func onFindTapped(_ sender: Any) {
         if (self.startingFrom == "Null" || self.goingTo == "Null") {
             // Display a pop telling the user they must select a From and To location

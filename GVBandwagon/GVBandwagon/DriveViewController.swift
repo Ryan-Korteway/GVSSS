@@ -92,6 +92,11 @@ class DriveViewController: UIViewController {
         self.farLabel.text = "Allendale Rate"
     }
     
+    // TODO: Ryan, here you could send some hardcoded information to Firebase. At least when
+    // the UI (Maps, etc) is finished we'll have the Firebase code prepped and ready to go.
+    @IBAction func onGoOnlineTapped(_ sender: Any) {
+    }
+    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesBegan(touches, with: event)
         
