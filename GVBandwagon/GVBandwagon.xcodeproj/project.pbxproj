@@ -36,6 +36,7 @@
 		0BE676301E3D78B5009675F2 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0BE6762F1E3D78B5009675F2 /* GoogleService-Info.plist */; };
 		0BE676311E3D78B5009675F2 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0BE6762F1E3D78B5009675F2 /* GoogleService-Info.plist */; };
 		0BE676321E3D78B5009675F2 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0BE6762F1E3D78B5009675F2 /* GoogleService-Info.plist */; };
+		851AAD191E58C54B0023F0D7 /* findingRidersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 851AAD181E58C54B0023F0D7 /* findingRidersViewController.swift */; };
 		85365DE51E3E8ACB003709C3 /* RegisterAsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85365DE41E3E8ACB003709C3 /* RegisterAsViewController.swift */; };
 		8D7CC2232AD3A68143663BA2 /* Pods_GVBandwagonTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A09C8C265162B5784985937B /* Pods_GVBandwagonTests.framework */; };
 		E95A7E4BE11C558326F54189 /* Pods_GVBandwagon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1F2583AB45790452F36E20D /* Pods_GVBandwagon.framework */; };
@@ -91,6 +92,7 @@
 		1456442C274CA1E608152DE7 /* Pods-GVBandwagon.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GVBandwagon.release.xcconfig"; path = "Pods/Target Support Files/Pods-GVBandwagon/Pods-GVBandwagon.release.xcconfig"; sourceTree = "<group>"; };
 		1FBE53FF6CE82D3A9B6283BB /* Pods-GVBandwagonTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GVBandwagonTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-GVBandwagonTests/Pods-GVBandwagonTests.release.xcconfig"; sourceTree = "<group>"; };
 		6EA9EDCC8B7D08BD0D8F9580 /* Pods-GVBandwagonTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GVBandwagonTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-GVBandwagonTests/Pods-GVBandwagonTests.debug.xcconfig"; sourceTree = "<group>"; };
+		851AAD181E58C54B0023F0D7 /* findingRidersViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = findingRidersViewController.swift; sourceTree = "<group>"; };
 		85365DE41E3E8ACB003709C3 /* RegisterAsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegisterAsViewController.swift; sourceTree = "<group>"; };
 		92439C4256939807408E1F10 /* Pods-GVBandwagonUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GVBandwagonUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-GVBandwagonUITests/Pods-GVBandwagonUITests.release.xcconfig"; sourceTree = "<group>"; };
 		A09C8C265162B5784985937B /* Pods_GVBandwagonTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GVBandwagonTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -162,6 +164,7 @@
 				0B69352C1E3D145100F551CB /* ContainerViewController.swift */,
 				0B197CE21E32815200392B40 /* FirstViewController.swift */,
 				0B197CE61E32815200392B40 /* Main.storyboard */,
+				851AAD181E58C54B0023F0D7 /* findingRidersViewController.swift */,
 				0B556BBE1E51390400EAE537 /* DriveViewController.swift */,
 				0B556BBA1E5115D100EAE537 /* RideFromTableViewController.swift */,
 				0B556BBC1E5115E000EAE537 /* RideToTableViewController.swift */,
@@ -305,7 +308,6 @@
 				TargetAttributes = {
 					0B197CDC1E32815100392B40 = {
 						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = VH242F6P8Y;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.Keychain = {
@@ -531,6 +533,7 @@
 				0B197CE31E32815200392B40 /* FirstViewController.swift in Sources */,
 				0BABBF731E4A84A600108DC2 /* accountTableViewController.swift in Sources */,
 				0B69352D1E3D145100F551CB /* ContainerViewController.swift in Sources */,
+				851AAD191E58C54B0023F0D7 /* findingRidersViewController.swift in Sources */,
 				0B6935291E3CE6C300F551CB /* RegistrationViewController.swift in Sources */,
 				0BABBF711E4A275F00108DC2 /* RideViewController.swift in Sources */,
 				0BABBF751E4A8F5F00108DC2 /* HelpViewController.swift in Sources */,
@@ -692,7 +695,7 @@
 			baseConfigurationReference = C956A4DD338348886D7E4358 /* Pods-GVBandwagon.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = VH242F6P8Y;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = GVBandwagon/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = nicolasheady.GVBandwagon;
@@ -706,7 +709,7 @@
 			baseConfigurationReference = 1456442C274CA1E608152DE7 /* Pods-GVBandwagon.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = VH242F6P8Y;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = GVBandwagon/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = nicolasheady.GVBandwagon;

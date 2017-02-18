@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import Firebase
+import GoogleSignIn
 
 class DriveViewController: UIViewController {
 
@@ -21,6 +23,10 @@ class DriveViewController: UIViewController {
     @IBOutlet var goOnlineButton: UIButton!
     
     var selection: String = "Null"
+    
+    let ref = FIRDatabase.database().reference();
+    
+    let userID = FIRAuth.auth()!.currentUser!.uid
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -95,6 +101,11 @@ class DriveViewController: UIViewController {
     // TODO: Ryan, here you could send some hardcoded information to Firebase. At least when
     // the UI (Maps, etc) is finished we'll have the Firebase code prepped and ready to go.
     @IBAction func onGoOnlineTapped(_ sender: Any) {
+    
+        let tempRef = self.ref.child("activedrivers/\(userID)/")
+        tempRef.child("jointime").setValue(NSDate().description)
+        tempRef.child("location").setValue(["start": "Bing", "stop": "Bong"]) //this will be all the better once we use lats and longs that can be fetched at any time hopefully.
+    
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {

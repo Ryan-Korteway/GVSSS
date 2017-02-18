@@ -43,6 +43,7 @@ class FirstViewController: UIViewController, RideSceneDelegate {
     let pickerData: [String] = ["Allendale", "Meijer", "Downtown"]
     
     let ref = FIRDatabase.database().reference()
+    var uid_forDriver = "wait";
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -56,53 +57,9 @@ class FirstViewController: UIViewController, RideSceneDelegate {
         
         // COPY FOR POP UP'S ABOUT RIDER DRIVR OFFERS STARTS HERE.
        
-        let driverRef = FIRDatabase.database().reference(withPath: "users/\(currentUser!.uid)/driver/")
         let riderRef = FIRDatabase.database().reference(withPath: "users/\(currentUser!.uid)/rider/")
         var riderfirst = true;
-        var driverfirst = true;
         
-        driverRef.child("rider_found").observe(.value, with: { (snapshot) in
-            //let postDict = snapshot.value as? [String : AnyObject] ?? [:]
-            if (driverfirst) {
-                driverfirst = false;
-            } else {
-                    //may need to further restrict the alert so that it does not pop up when the riderfound value is being reset to false.
-                
-                if(snapshot.value! as! Bool) {
-                    
-                        driverRef.child("rider_uid").observeSingleEvent(of: .value, with: { (snapshot) in
-                            
-                            //let user = self.ref.child("users/\(snapshot.value!)").queryEqual(toValue: "name")
-                            self.ref.child("users/\(snapshot.value!)/name").observeSingleEvent(of: .value , with: { (innerSnapshot) in
-                                //ALL OF THIS WORKS OTHER THAN THE QUERY NOT BRINGING UP THE RIDERS ACTUAL NAME!!!
-                                
-                                let alert = UIAlertController(title:"Rider Found", message:"Would you like to give \(innerSnapshot.value!) a ride?",
-                                    preferredStyle: .actionSheet)
-                                
-                                let yesAction = UIAlertAction(title:"Yes", style:.default) { action -> Void in
-                                    //code for the action can go here. so accepts or deny's
-                                    self.ref.child("users/\(snapshot.value!)/rider/driver_uid").setValue(self.currentUser!.uid)
-                                    self.ref.child("users/\(snapshot.value!)/rider/driver_found").setValue(true)
-                                }
-                                
-                                let noAction = UIAlertAction(title:"No", style:.default) { action -> Void in
-                                    //code for the action can go here. so accepts or deny's
-                                    self.ref.child("users/\(snapshot.value!)/rider/driver_uid").setValue("none")
-                                    self.ref.child("users/\(snapshot.value!)/rider/driver_found").setValue(true)
-                                }
-                                
-                                alert.addAction(yesAction)
-                                alert.addAction(noAction)
-                                self.present(alert, animated:true, completion:nil)
-                                driverRef.child("rider_found").setValue(false)
-                                
-                            })
-
-                        })
-                }
-            }
-        })
-
         riderRef.child("driver_found").observe(.value, with: { (snapshot) in
             //let postDict = snapshot.value as? [String : AnyObject] ?? [:]
             if (riderfirst) {
@@ -144,6 +101,10 @@ class FirstViewController: UIViewController, RideSceneDelegate {
                } //outer if end
            } //outer else end
         }) //observe end        COPY STOPS HERE
+        
+        ref.child("users/\(currentUser!.uid)/rider/driver_uid").observe(.value, with: { (snapshot) in
+            self.uid_forDriver = snapshot.value! as! String ;
+        })
         
         self.createMap()
         
@@ -283,6 +244,55 @@ class FirstViewController: UIViewController, RideSceneDelegate {
             // TODO: Send the locations to Firebase
             print("Leaving from \(self.startingFrom)")
             print("Going to \(self.goingTo)")
+            
+            ref.child("users/\(currentUser!.uid)/location/").setValue(["start": self.startingFrom, "stop": self.goingTo])
+            
+            ref.child("activedrivers").queryOrdered(byChild: "jointime").observe(.value, with: { snapshot in
+                
+                for driver in snapshot.children {
+                    print((driver as! FIRDataSnapshot).key)
+                    print((driver as! FIRDataSnapshot).childSnapshot(forPath: "location").value as! NSDictionary) //this could be it for group value pull down.
+                    let driver_dict = (driver as! FIRDataSnapshot).childSnapshot(forPath: "location").value as! NSDictionary
+                    
+                    if ( driver_dict["start"] as! String == "Bing" && driver_dict["stop"] as! String == "Bong" ) {
+                        
+                        self.ref.child("users/\((driver as! FIRDataSnapshot).key)/driver/rider_uid").setValue(self.currentUser!.uid)
+                        self.ref.child("users/\((driver as! FIRDataSnapshot).key)/driver/rider_found").setValue(true)
+                        
+                        sleep(30) //neither sleep nor infinite wait loop will do it... ACTUALLY SHOULD WORK BETWEEN DEVICES, JUST NOT FROM ONE USER TO THE SAME USER.
+                        
+                        //set a timer perhaps and when it goes off in 30 seconds, trigger this pop up etc... idk still how we would wait without freezing the app...
+                        
+                        if (self.uid_forDriver != "none") {
+                            let alert = UIAlertController(title:"Driver Alert", message:"Your Driver has been found. They are on their way.", preferredStyle: .alert);
+                            
+                            let defaultAction = UIAlertAction(title:"OK", style:.default) { action -> Void in
+                            }
+                            
+                            alert.addAction(defaultAction);
+                            self.present(alert, animated:true, completion:nil);
+                            
+                            return
+                        }//end if
+                    }
+                    
+                }
+                
+                let alert = UIAlertController(title:"Driver Alert", message:"We are sorry but there are no drivers.", preferredStyle: .alert);
+                
+                let defaultAction = UIAlertAction(title:"OK", style:.default) { action -> Void in
+                }
+                
+                alert.addAction(defaultAction);
+                self.present(alert, animated:true, completion:nil);
+                
+                return
+                
+            })
+            
+            //print("about to leave find driver");
+            
+            return;
         }
     }
     

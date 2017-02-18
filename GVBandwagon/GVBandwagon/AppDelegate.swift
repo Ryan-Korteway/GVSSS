@@ -88,6 +88,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+        
+        if(FIRAuth.auth()!.currentUser == nil) { //use a guard and uid is string otherwise dont run, like sign in.
+            return
+        } else {
+            
+            let userID = FIRAuth.auth()!.currentUser!.uid
+            
+            let ref = FIRDatabase.database().reference()
+            
+            ref.child("userStates").child("\(userID)").observeSingleEvent(of: .value, with: { (snapshot) in
+                
+                if(snapshot.value! as! Bool) {
+                    let tempRef = ref.child("activedrivers/\(userID)/")
+                    tempRef.child("jointime").removeValue()
+                    tempRef.child("location").removeValue()
+                }
+                
+            })
+        }
+        
     }
     
     // Added
