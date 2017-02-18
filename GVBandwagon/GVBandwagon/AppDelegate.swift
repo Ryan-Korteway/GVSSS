@@ -10,6 +10,7 @@ import UIKit
 import Firebase
 import GoogleSignIn
 import Google
+import GoogleMaps
 import KGFloatingDrawer
 
 @UIApplicationMain
@@ -46,6 +47,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        
+        GMSServices.provideAPIKey("AIzaSyCGT0W7GBgr5dWY0E60RvwZatwKmTDT7u8")
+        //For google places: GMSPlacesClient.provideAPIKey("AIzaSyCGT0W7GBgr5dWY0E60RvwZatwKmTDT7u8")
         
         // Make sign in the root view controller UNLESS they are already signed in.
         window = UIWindow(frame: UIScreen.main.bounds)

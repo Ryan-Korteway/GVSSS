@@ -9,6 +9,7 @@
 import UIKit
 import Firebase
 import GoogleSignIn
+import GoogleMaps
 
 protocol RideSceneDelegate {
     var startingFrom: String {get set}
@@ -27,6 +28,7 @@ class FirstViewController: UIViewController, RideSceneDelegate {
     @IBOutlet var signOutButton: UIBarButtonItem!
     @IBOutlet var findDriverButton: UIButton!
     @IBOutlet var superViewTapGesture: UITapGestureRecognizer!
+    @IBOutlet var googleMapsView: GMSMapView!
     
     var fromTableViewController: RideFromTableViewController?
     var toTableViewController: RideToTableViewController?
@@ -142,6 +144,8 @@ class FirstViewController: UIViewController, RideSceneDelegate {
                } //outer if end
            } //outer else end
         }) //observe end        COPY STOPS HERE
+        
+        self.createMap()
         
     } //end of view did load.
     
@@ -292,6 +296,21 @@ class FirstViewController: UIViewController, RideSceneDelegate {
     @IBAction func toggleLeftDrawer(_ sender: Any) {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         appDelegate.toggleLeftDrawer(sender: sender as AnyObject, animated: false)
+    }
+    
+    func createMap() {
+        // Create a GMSCameraPosition that tells the map to display the
+        // coordinate -33.86,151.20 at zoom level 6.
+        let camera = GMSCameraPosition.camera(withLatitude: -33.86, longitude: 151.20, zoom: 6.0)
+        let mapView = GMSMapView.map(withFrame: CGRect.zero, camera: camera)
+        self.googleMapsView = mapView
+        
+        // Creates a marker in the center of the map.
+        let marker = GMSMarker()
+        marker.position = CLLocationCoordinate2D(latitude: -33.86, longitude: 151.20)
+        marker.title = "Sydney"
+        marker.snippet = "Australia"
+        marker.map = mapView
     }
 
     
