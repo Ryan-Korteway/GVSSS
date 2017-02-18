@@ -12,6 +12,7 @@ target 'GVBandwagon' do
   pod 'Firebase/Database'
   pod 'GoogleSignIn'
   pod 'Firebase/Auth'
+  pod 'KGFloatingDrawer', '~> 0.2.0'
 
   target 'GVBandwagonTests' do
     inherit! :search_paths

@@ -13,6 +13,7 @@ class MenuTableViewController: UITableViewController {
     var containerDelegate: ContainerDelegate?
 
     @IBOutlet var modeLabel: UILabel!
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,6 +23,7 @@ class MenuTableViewController: UITableViewController {
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+        modeLabel?.text = "Drive"
     }
 
     //TODO tapping drive mode should change the rider to driver mode/state in the userstates table and change the label from ride mode to drive mode if possible.
@@ -35,12 +37,12 @@ class MenuTableViewController: UITableViewController {
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 1
+        return 4
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return 4
+        return 1
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -52,16 +54,19 @@ class MenuTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if (indexPath.row == 1) {
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        
+        if (indexPath.section == 1) {
             //enter account
-        } else if (indexPath.row == 2) {
-            // Call swap mode in the delegate
-            
+            appDelegate.toggleLeftDrawer(sender: Any, animated: false)
+        } else if (indexPath.section == 2) {
             // Change name of this cell label to "ride mode" if it's "drive mode", and vice versa
-            if (self.modeLabel.text == "drive mode") {
-                self.modeLabel.text = "ride mode"
+            if (self.modeLabel.text == "Drive") {
+                appDelegate.centerViewController = appDelegate.driveViewController()
+                self.modeLabel.text = "Ride"
             } else {
-                self.modeLabel.text = "drive mode"
+                appDelegate.centerViewController = appDelegate.rideViewController()
+                self.modeLabel.text = "Drive"
             }
         } else {
             //enter help

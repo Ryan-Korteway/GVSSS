@@ -40,6 +40,12 @@ class DriveViewController: UIViewController {
         }
     }
     
+    @IBAction func toggleLeftDrawer(_ sender: Any) {
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        appDelegate.toggleLeftDrawer(sender: sender as AnyObject, animated: false)
+    }
+    
+    
     // When a location is tapped, highlight it, and unhighlight the others.
     // Also change the labels for the rates to each location,
     // depending on the current location.

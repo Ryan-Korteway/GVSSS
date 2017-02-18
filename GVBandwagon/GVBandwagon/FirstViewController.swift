@@ -272,7 +272,7 @@ class FirstViewController: UIViewController, RideSceneDelegate {
             print("Select a FROM and TO location.")
             return
         } else {
-            // Send the locations to Firebase
+            // TODO: Send the locations to Firebase
             print("Leaving from \(self.startingFrom)")
             print("Going to \(self.goingTo)")
         }
@@ -288,6 +288,11 @@ class FirstViewController: UIViewController, RideSceneDelegate {
             self.toTableViewController = segue.destination as? RideToTableViewController
             self.toTableViewController?.rideDelegate = self
         }
+    }
+
+    @IBAction func toggleLeftDrawer(_ sender: Any) {
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        appDelegate.toggleLeftDrawer(sender: sender as AnyObject, animated: false)
     }
     
 }

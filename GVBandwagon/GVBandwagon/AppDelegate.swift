@@ -10,11 +10,26 @@ import UIKit
 import Firebase
 import GoogleSignIn
 import Google
+import KGFloatingDrawer
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
+    
+    // Go to func prepareDrawerViewController() to set initial views //
 
     var window: UIWindow?
+    
+    let kKGDrawersStoryboardName = "Main"
+    
+    let rideViewControllerStoryboardId = "rideViewControllerStoryboardId"
+    let driveViewControllerStoryboardId = "driveViewControllerStoryboardId"
+    let menuTableViewControllerStoryboardId = "menuViewControllerStoryboardId"
+    let signInViewControllerStoryboardId = "signInViewControllerStoryboardId"
+    
+    let kKGDrawerSettingsViewControllerStoryboardId = "KGDrawerSettingsViewControllerStoryboardId"
+    let kKGDrawerWebViewViewControllerStoryboardId = "KGDrawerWebViewControllerStoryboardId"
+    let kKGLeftDrawerStoryboardId = "KGLeftDrawerViewControllerStoryboardId"
+    let kKGRightDrawerStoryboardId = "KGRightDrawerViewControllerStoryboardId"
     
     // Overriding init() and putting FIRApp.configure() here to ensure it's configured before
     // the first view controller tries to retreive a reference to it.
@@ -31,6 +46,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        
+        window = UIWindow(frame: UIScreen.main.bounds)
+        
+        window?.rootViewController = drawerViewController
+        
+        window?.makeKeyAndVisible()
         
         return true
     }
@@ -73,5 +94,111 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                                                  annotation: annotation)
     }
     
+    private var _drawerViewController: KGDrawerViewController?
+    var drawerViewController: KGDrawerViewController {
+        get {
+            if let viewController = _drawerViewController {
+                return viewController
+            }
+            return prepareDrawerViewController()
+        }
+    }
+    
+    // Set our own view controllers here:
+    func prepareDrawerViewController() -> KGDrawerViewController {
+        let drawerViewController = KGDrawerViewController()
+        
+        //drawerViewController.centerViewController = drawerSettingsViewController()
+        //drawerViewController.leftViewController = leftViewController()
+        
+        // Set our initial view controllers here for menu and center:
+        drawerViewController.centerViewController = rideViewController()
+        drawerViewController.leftViewController = menuTableViewController()
+        
+        // Not using right drawer
+        //drawerViewController.rightViewController = rightViewController()
+        drawerViewController.backgroundImage = UIImage(named: "sky3")
+        
+        _drawerViewController = drawerViewController
+        
+        return drawerViewController
+    }
+    
+    private func drawerStoryboard() -> UIStoryboard {
+        let storyboard = UIStoryboard(name: kKGDrawersStoryboardName, bundle: nil)
+        return storyboard
+    }
+    
+    private func viewControllerForStoryboardId(storyboardId: String) -> UIViewController {
+        let viewController: UIViewController = drawerStoryboard().instantiateViewController(withIdentifier: storyboardId)
+        return viewController
+    }
+    
+    // -------------------
+    func drawerSettingsViewController() -> UIViewController {
+        let viewController = viewControllerForStoryboardId(storyboardId: kKGDrawerSettingsViewControllerStoryboardId)
+        return viewController
+    }
+    
+    func rideViewController() -> UIViewController {
+        let viewController = viewControllerForStoryboardId(storyboardId: rideViewControllerStoryboardId)
+        return viewController
+    }
+    
+    func driveViewController() -> UIViewController {
+        let viewController = viewControllerForStoryboardId(storyboardId: driveViewControllerStoryboardId)
+        return viewController
+    }
+    
+    func menuTableViewController() -> UIViewController {
+        let viewController = viewControllerForStoryboardId(storyboardId: menuTableViewControllerStoryboardId)
+        return viewController
+    }
+    
+    func signInViewController() -> UIViewController {
+        let viewController = viewControllerForStoryboardId(storyboardId: signInViewControllerStoryboardId)
+        return viewController
+    }
+    // -------------------
+    
+    private func leftViewController() -> UIViewController {
+        let viewController = viewControllerForStoryboardId(storyboardId: kKGLeftDrawerStoryboardId)
+        return viewController
+    }
+    
+    private func rightViewController() -> UIViewController {
+        let viewController = viewControllerForStoryboardId(storyboardId: kKGRightDrawerStoryboardId)
+        return viewController
+    }
+    
+    func toggleLeftDrawer(sender:AnyObject, animated:Bool) {
+        _drawerViewController?.toggleDrawer(.left, animated: true, complete: { (finished) -> Void in
+            // do nothing
+        })
+    }
+    
+    func toggleRightDrawer(sender:AnyObject, animated:Bool) {
+        _drawerViewController?.toggleDrawer(.right, animated: true, complete: { (finished) -> Void in
+            // do nothing
+        })
+    }
+    
+    private var _centerViewController: UIViewController?
+    var centerViewController: UIViewController {
+        get {
+            if let viewController = _centerViewController {
+                return viewController
+            }
+            return drawerSettingsViewController()
+        }
+        set {
+            if let drawerViewController = _drawerViewController {
+                drawerViewController.closeDrawer(drawerViewController.currentlyOpenedSide, animated: true) { finished in }
+                if drawerViewController.centerViewController != newValue {
+                    drawerViewController.centerViewController = newValue
+                }
+            }
+            _centerViewController = newValue
+        }
+    }
 }
-

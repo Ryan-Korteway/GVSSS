@@ -12,10 +12,120 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
+        <!--Menu-->
+        <scene sceneID="jaz-kx-QUg">
+            <objects>
+                <tableViewController storyboardIdentifier="menuViewControllerStoryboardId" title="Menu" id="Gg2-J1-aY4" customClass="MenuTableViewController" customModule="GVBandwagon" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="ege-im-lYU">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <sections>
+                            <tableViewSection id="Syj-EW-S5k">
+                                <cells>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="yfN-gA-GcD">
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="yfN-gA-GcD" id="way-JJ-tV9">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                            <tableViewSection id="BPp-uM-QVs">
+                                <cells>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="wn4-f3-QAm">
+                                        <rect key="frame" x="0.0" y="44" width="375" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="wn4-f3-QAm" id="VdR-rS-5M1">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Account" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BRG-Gk-6mM">
+                                                    <rect key="frame" x="25" y="5" width="102" height="34"/>
+                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="BRG-Gk-6mM" firstAttribute="centerY" secondItem="VdR-rS-5M1" secondAttribute="centerY" id="SBC-fw-JZw"/>
+                                                <constraint firstItem="BRG-Gk-6mM" firstAttribute="leading" secondItem="VdR-rS-5M1" secondAttribute="leading" constant="25" id="yGv-EB-Wr5"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <segue destination="qie-e8-3Lv" kind="show" identifier="segueToAccount" id="iAs-B1-UmY"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                            <tableViewSection id="ybL-DR-qvQ">
+                                <cells>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="xLK-4D-10B">
+                                        <rect key="frame" x="0.0" y="88" width="375" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="xLK-4D-10B" id="Rk6-8L-oy5">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Drive" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vxp-ya-npD">
+                                                    <rect key="frame" x="25" y="3" width="63" height="34"/>
+                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="Vxp-ya-npD" firstAttribute="leading" secondItem="Rk6-8L-oy5" secondAttribute="leading" constant="25" id="Onn-pq-se9"/>
+                                                <constraint firstItem="Vxp-ya-npD" firstAttribute="centerY" secondItem="Rk6-8L-oy5" secondAttribute="centerY" id="pm5-CR-IOS"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                            <tableViewSection id="Xc7-m0-a9G">
+                                <cells>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="nrk-4A-wUF">
+                                        <rect key="frame" x="0.0" y="132" width="375" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="nrk-4A-wUF" id="6X5-Ue-mAd">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Help" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8RM-lj-cqE">
+                                                    <rect key="frame" x="25" y="5" width="57" height="34"/>
+                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="8RM-lj-cqE" firstAttribute="centerY" secondItem="6X5-Ue-mAd" secondAttribute="centerY" id="18b-AU-Yih"/>
+                                                <constraint firstItem="8RM-lj-cqE" firstAttribute="leading" secondItem="6X5-Ue-mAd" secondAttribute="leading" constant="25" id="E5j-Y2-RcK"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                        </sections>
+                        <connections>
+                            <outlet property="dataSource" destination="Gg2-J1-aY4" id="9lF-cc-EJx"/>
+                            <outlet property="delegate" destination="Gg2-J1-aY4" id="A0d-pi-S9d"/>
+                        </connections>
+                    </tableView>
+                    <connections>
+                        <outlet property="modeLabel" destination="Vxp-ya-npD" id="7Yf-jG-azd"/>
+                    </connections>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="rXw-d8-rJZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1866.4000000000001" y="-1777.0614692653674"/>
+        </scene>
         <!--Ride-->
         <scene sceneID="hNz-n2-bh7">
             <objects>
-                <viewController storyboardIdentifier="rideViewController" title="Ride" id="9pv-A4-QxB" customClass="FirstViewController" customModule="GVBandwagon" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="rideViewControllerStoryboardId" title="Ride" id="9pv-A4-QxB" customClass="FirstViewController" customModule="GVBandwagon" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Ia1-K6-d13"/>
                         <viewControllerLayoutGuide type="bottom" id="4ug-Mw-9AY"/>
@@ -70,7 +180,7 @@
                                     <navigationItem id="f3W-IX-CrS">
                                         <barButtonItem key="leftBarButtonItem" title="Menu" id="6ht-Jc-pCJ">
                                             <connections>
-                                                <action selector="onMenuTapped:" destination="9pv-A4-QxB" id="mLb-nk-DZK"/>
+                                                <action selector="toggleLeftDrawer:" destination="9pv-A4-QxB" id="LLD-G4-OXQ"/>
                                             </connections>
                                         </barButtonItem>
                                         <barButtonItem key="rightBarButtonItem" title="Sign Out" id="if8-ei-HZl">
@@ -285,7 +395,7 @@
         <!--SignIn-->
         <scene sceneID="Od9-9j-Kga">
             <objects>
-                <viewController storyboardIdentifier="signInView" title="SignIn" id="8Mm-Jt-Bul" customClass="SignInViewController" customModule="GVBandwagon" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="signInViewControllerStoryboardId" title="SignIn" id="8Mm-Jt-Bul" customClass="SignInViewController" customModule="GVBandwagon" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="E0f-fV-4p4"/>
                         <viewControllerLayoutGuide type="bottom" id="LAa-g5-VXY"/>
@@ -1078,7 +1188,7 @@
         <!--Drive View Controller-->
         <scene sceneID="bdv-0e-xNP">
             <objects>
-                <viewController storyboardIdentifier="driveViewController" id="MRT-6q-8L6" customClass="DriveViewController" customModule="GVBandwagon" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="driveViewControllerStoryboardId" id="MRT-6q-8L6" customClass="DriveViewController" customModule="GVBandwagon" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="QWq-JD-9eR"/>
                         <viewControllerLayoutGuide type="bottom" id="vdX-sK-YiR"/>
@@ -1246,9 +1356,9 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="m9i-k7-CMo">
-                        <barButtonItem key="leftBarButtonItem" title="Exit" id="Qdr-9h-z2i">
+                        <barButtonItem key="leftBarButtonItem" title="Menu" id="Qdr-9h-z2i">
                             <connections>
-                                <action selector="onExitTapped:" destination="MRT-6q-8L6" id="x8O-EY-u9x"/>
+                                <action selector="toggleLeftDrawer:" destination="MRT-6q-8L6" id="cvr-N8-CiG"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -1463,7 +1573,8 @@
         <image name="gvbwlogo.jpg" width="889" height="1334"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="4gI-rb-loU"/>
+        <segue reference="iAs-B1-UmY"/>
+        <segue reference="JHF-Ep-omp"/>
         <segue reference="JZw-DP-dT2"/>
     </inferredMetricsTieBreakers>
 </document>
