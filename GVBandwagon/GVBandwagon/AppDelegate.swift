@@ -25,6 +25,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         ref = FIRDatabase.database().reference()
         // not really needed unless you really need it FIRDatabase.database().persistenceEnabled = true
         
+        //UNNotification
+        
         // Moved to didFinish... below
         //GIDSignIn.sharedInstance().clientID = FIRApp.defaultApp()?.options.clientID
         //GIDSignIn.sharedInstance().delegate = self
@@ -55,8 +57,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             ref.child("userStates").child("\(userID)").observeSingleEvent(of: .value, with: { (snapshot) in
             
             if(snapshot.value! as! Bool) {
-                let tempRef = self.ref.child("activedrivers/\(userID)/jointime/")
-                tempRef.removeValue()
+                let tempRef = self.ref.child("activedrivers/\(userID)/")
+                tempRef.child("jointime").removeValue()
+                tempRef.child("location").removeValue()
             }
 
             })
@@ -75,8 +78,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             ref.child("userStates").child("\(userID)").observeSingleEvent(of: .value, with: { (snapshot) in
                 
                 if(snapshot.value! as! Bool) {
-                    let tempRef = self.ref.child("activedrivers/\(userID)/jointime/")
-                    tempRef.setValue(NSDate().description)
+                    let tempRef = self.ref.child("activedrivers/\(userID)/")
+                    tempRef.child("jointime").setValue(NSDate().description)
+                    tempRef.child("location").setValue(["start": "Allendale", "stop": "Meijer"]) //this will be all the better once we use lats and longs that can be fetched at any time hopefully.
                 }
                 
             })
@@ -88,7 +92,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     }
 
-    func applicationWillTerminate(_ application: UIApplication) {
+    func applicationWillTerminate(_ application: UIApplication) { //this is the one that is called when the app is killed. 
+        
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
         
         if(FIRAuth.auth()!.currentUser == nil) { //use a guard and uid is string otherwise dont run, like sign in.
@@ -100,8 +105,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             ref.child("userStates").child("\(userID)").observeSingleEvent(of: .value, with: { (snapshot) in
                 
                 if(snapshot.value! as! Bool) {
-                    let tempRef = self.ref.child("activedrivers/\(userID)/jointime/")
-                    tempRef.removeValue()
+                    let tempRef = self.ref.child("activedrivers/\(userID)/")
+                    tempRef.child("jointime").removeValue()
+                    tempRef.child("location").removeValue()
                 }
                 
             })

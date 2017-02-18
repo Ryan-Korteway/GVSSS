@@ -150,8 +150,9 @@ class SignInViewController: UIViewController, GIDSignInDelegate, GIDSignInUIDele
             
             //right here could do a check for if its true and thus the user is a driver, then they get added to active drivers.
             if(snapshot.value! as! Bool) {
-                let tempRef = self.ref.child("activedrivers/\(userID)/jointime/")
-                tempRef.setValue(NSDate().description)
+                let tempRef = self.ref.child("activedrivers/\(userID)/")
+                tempRef.child("jointime").setValue(NSDate().description)
+                tempRef.child("location").setValue(["start": "Allendale", "stop": "Meijer"])
             }
             
             self.performSegue(withIdentifier: "signInApproved", sender: self)

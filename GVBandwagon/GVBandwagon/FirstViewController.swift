@@ -9,6 +9,7 @@
 import UIKit
 import Firebase
 import GoogleSignIn
+import UserNotifications //the thing to import for local notifications.
 
 class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
 
@@ -27,15 +28,13 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
     var userFrom = "nowhere"
     var userTo = "somewhere"
     
-    var waiting = true
-    var accepted = false
-    
     let ref = FIRDatabase.database().reference()
+    
+    var uid_forDriver = "none"
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-    
         /*
         ref.observe(.value, with: { snapshot in
             print(snapshot.value!)
@@ -71,7 +70,7 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
                                 //ALL OF THIS WORKS OTHER THAN THE QUERY NOT BRINGING UP THE RIDERS ACTUAL NAME!!!
                                 
                                 let alert = UIAlertController(title:"Rider Found", message:"Would you like to give \(innerSnapshot.value!) a ride?",
-                                    preferredStyle: .actionSheet)
+                                    preferredStyle: .alert)
                                 
                                 let yesAction = UIAlertAction(title:"Yes", style:.default) { action -> Void in
                                     //code for the action can go here. so accepts or deny's
@@ -108,31 +107,25 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
                     riderRef.child("driver_uid").observeSingleEvent(of: .value, with: { (snapshot) in
                     //inner if for accepted, else for rejected.
                     if( snapshot.value! as! String == "none") {
-                        let alert = UIAlertController(title:"Driver Alert", message:"We are sorry but this driver is unavailable.", preferredStyle: .actionSheet);
+                        let alert = UIAlertController(title:"Driver Alert", message:"We are sorry but this driver is unavailable.", preferredStyle: .alert);
                         
                         let defaultAction = UIAlertAction(title:"OK", style:.default) { action -> Void in
                             //code for the action can go here. so accepts or deny's
                             riderRef.child("driver_found").setValue(false)
                         }
-                        
-                        self.accepted = false;
-                        self.waiting = false;
                         
                         alert.addAction(defaultAction);
                         self.present(alert, animated:true, completion:nil);
                         
                     } else {
                         
-                        let alert = UIAlertController(title:"Driver Alert", message:"The driver has accepted.", preferredStyle: .actionSheet);
+                        let alert = UIAlertController(title:"Driver Alert", message:"The driver has accepted.", preferredStyle: .alert);
                         //maybe add a see profile action that triggers a seque to a page that pre fills itself with the drivers info based on his UID?
                         
                         let defaultAction = UIAlertAction(title:"OK", style:.default) { action -> Void in
                             //code for the action can go here. so accepts or deny's
                             riderRef.child("driver_found").setValue(false)
                         }
-                        
-                        self.accepted = true;
-                        self.waiting = false;
                         
                         alert.addAction(defaultAction);
                         self.present(alert, animated:true, completion:nil);
@@ -144,6 +137,10 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
                } //outer if end
            } //outer else end
         }) //observe end        COPY STOPS HERE
+        
+        ref.child("users/\(currentUser!.uid)/rider/driver_uid").observe(.value, with: { (snapshot) in
+                self.uid_forDriver = snapshot.value! as! String ;
+        })
         
     } //end of view did load.
     
@@ -241,89 +238,56 @@ class FirstViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
         }
     }
     
-    @IBAction func FindDriver(_ sender: Any) {
+    @IBAction func FindDriver(_ sender: Any) { // lots of logical synchronization issues
         
         //performing a query through active drivers to get an array of all the UID's, then use the uid's to do a query to find drivers with the right location/destination and update their riders found to true and with the riders UID
-        
-        var poss_drivers: NSArray = [] //these are apparently not string arrays
-        var match_drivers: NSArray = []
         
         ref.child("activedrivers").queryOrdered(byChild: "jointime").observe(.value, with: { snapshot in
             
             for driver in snapshot.children {
                 print((driver as! FIRDataSnapshot).key)
-                poss_drivers = poss_drivers.adding([(driver as! FIRDataSnapshot).key]) as NSArray
-                print(poss_drivers[0])
+                print((driver as! FIRDataSnapshot).childSnapshot(forPath: "location").value as! NSDictionary) //this could be it for group value pull down.
+                let driver_dict = (driver as! FIRDataSnapshot).childSnapshot(forPath: "location").value as! NSDictionary
+                
+                if ( driver_dict["start"] as! String == self.userFrom && driver_dict["stop"] as! String == self.userTo ) {
+                    
+                    self.ref.child("users/\((driver as! FIRDataSnapshot).key)/driver/rider_uid").setValue(self.currentUser!.uid)
+                    self.ref.child("users/\((driver as! FIRDataSnapshot).key)/driver/rider_found").setValue(true)
+                    
+                    sleep(30) //neither sleep nor infinite wait loop will do it... ACTUALLY SHOULD WORK BETWEEN DEVICES, JUST NOT FROM ONE USER TO THE SAME USER.
+                    
+                    //set a timer perhaps and when it goes off in 30 seconds, trigger this pop up etc... idk still how we would wait without freezing the app...
+                    
+                    if (self.uid_forDriver != "none") {
+                        let alert = UIAlertController(title:"Driver Alert", message:"Your Driver has been found. They are on their way.", preferredStyle: .alert);
+
+                        let defaultAction = UIAlertAction(title:"OK", style:.default) { action -> Void in
+                        }
+
+                        alert.addAction(defaultAction);
+                        self.present(alert, animated:true, completion:nil);
+                        
+                        return
+                    }//end if
+                }
+                
             }
-        })
-        
-        if (poss_drivers.count == 0) { //poss_drivers count is not increasing, despite having elements being added to the array according to the print statements....
-            let alert = UIAlertController(title:"Search Alert", message:"We are sorry but there are no drivers available. Please try again with a different set of criteria.", preferredStyle: .actionSheet);
+            
+            let alert = UIAlertController(title:"Driver Alert", message:"We are sorry but there are no drivers.", preferredStyle: .alert);
             
             let defaultAction = UIAlertAction(title:"OK", style:.default) { action -> Void in
             }
             
             alert.addAction(defaultAction);
             self.present(alert, animated:true, completion:nil);
+            
             return
-        }
-        
-        for drv in poss_drivers {
-            var locMatch = false
-            var destMatch = false
-            //do a query/observe to see if they have the right values, if so add them to match_drivers
-            
-            ref.child("users/\(drv)/destination").observeSingleEvent(of: .value, with: { snapshot in
-                if(snapshot.value! as! String == self.userTo) {
-                    destMatch = true
-                } else {
-                    destMatch = false
-                }
-            })
-            
-            ref.child("users/\(drv)/location").observeSingleEvent(of: .value, with: { snapshot in
-                if(snapshot.value! as! String == self.userFrom) {
-                    locMatch = true
-                } else {
-                    locMatch = false
-                }
-            })
-            
-            if( locMatch && destMatch) {
-                match_drivers = match_drivers.adding(drv) as NSArray
-            }
-        }
-        
-        //after we find the array of matching drivers, we need to loop through them and send each a ride request and to wait for their response,
-        for request in match_drivers {
-            //set the appropriate fields and then do an observe on the driver found/uid field to see if accepted or not and thus we can break out or if we need to loop again and then wait....
-            
-            self.ref.child("users/\(request)/driver/rider_uid").setValue(currentUser!.uid)
-            self.ref.child("users/\(request)/driver/rider_found").setValue(true)
-            
-            //infinite while loop that waits for a flipping of a global boolean that the pop up accepts and turn downs change?...
-            while(self.waiting) {
-                //waiting while loop
-            }//end while
-            
-            if (self.accepted) {
-                self.waiting = true
-                return
-            }//end if
-            
-        }// end for request
-        
-        self.waiting = true
-        
-        //if we get this far and self.accepted is false then we have no accepted drivers, show a pop up.
-        let alert = UIAlertController(title:"Search Alert", message:"We are sorry but there are no drivers available. Please try again with a different set of criteria.", preferredStyle: .actionSheet);
-        
-        let defaultAction = UIAlertAction(title:"OK", style:.default) { action -> Void in
-        }
-        
-        alert.addAction(defaultAction);
-        self.present(alert, animated:true, completion:nil);
-        return
-    }
 
+        })
+        
+        print("about to leave find driver");
+        
+        return;
+    }
+    
 } //end of the class/file.
