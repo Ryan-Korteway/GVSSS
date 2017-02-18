@@ -24,7 +24,6 @@ class FirstViewController: UIViewController, RideSceneDelegate {
     @IBOutlet var fromView: UIView!
     @IBOutlet var toView: UIView!
     @IBOutlet var toContainerView: UIView!
-    @IBOutlet var menuButton: UIBarButtonItem!
     @IBOutlet var signOutButton: UIBarButtonItem!
     @IBOutlet var findDriverButton: UIButton!
     @IBOutlet var superViewTapGesture: UITapGestureRecognizer!
@@ -294,6 +293,7 @@ class FirstViewController: UIViewController, RideSceneDelegate {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         appDelegate.toggleLeftDrawer(sender: sender as AnyObject, animated: false)
     }
+
     
 }
 

@@ -37,7 +37,9 @@ class MenuTableViewController: UITableViewController {
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 4
+        
+        // Number and type of menu options changes depending on if in Ride or Drive mode...
+        return 5
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -46,7 +48,7 @@ class MenuTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if (indexPath.row == 0) {
+        if (indexPath.section == 0) {
             return 80
         } else {
             return 50
@@ -58,7 +60,7 @@ class MenuTableViewController: UITableViewController {
         
         if (indexPath.section == 1) {
             //enter account
-            appDelegate.toggleLeftDrawer(sender: Any, animated: false)
+            appDelegate.toggleLeftDrawer(sender: self.modeLabel, animated: false)
         } else if (indexPath.section == 2) {
             // Change name of this cell label to "ride mode" if it's "drive mode", and vice versa
             if (self.modeLabel.text == "Drive") {
@@ -68,8 +70,12 @@ class MenuTableViewController: UITableViewController {
                 appDelegate.centerViewController = appDelegate.rideViewController()
                 self.modeLabel.text = "Drive"
             }
-        } else {
+        } else if (indexPath.section == 3) {
             //enter help
+        } else {
+            //sign out
+            let appDelegate = UIApplication.shared.delegate as! AppDelegate
+            appDelegate.firebaseSignOut()
         }
     }
     

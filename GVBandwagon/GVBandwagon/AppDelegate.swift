@@ -47,9 +47,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
+        // Make sign in the root view controller UNLESS they are already signed in.
         window = UIWindow(frame: UIScreen.main.bounds)
         
-        window?.rootViewController = drawerViewController
+        // If user is not signed in...
+        let signInVC = viewControllerForStoryboardId(storyboardId: signInViewControllerStoryboardId)
+        window?.rootViewController = signInVC
+        
+        // If user IS signed in...
+        //window?.rootViewController = drawerViewController
+        // OR
+        // self.initiateDrawer()
         
         window?.makeKeyAndVisible()
         
@@ -200,5 +208,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
             _centerViewController = newValue
         }
+    }
+    
+    func firebaseSignOut() {
+        let firebaseAuth = FIRAuth.auth()
+        do {
+            try firebaseAuth!.signOut()
+            print("Successfully signed out user.")
+            //performSegue(withIdentifier: "signOutSegue", sender: self)
+            let signInVC = viewControllerForStoryboardId(storyboardId: signInViewControllerStoryboardId)
+            window?.rootViewController = signInVC
+        } catch let signOutError as NSError {
+            print ("Error signing out: %@", signOutError)
+        }
+    }
+    
+    func initiateDrawer() {
+        window?.rootViewController = drawerViewController
     }
 }

@@ -119,7 +119,12 @@ class SignInViewController: UIViewController, GIDSignInDelegate, GIDSignInUIDele
                 print("sign in error: \(error.localizedDescription)")
                 return
             }
-            self.directUserToCorrectView()
+            //self.directUserToCorrectView()
+            
+            // Load up the drawer from AppDelegate:
+            let appDelegate = UIApplication.shared.delegate as! AppDelegate
+            appDelegate.initiateDrawer()
+            
         }
     }
     

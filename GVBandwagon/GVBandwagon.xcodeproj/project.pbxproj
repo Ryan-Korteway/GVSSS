@@ -16,6 +16,7 @@
 		0B197D031E32815200392B40 /* GVBandwagonUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B197D021E32815200392B40 /* GVBandwagonUITests.swift */; };
 		0B3DE4FA1E3BB45A00733810 /* gvbwlogo.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 0B3DE4F91E3BB45A00733810 /* gvbwlogo.jpg */; };
 		0B3DE4FC1E3BB57C00733810 /* SignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B3DE4FB1E3BB57C00733810 /* SignInViewController.swift */; };
+		0B4BDD931E57DEFB005C186D /* imagicon.png in Resources */ = {isa = PBXBuildFile; fileRef = 0B4BDD921E57DEFB005C186D /* imagicon.png */; };
 		0B556BBB1E5115D100EAE537 /* RideFromTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B556BBA1E5115D100EAE537 /* RideFromTableViewController.swift */; };
 		0B556BBD1E5115E000EAE537 /* RideToTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B556BBC1E5115E000EAE537 /* RideToTableViewController.swift */; };
 		0B556BBF1E51390400EAE537 /* DriveViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B556BBE1E51390400EAE537 /* DriveViewController.swift */; };
@@ -74,6 +75,7 @@
 		0B197D041E32815200392B40 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0B3DE4F91E3BB45A00733810 /* gvbwlogo.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = gvbwlogo.jpg; sourceTree = "<group>"; };
 		0B3DE4FB1E3BB57C00733810 /* SignInViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignInViewController.swift; sourceTree = "<group>"; };
+		0B4BDD921E57DEFB005C186D /* imagicon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = imagicon.png; path = GVBandwagon/Assets.xcassets/imagicon.png; sourceTree = "<group>"; };
 		0B556BBA1E5115D100EAE537 /* RideFromTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RideFromTableViewController.swift; sourceTree = "<group>"; };
 		0B556BBC1E5115E000EAE537 /* RideToTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RideToTableViewController.swift; sourceTree = "<group>"; };
 		0B556BBE1E51390400EAE537 /* DriveViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DriveViewController.swift; sourceTree = "<group>"; };
@@ -198,6 +200,7 @@
 			isa = PBXGroup;
 			children = (
 				0B3DE4F91E3BB45A00733810 /* gvbwlogo.jpg */,
+				0B4BDD921E57DEFB005C186D /* imagicon.png */,
 			);
 			name = Assets;
 			sourceTree = "<group>";
@@ -348,6 +351,7 @@
 			files = (
 				0B197CED1E32815200392B40 /* LaunchScreen.storyboard in Resources */,
 				0B197CEA1E32815200392B40 /* Assets.xcassets in Resources */,
+				0B4BDD931E57DEFB005C186D /* imagicon.png in Resources */,
 				0BE676301E3D78B5009675F2 /* GoogleService-Info.plist in Resources */,
 				0B197CE81E32815200392B40 /* Main.storyboard in Resources */,
 				0B3DE4FA1E3BB45A00733810 /* gvbwlogo.jpg in Resources */,
