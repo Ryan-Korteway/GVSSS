@@ -1343,6 +1343,7 @@
                                 <fontDescription key="fontDescription" name="Futura-MediumItalic" family="Futura" pointSize="22"/>
                                 <state key="normal" title="Go Online!"/>
                                 <connections>
+                                    <action selector="goOnlineTapped:" destination="MRT-6q-8L6" eventType="touchUpInside" id="Ucu-xK-ue6"/>
                                     <segue destination="vCp-ej-JMA" kind="show" id="lqC-2j-Dfe"/>
                                 </connections>
                             </button>
@@ -1462,7 +1463,7 @@
             <objects>
                 <navigationController title="Help Navigation" automaticallyAdjustsScrollViewInsets="NO" id="QKe-sZ-Rbw" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="b3b-uB-DMY">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="b3b-uB-DMY">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>

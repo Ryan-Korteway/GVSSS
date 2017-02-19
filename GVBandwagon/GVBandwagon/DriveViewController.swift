@@ -11,6 +11,7 @@ import Firebase
 import GoogleSignIn
 
 class DriveViewController: UIViewController {
+    
 
     @IBOutlet var exitButton: UIBarButtonItem!
     @IBOutlet var allendaleView: UIView!
@@ -50,7 +51,6 @@ class DriveViewController: UIViewController {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         appDelegate.toggleLeftDrawer(sender: sender as AnyObject, animated: false)
     }
-    
     
     
     // When a location is tapped, highlight it, and unhighlight the others.
@@ -100,11 +100,14 @@ class DriveViewController: UIViewController {
     
     // TODO: Ryan, here you could send some hardcoded information to Firebase. At least when
     // the UI (Maps, etc) is finished we'll have the Firebase code prepped and ready to go.
-    @IBAction func onGoOnlineTapped(_ sender: Any) {
+    @IBAction func goOnlineTapped(_ sender: UIButton) {
     
-        let tempRef = self.ref.child("activedrivers/\(userID)/")
+    //    print("going online")
+        
+        let tempRef = self.ref.child("activedrivers/\(self.userID)/");
+        
         tempRef.child("jointime").setValue(NSDate().description)
-        tempRef.child("location").setValue(["start": "Bing", "stop": "Bong"]) //this will be all the better once we use lats and longs that can be fetched at any time hopefully.
+        tempRef.child("location").setValue(["start": "Bing", "end": "Bong"])
     
     }
     
