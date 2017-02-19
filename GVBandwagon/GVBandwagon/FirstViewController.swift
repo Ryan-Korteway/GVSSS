@@ -245,7 +245,7 @@ class FirstViewController: UIViewController, RideSceneDelegate {
             print("Leaving from \(self.startingFrom)")
             print("Going to \(self.goingTo)")
             
-            ref.child("users/\(currentUser!.uid)/location/").setValue(["start": self.startingFrom, "stop": self.goingTo])
+            ref.child("users/\(currentUser!.uid)/location/").setValue(["start": self.startingFrom, "stop": self.goingTo]) //locations being sent here.
             
             ref.child("activedrivers").queryOrdered(byChild: "jointime").observe(.value, with: { snapshot in
                 
@@ -254,7 +254,7 @@ class FirstViewController: UIViewController, RideSceneDelegate {
                     print((driver as! FIRDataSnapshot).childSnapshot(forPath: "location").value as! NSDictionary) //this could be it for group value pull down.
                     let driver_dict = (driver as! FIRDataSnapshot).childSnapshot(forPath: "location").value as! NSDictionary
                     
-                    if ( driver_dict["start"] as! String == "Bing" && driver_dict["stop"] as! String == "Bong" ) {
+                    if ( driver_dict["start"] as! String == "Bing" && driver_dict["stop"] as! String == "Bong" ) { //Bing and Bong are hardcoded values for the sake of testing and demonstrations.
                         
                         self.ref.child("users/\((driver as! FIRDataSnapshot).key)/driver/rider_uid").setValue(self.currentUser!.uid)
                         self.ref.child("users/\((driver as! FIRDataSnapshot).key)/driver/rider_found").setValue(true)
