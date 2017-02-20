@@ -35,8 +35,8 @@ class FirstViewController: UIViewController, RideSceneDelegate {
     
     var containerDelegate: ContainerDelegate?
     
-    var startingFrom: String = "Null"
-    var goingTo: String = "Null"
+    var startingFrom: String = "Bing"
+    var goingTo: String = "Bong"
     
     //let userid = "0001" //hardcoded values, should be the fireauth current user stuff.
     let currentUser = FIRAuth.auth()!.currentUser
@@ -247,21 +247,25 @@ class FirstViewController: UIViewController, RideSceneDelegate {
             
             ref.child("users/\(currentUser!.uid)/location/").setValue(["start": self.startingFrom, "stop": self.goingTo]) //locations being sent here.
             
-            ref.child("activedrivers").queryOrdered(byChild: "jointime").observe(.value, with: { snapshot in
+            ref.child("activedrivers").queryOrdered(byChild: "jointime").observeSingleEvent(of: .value, with: { snapshot in //needs to be singleevent of.
                 
                 for driver in snapshot.children {
                     print((driver as! FIRDataSnapshot).key)
                     print((driver as! FIRDataSnapshot).childSnapshot(forPath: "location").value as! NSDictionary) //this could be it for group value pull down.
                     let driver_dict = (driver as! FIRDataSnapshot).childSnapshot(forPath: "location").value as! NSDictionary
                     
-                    if ( driver_dict["start"] as! String == "Bing" && driver_dict["stop"] as! String == "Bong" ) { //Bing and Bong are hardcoded values for the sake of testing and demonstrations.
+                    if ( driver_dict["start"] as! String == "Bing" && driver_dict["end"] as! String == "Bong" ) { //Bing and Bong are hardcoded values for the sake of testing and demonstrations.
                         
                         self.ref.child("users/\((driver as! FIRDataSnapshot).key)/driver/rider_uid").setValue(self.currentUser!.uid)
                         self.ref.child("users/\((driver as! FIRDataSnapshot).key)/driver/rider_found").setValue(true)
                         
+                        print(self.uid_forDriver)
+                        
                         sleep(30) //neither sleep nor infinite wait loop will do it... ACTUALLY SHOULD WORK BETWEEN DEVICES, JUST NOT FROM ONE USER TO THE SAME USER.
                         
                         //set a timer perhaps and when it goes off in 30 seconds, trigger this pop up etc... idk still how we would wait without freezing the app...
+                        
+                        print(self.uid_forDriver)
                         
                         if (self.uid_forDriver != "none") {
                             let alert = UIAlertController(title:"Driver Alert", message:"Your Driver has been found. They are on their way.", preferredStyle: .alert);
@@ -286,11 +290,13 @@ class FirstViewController: UIViewController, RideSceneDelegate {
                 alert.addAction(defaultAction);
                 self.present(alert, animated:true, completion:nil);
                 
+                //no drivers means set the driver_uid value to "none" 
+                
                 return
                 
             })
             
-            //print("about to leave find driver");
+            print("about to leave find driver");
             
             return;
         }
