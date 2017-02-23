@@ -16,6 +16,10 @@
 		0B197D031E32815200392B40 /* GVBandwagonUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B197D021E32815200392B40 /* GVBandwagonUITests.swift */; };
 		0B3DE4FA1E3BB45A00733810 /* gvbwlogo.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 0B3DE4F91E3BB45A00733810 /* gvbwlogo.jpg */; };
 		0B3DE4FC1E3BB57C00733810 /* SignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B3DE4FB1E3BB57C00733810 /* SignInViewController.swift */; };
+		0B4BDD931E57DEFB005C186D /* imagicon.png in Resources */ = {isa = PBXBuildFile; fileRef = 0B4BDD921E57DEFB005C186D /* imagicon.png */; };
+		0B556BBB1E5115D100EAE537 /* RideFromTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B556BBA1E5115D100EAE537 /* RideFromTableViewController.swift */; };
+		0B556BBD1E5115E000EAE537 /* RideToTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B556BBC1E5115E000EAE537 /* RideToTableViewController.swift */; };
+		0B556BBF1E51390400EAE537 /* DriveViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B556BBE1E51390400EAE537 /* DriveViewController.swift */; };
 		0B6935291E3CE6C300F551CB /* RegistrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B6935281E3CE6C300F551CB /* RegistrationViewController.swift */; };
 		0B69352A1E3CE6C300F551CB /* RegistrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B6935281E3CE6C300F551CB /* RegistrationViewController.swift */; };
 		0B69352B1E3CE6C300F551CB /* RegistrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B6935281E3CE6C300F551CB /* RegistrationViewController.swift */; };
@@ -32,6 +36,7 @@
 		0BE676301E3D78B5009675F2 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0BE6762F1E3D78B5009675F2 /* GoogleService-Info.plist */; };
 		0BE676311E3D78B5009675F2 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0BE6762F1E3D78B5009675F2 /* GoogleService-Info.plist */; };
 		0BE676321E3D78B5009675F2 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0BE6762F1E3D78B5009675F2 /* GoogleService-Info.plist */; };
+		851AAD191E58C54B0023F0D7 /* findingRidersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 851AAD181E58C54B0023F0D7 /* findingRidersViewController.swift */; };
 		85365DE51E3E8ACB003709C3 /* RegisterAsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85365DE41E3E8ACB003709C3 /* RegisterAsViewController.swift */; };
 		8D7CC2232AD3A68143663BA2 /* Pods_GVBandwagonTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A09C8C265162B5784985937B /* Pods_GVBandwagonTests.framework */; };
 		E95A7E4BE11C558326F54189 /* Pods_GVBandwagon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1F2583AB45790452F36E20D /* Pods_GVBandwagon.framework */; };
@@ -71,18 +76,23 @@
 		0B197D041E32815200392B40 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0B3DE4F91E3BB45A00733810 /* gvbwlogo.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = gvbwlogo.jpg; sourceTree = "<group>"; };
 		0B3DE4FB1E3BB57C00733810 /* SignInViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignInViewController.swift; sourceTree = "<group>"; };
+		0B4BDD921E57DEFB005C186D /* imagicon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = imagicon.png; path = GVBandwagon/Assets.xcassets/imagicon.png; sourceTree = "<group>"; };
+		0B556BBA1E5115D100EAE537 /* RideFromTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RideFromTableViewController.swift; sourceTree = "<group>"; };
+		0B556BBC1E5115E000EAE537 /* RideToTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RideToTableViewController.swift; sourceTree = "<group>"; };
+		0B556BBE1E51390400EAE537 /* DriveViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DriveViewController.swift; sourceTree = "<group>"; };
 		0B6935281E3CE6C300F551CB /* RegistrationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegistrationViewController.swift; sourceTree = "<group>"; };
 		0B69352C1E3D145100F551CB /* ContainerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContainerViewController.swift; sourceTree = "<group>"; };
 		0B6935301E3D158400F551CB /* MenuTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuTableViewController.swift; sourceTree = "<group>"; };
 		0BABBF701E4A275F00108DC2 /* RideViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RideViewController.swift; sourceTree = "<group>"; };
 		0BABBF721E4A84A600108DC2 /* accountTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = accountTableViewController.swift; sourceTree = "<group>"; };
-		0BABBF741E4A8F5F00108DC2 /* HelpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HelpViewController.swift; sourceTree = "<group>"; };
+		0BABBF741E4A8F5F00108DC2 /* HelpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HelpViewController.swift; path = ../HelpViewController.swift; sourceTree = "<group>"; };
 		0BABBF761E4A912D00108DC2 /* userInfoTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = userInfoTableViewController.swift; sourceTree = "<group>"; };
 		0BC8F62D1E3A795A00E94F5B /* GVBandwagon.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GVBandwagon.entitlements; sourceTree = "<group>"; };
 		0BE6762F1E3D78B5009675F2 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		1456442C274CA1E608152DE7 /* Pods-GVBandwagon.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GVBandwagon.release.xcconfig"; path = "Pods/Target Support Files/Pods-GVBandwagon/Pods-GVBandwagon.release.xcconfig"; sourceTree = "<group>"; };
 		1FBE53FF6CE82D3A9B6283BB /* Pods-GVBandwagonTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GVBandwagonTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-GVBandwagonTests/Pods-GVBandwagonTests.release.xcconfig"; sourceTree = "<group>"; };
 		6EA9EDCC8B7D08BD0D8F9580 /* Pods-GVBandwagonTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GVBandwagonTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-GVBandwagonTests/Pods-GVBandwagonTests.debug.xcconfig"; sourceTree = "<group>"; };
+		851AAD181E58C54B0023F0D7 /* findingRidersViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = findingRidersViewController.swift; sourceTree = "<group>"; };
 		85365DE41E3E8ACB003709C3 /* RegisterAsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegisterAsViewController.swift; sourceTree = "<group>"; };
 		92439C4256939807408E1F10 /* Pods-GVBandwagonUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GVBandwagonUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-GVBandwagonUITests/Pods-GVBandwagonUITests.release.xcconfig"; sourceTree = "<group>"; };
 		A09C8C265162B5784985937B /* Pods_GVBandwagonTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GVBandwagonTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -123,7 +133,6 @@
 		0B197CD41E32815100392B40 = {
 			isa = PBXGroup;
 			children = (
-				0BABBF741E4A8F5F00108DC2 /* HelpViewController.swift */,
 				0B3DE4F81E3BB44200733810 /* Assets */,
 				0B197CDF1E32815200392B40 /* GVBandwagon */,
 				0B197CF61E32815200392B40 /* GVBandwagonTests */,
@@ -155,10 +164,15 @@
 				0B69352C1E3D145100F551CB /* ContainerViewController.swift */,
 				0B197CE21E32815200392B40 /* FirstViewController.swift */,
 				0B197CE61E32815200392B40 /* Main.storyboard */,
+				851AAD181E58C54B0023F0D7 /* findingRidersViewController.swift */,
+				0B556BBE1E51390400EAE537 /* DriveViewController.swift */,
+				0B556BBA1E5115D100EAE537 /* RideFromTableViewController.swift */,
+				0B556BBC1E5115E000EAE537 /* RideToTableViewController.swift */,
 				0BABBF761E4A912D00108DC2 /* userInfoTableViewController.swift */,
 				0BABBF721E4A84A600108DC2 /* accountTableViewController.swift */,
 				0BABBF701E4A275F00108DC2 /* RideViewController.swift */,
 				85365DE41E3E8ACB003709C3 /* RegisterAsViewController.swift */,
+				0BABBF741E4A8F5F00108DC2 /* HelpViewController.swift */,
 				0B197CE91E32815200392B40 /* Assets.xcassets */,
 				0B197CEB1E32815200392B40 /* LaunchScreen.storyboard */,
 				0BE6762F1E3D78B5009675F2 /* GoogleService-Info.plist */,
@@ -189,6 +203,7 @@
 			isa = PBXGroup;
 			children = (
 				0B3DE4F91E3BB45A00733810 /* gvbwlogo.jpg */,
+				0B4BDD921E57DEFB005C186D /* imagicon.png */,
 			);
 			name = Assets;
 			sourceTree = "<group>";
@@ -269,6 +284,7 @@
 				0B197CFB1E32815200392B40 /* Frameworks */,
 				0B197CFC1E32815200392B40 /* Resources */,
 				C7E776EE03E0457B2A3BD879 /* [CP] Copy Pods Resources */,
+				F488785BDB77E0CE21DD6A7B /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -292,7 +308,6 @@
 				TargetAttributes = {
 					0B197CDC1E32815100392B40 = {
 						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = VH242F6P8Y;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.Keychain = {
@@ -339,6 +354,7 @@
 			files = (
 				0B197CED1E32815200392B40 /* LaunchScreen.storyboard in Resources */,
 				0B197CEA1E32815200392B40 /* Assets.xcassets in Resources */,
+				0B4BDD931E57DEFB005C186D /* imagicon.png in Resources */,
 				0BE676301E3D78B5009675F2 /* GoogleService-Info.plist in Resources */,
 				0B197CE81E32815200392B40 /* Main.storyboard in Resources */,
 				0B3DE4FA1E3BB45A00733810 /* gvbwlogo.jpg in Resources */,
@@ -406,7 +422,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		7C1161F45EC9C46EB9822F33 /* [CP] Copy Pods Resources */ = {
@@ -466,7 +482,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		E2D5CB47A7CBA182B7BF696F /* [CP] Check Pods Manifest.lock */ = {
@@ -481,7 +497,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		F488785BDB77E0CE21DD6A7B /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-GVBandwagonUITests/Pods-GVBandwagonUITests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -492,13 +523,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				0B3DE4FC1E3BB57C00733810 /* SignInViewController.swift in Sources */,
+				0B556BBF1E51390400EAE537 /* DriveViewController.swift in Sources */,
 				85365DE51E3E8ACB003709C3 /* RegisterAsViewController.swift in Sources */,
 				0B6935311E3D158400F551CB /* MenuTableViewController.swift in Sources */,
 				0B197CE11E32815200392B40 /* AppDelegate.swift in Sources */,
+				0B556BBD1E5115E000EAE537 /* RideToTableViewController.swift in Sources */,
 				0BABBF771E4A912D00108DC2 /* userInfoTableViewController.swift in Sources */,
+				0B556BBB1E5115D100EAE537 /* RideFromTableViewController.swift in Sources */,
 				0B197CE31E32815200392B40 /* FirstViewController.swift in Sources */,
 				0BABBF731E4A84A600108DC2 /* accountTableViewController.swift in Sources */,
 				0B69352D1E3D145100F551CB /* ContainerViewController.swift in Sources */,
+				851AAD191E58C54B0023F0D7 /* findingRidersViewController.swift in Sources */,
 				0B6935291E3CE6C300F551CB /* RegistrationViewController.swift in Sources */,
 				0BABBF711E4A275F00108DC2 /* RideViewController.swift in Sources */,
 				0BABBF751E4A8F5F00108DC2 /* HelpViewController.swift in Sources */,
@@ -660,7 +695,7 @@
 			baseConfigurationReference = C956A4DD338348886D7E4358 /* Pods-GVBandwagon.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = VH242F6P8Y;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = GVBandwagon/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = nicolasheady.GVBandwagon;
@@ -674,7 +709,7 @@
 			baseConfigurationReference = 1456442C274CA1E608152DE7 /* Pods-GVBandwagon.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = VH242F6P8Y;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = GVBandwagon/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = nicolasheady.GVBandwagon;

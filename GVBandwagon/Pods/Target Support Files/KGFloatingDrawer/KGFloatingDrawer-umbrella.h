@@ -10,7 +10,8 @@
 #endif
 #endif
 
+#import "KGFloatingDrawer.h"
 
-FOUNDATION_EXPORT double Pods_GVBandwagonVersionNumber;
-FOUNDATION_EXPORT const unsigned char Pods_GVBandwagonVersionString[];
+FOUNDATION_EXPORT double KGFloatingDrawerVersionNumber;
+FOUNDATION_EXPORT const unsigned char KGFloatingDrawerVersionString[];
 

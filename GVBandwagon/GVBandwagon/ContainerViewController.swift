@@ -20,6 +20,7 @@ class ContainerViewController: UIViewController, ContainerDelegate {
     var menuShown = false
     
     var rideViewController: FirstViewController! = nil
+    var driveViewController: UIViewController! = nil
     var menuViewController: MenuTableViewController! = nil
     //var accountViewController:
     
@@ -78,7 +79,8 @@ class ContainerViewController: UIViewController, ContainerDelegate {
         
         self.rightViewController = self.rideViewController
         self.leftMenu = self.menuViewController
- 
+
+        self.menuViewController.containerDelegate = self
     }
     /*
     override func viewWillAppear(_ animated: Bool) {
