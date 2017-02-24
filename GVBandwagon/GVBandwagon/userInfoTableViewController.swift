@@ -139,7 +139,7 @@ class userInfoTableViewController: UITableViewController {
         
         if (self.isMovingFromParentViewController) {
             
-            print("Updating...")
+            print("Updating...") //dont see why we need the observer to do the updates but okay...
             
             self.ref.child("users").child("\(self.currentUser!.uid)").observeSingleEvent(of: .value, with: { (snapshot) in
                 
