@@ -39,7 +39,7 @@ class MenuTableViewController: UITableViewController {
         // #warning Incomplete implementation, return the number of sections
         
         // Number and type of menu options changes depending on if in Ride or Drive mode...
-        return 5
+        return 6
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -71,6 +71,8 @@ class MenuTableViewController: UITableViewController {
                 self.modeLabel.text = "Drive"
             }
         } else if (indexPath.section == 3) {
+            //enter my trips
+        } else if (indexPath.section == 4) {
             //enter help
         } else {
             //sign out

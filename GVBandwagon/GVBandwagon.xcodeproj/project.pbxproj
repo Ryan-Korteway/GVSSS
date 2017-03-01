@@ -29,6 +29,7 @@
 		0B6935311E3D158400F551CB /* MenuTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B6935301E3D158400F551CB /* MenuTableViewController.swift */; };
 		0B6935321E3D158400F551CB /* MenuTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B6935301E3D158400F551CB /* MenuTableViewController.swift */; };
 		0B6935331E3D158400F551CB /* MenuTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B6935301E3D158400F551CB /* MenuTableViewController.swift */; };
+		0B77D5DE1E64CFB700DDF96C /* CustomKGDrawerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B77D5DD1E64CFB700DDF96C /* CustomKGDrawerViewController.swift */; };
 		0BABBF711E4A275F00108DC2 /* RideViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BABBF701E4A275F00108DC2 /* RideViewController.swift */; };
 		0BABBF731E4A84A600108DC2 /* accountTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BABBF721E4A84A600108DC2 /* accountTableViewController.swift */; };
 		0BABBF751E4A8F5F00108DC2 /* HelpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BABBF741E4A8F5F00108DC2 /* HelpViewController.swift */; };
@@ -83,6 +84,7 @@
 		0B6935281E3CE6C300F551CB /* RegistrationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegistrationViewController.swift; sourceTree = "<group>"; };
 		0B69352C1E3D145100F551CB /* ContainerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContainerViewController.swift; sourceTree = "<group>"; };
 		0B6935301E3D158400F551CB /* MenuTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuTableViewController.swift; sourceTree = "<group>"; };
+		0B77D5DD1E64CFB700DDF96C /* CustomKGDrawerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomKGDrawerViewController.swift; sourceTree = "<group>"; };
 		0BABBF701E4A275F00108DC2 /* RideViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RideViewController.swift; sourceTree = "<group>"; };
 		0BABBF721E4A84A600108DC2 /* accountTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = accountTableViewController.swift; sourceTree = "<group>"; };
 		0BABBF741E4A8F5F00108DC2 /* HelpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HelpViewController.swift; path = ../HelpViewController.swift; sourceTree = "<group>"; };
@@ -177,6 +179,7 @@
 				0B197CEB1E32815200392B40 /* LaunchScreen.storyboard */,
 				0BE6762F1E3D78B5009675F2 /* GoogleService-Info.plist */,
 				0B197CEE1E32815200392B40 /* Info.plist */,
+				0B77D5DD1E64CFB700DDF96C /* CustomKGDrawerViewController.swift */,
 			);
 			path = GVBandwagon;
 			sourceTree = "<group>";
@@ -308,6 +311,7 @@
 				TargetAttributes = {
 					0B197CDC1E32815100392B40 = {
 						CreatedOnToolsVersion = 8.2.1;
+						DevelopmentTeam = VH242F6P8Y;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.Keychain = {
@@ -528,6 +532,7 @@
 				0B6935311E3D158400F551CB /* MenuTableViewController.swift in Sources */,
 				0B197CE11E32815200392B40 /* AppDelegate.swift in Sources */,
 				0B556BBD1E5115E000EAE537 /* RideToTableViewController.swift in Sources */,
+				0B77D5DE1E64CFB700DDF96C /* CustomKGDrawerViewController.swift in Sources */,
 				0BABBF771E4A912D00108DC2 /* userInfoTableViewController.swift in Sources */,
 				0B556BBB1E5115D100EAE537 /* RideFromTableViewController.swift in Sources */,
 				0B197CE31E32815200392B40 /* FirstViewController.swift in Sources */,
@@ -695,7 +700,7 @@
 			baseConfigurationReference = C956A4DD338348886D7E4358 /* Pods-GVBandwagon.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = VH242F6P8Y;
 				INFOPLIST_FILE = GVBandwagon/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = nicolasheady.GVBandwagon;
@@ -709,7 +714,7 @@
 			baseConfigurationReference = 1456442C274CA1E608152DE7 /* Pods-GVBandwagon.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = VH242F6P8Y;
 				INFOPLIST_FILE = GVBandwagon/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = nicolasheady.GVBandwagon;

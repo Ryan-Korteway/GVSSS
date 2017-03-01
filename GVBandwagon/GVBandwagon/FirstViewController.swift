@@ -21,14 +21,16 @@ protocol RideSceneDelegate {
 class FirstViewController: UIViewController, RideSceneDelegate {
 
 
+    @IBOutlet var rideNowButton: UIButton!
+    @IBOutlet var scheduleRideButton: UIButton!
     @IBOutlet var fromContainerView: UIView!
     @IBOutlet var fromView: UIView!
     @IBOutlet var toView: UIView!
     @IBOutlet var toContainerView: UIView!
     @IBOutlet var signOutButton: UIBarButtonItem!
-    @IBOutlet var findDriverButton: UIButton!
     @IBOutlet var superViewTapGesture: UITapGestureRecognizer!
     @IBOutlet var googleMapsView: GMSMapView!
+    @IBOutlet var headerView: UIView!
     
     var fromTableViewController: RideFromTableViewController?
     var toTableViewController: RideToTableViewController?
@@ -47,6 +49,12 @@ class FirstViewController: UIViewController, RideSceneDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.rideNowButton.layer.borderWidth = 1
+        self.rideNowButton.layer.borderColor = UIColor.blue.cgColor
+        
+        self.scheduleRideButton.layer.borderWidth = 1
+        self.scheduleRideButton.layer.borderColor = UIColor.blue.cgColor
         
         /* Link to pay on venmo
         UIApplication.shared.open(NSURL(string:"https://venmo.com/?txn=pay&audience=private&recipients=@michael-christensen-20&amount=3&note=GVB") as! URL, options: [:], completionHandler: nil)
@@ -107,6 +115,7 @@ class FirstViewController: UIViewController, RideSceneDelegate {
         })
         
         self.createMap()
+        self.googleMapsView.reloadInputViews()
         
     } //end of view did load.
     
@@ -223,7 +232,7 @@ class FirstViewController: UIViewController, RideSceneDelegate {
             self.toContainerView.frame = CGRect(x: self.toContainerView.frame.origin.x, y: self.toContainerView.frame.origin.y, width: self.toContainerView.frame.width, height: frameHeight)
             
             // Hide the button
-            self.findDriverButton.alpha = buttonAlpha
+            //self.findDriverButton.alpha = buttonAlpha
             
         }, completion: { (Bool) -> Void in
             // what to do when completed animation.
@@ -317,15 +326,14 @@ class FirstViewController: UIViewController, RideSceneDelegate {
         // Create a GMSCameraPosition that tells the map to display the
         // coordinate -33.86,151.20 at zoom level 6.
         let camera = GMSCameraPosition.camera(withLatitude: -33.86, longitude: 151.20, zoom: 6.0)
-        let mapView = GMSMapView.map(withFrame: CGRect.zero, camera: camera)
-        self.googleMapsView = mapView
+        self.googleMapsView.camera = camera
         
         // Creates a marker in the center of the map.
         let marker = GMSMarker()
         marker.position = CLLocationCoordinate2D(latitude: -33.86, longitude: 151.20)
         marker.title = "Sydney"
         marker.snippet = "Australia"
-        marker.map = mapView
+        marker.map = self.googleMapsView
     }
 
     

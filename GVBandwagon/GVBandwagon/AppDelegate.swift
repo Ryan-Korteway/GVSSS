@@ -138,7 +138,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     // Set our own view controllers here:
     func prepareDrawerViewController() -> KGDrawerViewController {
-        let drawerViewController = KGDrawerViewController()
+        //let drawerViewController = KGDrawerViewController()
+        let drawerViewController = CustomKGDrawerViewController()
         
         //drawerViewController.centerViewController = drawerSettingsViewController()
         //drawerViewController.leftViewController = leftViewController()
