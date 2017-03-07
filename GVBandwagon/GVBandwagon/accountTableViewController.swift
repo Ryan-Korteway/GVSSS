@@ -130,10 +130,16 @@ class accountTableViewController: UITableViewController {
     */
     
     @IBAction func doneTapped(_ sender: Any) {
+        
+        /*
         self.dismiss(animated: true) {
             // go back to MainMenuView as the eyes of the user
-           self.presentingViewController?.dismiss(animated: false, completion: nil)
+            self.presentingViewController?.dismiss(animated: false, completion: nil)
+
         }
+        */
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        appDelegate.centerViewController = appDelegate.rideViewController()
     }
     
     

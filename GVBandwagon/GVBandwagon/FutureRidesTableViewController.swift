@@ -1,16 +1,14 @@
 //
-//  RideToTableViewController.swift
+//  FutureRidesTableViewController.swift
 //  GVBandwagon
 //
-//  Created by Nicolas Heady on 2/12/17.
+//  Created by Nicolas Heady on 3/4/17.
 //  Copyright © 2017 Nicolas Heady. All rights reserved.
 //
 
 import UIKit
 
-class RideToTableViewController: UITableViewController {
-    
-    var rideDelegate: RideSceneDelegate?
+class FutureRidesTableViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,25 +29,12 @@ class RideToTableViewController: UITableViewController {
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 3
+        return 0
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return 1
-    }
-    
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        var to = "Null"
-        if (indexPath.section == 0) {
-            to = "Allendale"
-        } else if (indexPath.section == 1) {
-            to = "Meijer"
-        } else if (indexPath.section == 2) {
-            to = "Downtown"
-        }
-        self.rideDelegate?.goingTo = to
-        self.rideDelegate?.onToViewTapped(Any.self)
+        return 0
     }
 
     /*

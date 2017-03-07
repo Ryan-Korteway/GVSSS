@@ -9,30 +9,25 @@
 import UIKit
 import Firebase
 import GoogleSignIn
+import GoogleMaps
 
 class DriveViewController: UIViewController {
     
-
-    @IBOutlet var exitButton: UIBarButtonItem!
-    @IBOutlet var allendaleView: UIView!
-    @IBOutlet var meijerView: UIView!
-    @IBOutlet var downtownView: UIView!
-    @IBOutlet var midwayRateField: UITextField!
-    @IBOutlet var farRateField: UITextField!
-    @IBOutlet var midwayLabel: UILabel!
-    @IBOutlet var farLabel: UILabel!
+    @IBOutlet var goOnlineLabelBtn: UILabel!
+    @IBOutlet var messageDismissButton: UIButton!
+    @IBOutlet var onlineMessageView: UIView!
+    @IBOutlet var googleMap: GMSMapView!
     @IBOutlet var goOnlineButton: UIButton!
     
-    var selection: String = "Null"
+    var isMessageDisplayed = false
     
     let ref = FIRDatabase.database().reference();
-    
     let userID = FIRAuth.auth()!.currentUser!.uid
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
+        self.createMap()
     }
 
     override func didReceiveMemoryWarning() {
@@ -52,63 +47,26 @@ class DriveViewController: UIViewController {
         appDelegate.toggleLeftDrawer(sender: sender as AnyObject, animated: false)
     }
     
-    
-    // When a location is tapped, highlight it, and unhighlight the others.
-    // Also change the labels for the rates to each location,
-    // depending on the current location.
-    @IBAction func onAllenTapped(_ sender: Any) {
-        if (selection == "Allendale") {
-            return
-        }
-        self.allendaleView.backgroundColor = UIColor.blue.withAlphaComponent(0.2)
-        self.selection = "Allendale"
-        self.meijerView.backgroundColor = UIColor.clear
-        self.downtownView.backgroundColor = UIColor.clear
-        
-        // Adjust labels
-        self.midwayLabel.text = "Meijer Rate"
-        self.farLabel.text = "Downtown Rate"
-    }
-
-    @IBAction func onMeijerTapped(_ sender: Any) {
-        if (selection == "Meijer") {
-            return
-        }
-        self.meijerView.backgroundColor = UIColor.blue.withAlphaComponent(0.2)
-        self.selection = "Meijer"
-        self.allendaleView.backgroundColor = UIColor.clear
-        self.downtownView.backgroundColor = UIColor.clear
-        
-        // Adjust labels
-        self.midwayLabel.text = "Allendale Rate"
-        self.farLabel.text = "Downtown Rate"
-    }
-    
-    @IBAction func onDowntownTapped(_ sender: Any) {
-        if (selection == "Downtown") {
-            return
-        }
-        self.downtownView.backgroundColor = UIColor.blue.withAlphaComponent(0.2)
-        self.selection = "Downtown"
-        self.meijerView.backgroundColor = UIColor.clear
-        self.allendaleView.backgroundColor = UIColor.clear
-        
-        // Adjust labels
-        self.midwayLabel.text = "Meijer Rate"
-        self.farLabel.text = "Allendale Rate"
-    }
-    
-    // TODO: Ryan, here you could send some hardcoded information to Firebase. At least when
-    // the UI (Maps, etc) is finished we'll have the Firebase code prepped and ready to go.
-    @IBAction func goOnlineTapped(_ sender: UIButton) {
-    
-    //    print("going online")
+    @IBAction func goOnlineLabelBtnTapped(_ sender: Any) {
         
         let tempRef = self.ref.child("activedrivers/\(self.userID)/");
         
         tempRef.child("jointime").setValue(NSDate().description)
         tempRef.child("location").setValue(["start": "Bing", "end": "Bong"])
-    
+        
+        
+        // If user is offline do this
+        
+        // Getting errors trying to change label text and
+        // animate the view simultaneously.
+        /*
+        if (self.goOnlineLabelBtn.text == "Go Online!") {
+            self.displayOnlineMessage()
+        } else {
+            self.goOnlineLabelBtn.text = "Go Online!"
+        }
+        */
+        self.displayOnlineMessage()
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -126,5 +84,46 @@ class DriveViewController: UIViewController {
         // Pass the selected object to the new view controller.
     }
     */
+    
+    func createMap() {
+        // Create a GMSCameraPosition that tells the map to display the
+        // coordinate -33.86,151.20 at zoom level 6.
+        let camera = GMSCameraPosition.camera(withLatitude: -33.86, longitude: 151.20, zoom: 6.0)
+        self.googleMap.camera = camera
+        
+        // Creates a marker in the center of the map.
+        let marker = GMSMarker()
+        marker.position = CLLocationCoordinate2D(latitude: -33.86, longitude: 151.20)
+        marker.title = "Sydney"
+        marker.snippet = "Australia"
+        marker.map = self.googleMap
+    }
+    
+    func displayOnlineMessage() -> Void {
+        var animateDirection: CGFloat = -125
+        var shadowOpacity: Float = 0.6
+        if (!isMessageDisplayed) {
+            isMessageDisplayed = true
+        } else {
+            isMessageDisplayed = false
+            animateDirection = 125
+            shadowOpacity = 1.0
+        }
+        
+        UIView.animate(withDuration: 0.3, animations: {
+            self.onlineMessageView.frame = CGRect(x: self.onlineMessageView.frame.origin.x, y: self.onlineMessageView.frame.origin.y + animateDirection, width: self.onlineMessageView.frame.width, height: self.onlineMessageView.frame.height)
+            
+            self.view.layer.shadowOpacity = shadowOpacity
+        }, completion: { (Bool) -> Void in
+            // Do nothing.
+            //self.goOnlineLabelBtn.text = "Go Offline"
+        })
+        
+    }
+    
+    @IBAction func onDismissTapped(_ sender: Any) {
+        self.displayOnlineMessage()
+    }
+    
 
 }

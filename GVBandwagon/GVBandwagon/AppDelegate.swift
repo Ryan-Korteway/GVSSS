@@ -26,6 +26,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     let driveViewControllerStoryboardId = "driveViewControllerStoryboardId"
     let menuTableViewControllerStoryboardId = "menuViewControllerStoryboardId"
     let signInViewControllerStoryboardId = "signInViewControllerStoryboardId"
+    let settingsNavControllerStoryboardId = "settingsNavigationController"
+    let driveTabBarControllerStoryboardId = "driveTabBarController"
     
     let kKGDrawerSettingsViewControllerStoryboardId = "KGDrawerSettingsViewControllerStoryboardId"
     let kKGDrawerWebViewViewControllerStoryboardId = "KGDrawerWebViewControllerStoryboardId"
@@ -178,9 +180,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return viewController
     }
     
-    func driveViewController() -> UIViewController {
-        let viewController = viewControllerForStoryboardId(storyboardId: driveViewControllerStoryboardId)
-        return viewController
+    func driveViewController() -> UITabBarController {
+        let viewController = viewControllerForStoryboardId(storyboardId: driveTabBarControllerStoryboardId)
+        return viewController as! UITabBarController
+    }
+    
+    func settingsNavController() -> UINavigationController {
+        let navController = viewControllerForStoryboardId(storyboardId: settingsNavControllerStoryboardId)
+        return navController as! UINavigationController
     }
     
     func menuTableViewController() -> UIViewController {

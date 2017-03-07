@@ -39,7 +39,7 @@ class MenuTableViewController: UITableViewController {
         // #warning Incomplete implementation, return the number of sections
         
         // Number and type of menu options changes depending on if in Ride or Drive mode...
-        return 6
+        return 7
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -59,11 +59,13 @@ class MenuTableViewController: UITableViewController {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         
         if (indexPath.section == 1) {
-            //enter account
-            appDelegate.toggleLeftDrawer(sender: self.modeLabel, animated: false)
+            //enter profile
+            //appDelegate.toggleLeftDrawer(sender: self.modeLabel, animated: false)
+            appDelegate.centerViewController = appDelegate.settingsNavController()
         } else if (indexPath.section == 2) {
             // Change name of this cell label to "ride mode" if it's "drive mode", and vice versa
             if (self.modeLabel.text == "Drive") {
+                // Needs to load the tabbarviewcontroller
                 appDelegate.centerViewController = appDelegate.driveViewController()
                 self.modeLabel.text = "Ride"
             } else {
@@ -71,12 +73,13 @@ class MenuTableViewController: UITableViewController {
                 self.modeLabel.text = "Drive"
             }
         } else if (indexPath.section == 3) {
-            //enter my trips
+            //enter scheduled rides
         } else if (indexPath.section == 4) {
-            //enter help
+            //enter my trips
+        } else if (indexPath.section == 5) {
+            // enter help
         } else {
             //sign out
-            let appDelegate = UIApplication.shared.delegate as! AppDelegate
             appDelegate.firebaseSignOut()
         }
     }
