@@ -9,7 +9,7 @@
 import UIKit
 
 class HelpViewController: UIViewController {
-
+    
     @IBOutlet var doneButton: UIBarButtonItem!
     
     override func viewDidLoad() {
@@ -34,11 +34,9 @@ class HelpViewController: UIViewController {
     }
     */
     
-    @IBAction func doneTapped(_ sender: Any) {
-        self.dismiss(animated: true) {
-            // go back to MainMenuView as the eyes of the user
-            self.presentingViewController?.dismiss(animated: false, completion: nil)
-        }
+    @IBAction func onDoneTapped(_ sender: Any) {
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        appDelegate.centerViewController = appDelegate.rideViewController()
     }
     
 

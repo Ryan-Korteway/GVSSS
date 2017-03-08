@@ -28,6 +28,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     let signInViewControllerStoryboardId = "signInViewControllerStoryboardId"
     let settingsNavControllerStoryboardId = "settingsNavigationController"
     let driveTabBarControllerStoryboardId = "driveTabBarController"
+    let driverPanelViewControllerStoryboardId = "driverPanelViewController"
+    let helpViewControllerStoryboardId = "helpViewController"
+    let myHistoryNavigationControllerStoryboardId = "myHistoryNavigationController"
+    let scheduledRidesNavigationControllerStoryboardId = "scheduledRidesNavigationController"
     
     let kKGDrawerSettingsViewControllerStoryboardId = "KGDrawerSettingsViewControllerStoryboardId"
     let kKGDrawerWebViewViewControllerStoryboardId = "KGDrawerWebViewControllerStoryboardId"
@@ -150,8 +154,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         drawerViewController.centerViewController = rideViewController()
         drawerViewController.leftViewController = menuTableViewController()
         
-        // Not using right drawer
-        //drawerViewController.rightViewController = rightViewController()
+        // Right drawer is for the driver's panel only
+        drawerViewController.rightViewController = driverPanelViewController()
         drawerViewController.backgroundImage = UIImage(named: "sky3")
         
         _drawerViewController = drawerViewController
@@ -195,10 +199,32 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return viewController
     }
     
+    func driverPanelViewController() -> UIViewController {
+        let viewController = viewControllerForStoryboardId(storyboardId: driverPanelViewControllerStoryboardId)
+        return viewController
+    }
+    
     func signInViewController() -> UIViewController {
         let viewController = viewControllerForStoryboardId(storyboardId: signInViewControllerStoryboardId)
         return viewController
     }
+    
+    func scheduledRidesTableViewController() -> UINavigationController {
+        let viewController = viewControllerForStoryboardId(storyboardId: scheduledRidesNavigationControllerStoryboardId)
+        return viewController as! UINavigationController
+    }
+    
+    func myHistoryTableViewController() -> UINavigationController {
+        let viewController = viewControllerForStoryboardId(storyboardId: myHistoryNavigationControllerStoryboardId)
+        return viewController as! UINavigationController
+    }
+    
+    func helpViewController() -> UIViewController {
+        let viewController = viewControllerForStoryboardId(storyboardId: helpViewControllerStoryboardId)
+        return viewController
+    }
+    
+    
     // -------------------
     
     private func leftViewController() -> UIViewController {

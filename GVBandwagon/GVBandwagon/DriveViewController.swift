@@ -13,13 +13,15 @@ import GoogleMaps
 
 class DriveViewController: UIViewController {
     
-    @IBOutlet var goOnlineLabelBtn: UILabel!
+    @IBOutlet var driverPanelButton: UIButton!
+    @IBOutlet var displayMsgBtmCons: NSLayoutConstraint!
     @IBOutlet var messageDismissButton: UIButton!
     @IBOutlet var onlineMessageView: UIView!
     @IBOutlet var googleMap: GMSMapView!
     @IBOutlet var goOnlineButton: UIButton!
     
     var isMessageDisplayed = false
+    let locationManager = CLLocationManager()
     
     let ref = FIRDatabase.database().reference();
     let userID = FIRAuth.auth()!.currentUser!.uid
@@ -27,6 +29,13 @@ class DriveViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        //user location stuff
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+        locationManager.activityType = .automotiveNavigation
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.startUpdatingLocation()
+        
         self.createMap()
     }
 
@@ -53,19 +62,7 @@ class DriveViewController: UIViewController {
         
         tempRef.child("jointime").setValue(NSDate().description)
         tempRef.child("location").setValue(["start": "Bing", "end": "Bong"])
-        
-        
-        // If user is offline do this
-        
-        // Getting errors trying to change label text and
-        // animate the view simultaneously.
-        /*
-        if (self.goOnlineLabelBtn.text == "Go Online!") {
-            self.displayOnlineMessage()
-        } else {
-            self.goOnlineLabelBtn.text = "Go Online!"
-        }
-        */
+ 
         self.displayOnlineMessage()
     }
     
@@ -86,20 +83,14 @@ class DriveViewController: UIViewController {
     */
     
     func createMap() {
-        // Create a GMSCameraPosition that tells the map to display the
-        // coordinate -33.86,151.20 at zoom level 6.
-        let camera = GMSCameraPosition.camera(withLatitude: -33.86, longitude: 151.20, zoom: 6.0)
-        self.googleMap.camera = camera
-        
-        // Creates a marker in the center of the map.
-        let marker = GMSMarker()
-        marker.position = CLLocationCoordinate2D(latitude: -33.86, longitude: 151.20)
-        marker.title = "Sydney"
-        marker.snippet = "Australia"
-        marker.map = self.googleMap
+        self.googleMap.isMyLocationEnabled = true
+        self.googleMap.settings.myLocationButton = true
     }
     
     func displayOnlineMessage() -> Void {
+        
+        print("isMessageDisplayed before: \(isMessageDisplayed)")
+        
         var animateDirection: CGFloat = -125
         var shadowOpacity: Float = 0.6
         if (!isMessageDisplayed) {
@@ -110,20 +101,56 @@ class DriveViewController: UIViewController {
             shadowOpacity = 1.0
         }
         
+        print("isMessageDisplayed after: \(isMessageDisplayed)")
+        print("Animate direction: \(animateDirection)\n")
+        
         UIView.animate(withDuration: 0.3, animations: {
             self.onlineMessageView.frame = CGRect(x: self.onlineMessageView.frame.origin.x, y: self.onlineMessageView.frame.origin.y + animateDirection, width: self.onlineMessageView.frame.width, height: self.onlineMessageView.frame.height)
             
             self.view.layer.shadowOpacity = shadowOpacity
         }, completion: { (Bool) -> Void in
             // Do nothing.
-            //self.goOnlineLabelBtn.text = "Go Offline"
         })
         
+    }
+    
+    
+    @IBAction func onDriverPanelTapped(_ sender: Any) {
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        appDelegate.toggleRightDrawer(sender: sender as AnyObject, animated: false)
     }
     
     @IBAction func onDismissTapped(_ sender: Any) {
         self.displayOnlineMessage()
     }
-    
+}
 
+extension DriveViewController: CLLocationManagerDelegate {
+    
+    private func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
+        
+        if status == .authorizedWhenInUse {
+            
+            locationManager.startUpdatingLocation()
+            
+            self.googleMap.isMyLocationEnabled = true
+            self.googleMap.settings.myLocationButton = true
+        } else {
+            print("\nNOT AUTHORIZED\n")
+        }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        if let location = locations.last {
+            
+            let camera = GMSCameraPosition(target: location.coordinate, zoom: 15, bearing: 0, viewingAngle: 0)
+            
+            //self.googleMap.animate(to: camera)
+            self.googleMap.camera = camera
+            
+            locationManager.stopUpdatingLocation()
+        } else {
+            print("No location found!")
+        }
+    }
 }

@@ -1,17 +1,16 @@
 //
-//  MenuTableViewController.swift
+//  MyHistoryTableViewController.swift
 //  GVBandwagon
 //
-//  Created by Nicolas Heady on 1/28/17.
+//  Created by Nicolas Heady on 3/7/17.
 //  Copyright © 2017 Nicolas Heady. All rights reserved.
 //
 
 import UIKit
 
-class MenuTableViewController: UITableViewController {
+class MyHistoryTableViewController: UITableViewController {
 
-    @IBOutlet var modeLabel: UILabel!
-
+    @IBOutlet var doneButton: UIBarButtonItem!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -21,11 +20,8 @@ class MenuTableViewController: UITableViewController {
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
-        modeLabel?.text = "Drive"
     }
 
-    //TODO tapping drive mode should change the rider to driver mode/state in the userstates table and change the label from ride mode to drive mode if possible.
-    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -35,56 +31,14 @@ class MenuTableViewController: UITableViewController {
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        
-        // Number and type of menu options changes depending on if in Ride or Drive mode...
-        return 7
+        return 0
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return 1
+        return 0
     }
-    
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if (indexPath.section == 0) {
-            return 80
-        } else {
-            return 50
-        }
-    }
-    
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        
-        if (indexPath.section == 1) {
-            //enter profile
-            //appDelegate.toggleLeftDrawer(sender: self.modeLabel, animated: false)
-            appDelegate.centerViewController = appDelegate.settingsNavController()
-        } else if (indexPath.section == 2) {
-            // Change name of this cell label to "ride mode" if it's "drive mode", and vice versa
-            if (self.modeLabel.text == "Drive") {
-                // Needs to load the tabbarviewcontroller
-                appDelegate.centerViewController = appDelegate.driveViewController()
-                self.modeLabel.text = "Ride"
-            } else {
-                appDelegate.centerViewController = appDelegate.rideViewController()
-                self.modeLabel.text = "Drive"
-            }
-        } else if (indexPath.section == 3) {
-            //enter scheduled rides
-            appDelegate.centerViewController = appDelegate.scheduledRidesTableViewController()
-        } else if (indexPath.section == 4) {
-            //enter my trips
-            appDelegate.centerViewController = appDelegate.myHistoryTableViewController()
-        } else if (indexPath.section == 5) {
-            // enter help
-            appDelegate.centerViewController = appDelegate.helpViewController()
-        } else {
-            //sign out
-            appDelegate.firebaseSignOut()
-        }
-    }
-    
+
     /*
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
@@ -139,4 +93,18 @@ class MenuTableViewController: UITableViewController {
         // Pass the selected object to the new view controller.
     }
     */
+    
+    @IBAction func onDoneTapped(_ sender: Any) {
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        appDelegate.centerViewController = appDelegate.rideViewController()
+    }
+    
+    // Not sure where the pay now and request payment buttons will go, but we can still add the code here. When we decide on placement of the elements, we will copy this into the IBAction function for those buttons.
+    func payNow() -> Void {
+        
+    }
+    
+    func requestPayment() -> Void {
+        
+    }
 }

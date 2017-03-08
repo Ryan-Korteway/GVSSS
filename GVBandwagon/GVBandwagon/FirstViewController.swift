@@ -12,14 +12,12 @@ import GoogleMaps
 
 class FirstViewController: UIViewController {
 
-
     @IBOutlet var rideNowButton: UIButton!
     @IBOutlet var scheduleRideButton: UIButton!
     @IBOutlet var superViewTapGesture: UITapGestureRecognizer!
     @IBOutlet var googleMapsView: GMSMapView!
-    @IBOutlet var headerView: UIView!
     
-    var containerDelegate: ContainerDelegate?
+    let locationManager = CLLocationManager()
     
     var startingFrom: String = "Bing"
     var goingTo: String = "Bong"
@@ -95,6 +93,13 @@ class FirstViewController: UIViewController {
             self.uid_forDriver = snapshot.value! as! String ;
         })
         
+        //user location stuff
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+        locationManager.activityType = .automotiveNavigation
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.startUpdatingLocation()
+        
         self.createMap()
         
     } //end of view did load.
@@ -104,12 +109,6 @@ class FirstViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        super.touchesBegan(touches, with: event)
-        
-        //nameField.resignFirstResponder() // User with picker?
-    }
-    
     func updateUserInfo(name: String, phone: String) {
         let userID = FIRAuth.auth()!.currentUser!.uid
         
@@ -117,36 +116,11 @@ class FirstViewController: UIViewController {
         self.ref.child("users/\(userID)/phone").setValue(phone)
     }
     
-    @IBAction func onMenuTapped(_ sender: Any) {
-        guard let menuOpen = self.containerDelegate?.menuShown else {
-            print("containerDelegate or it's menuShown field is nil!")
-            return
-        }
-        if (menuOpen) {
-            self.containerDelegate?.hideMenu()
-        } else {
-            self.containerDelegate?.showMenu()
-        }
-    }
     
-    
-    @IBAction func onViewTapped(_ sender: Any) {
-        print("View has been tapped.")
-        guard let menuOpen = self.containerDelegate?.menuShown else {
-            print("containerDelegate or it's menuShown field is nil!")
-            return
-        }
-        if (menuOpen) {
-            self.containerDelegate?.hideMenu()
-        }
-    }
-    
-    
-    // TODO: Ryan, here you could hardcode some lats/longs (location objects) to use for
-    // storing in Firebase, etc. Instead of getting the users current location, just
-    // use the hardcoded location, then everything else with Firebase should be as usual.
-    // Feel free to change anything in this function:
-    @IBAction func onFindTapped(_ sender: Any) {
+    // Ride Now button. Inside code, will add UI elements later.
+    // Looking into adding an on-screen "bar" for searching up addresses, etc.
+    // Will take some time.
+    @IBAction func onRideNowTapped(_ sender: Any) {
         if (self.startingFrom == "Null" || self.goingTo == "Null") {
             // Display a pop telling the user they must select a From and To location
             print("Select a FROM and TO location.")
@@ -201,7 +175,7 @@ class FirstViewController: UIViewController {
                 alert.addAction(defaultAction);
                 self.present(alert, animated:true, completion:nil);
                 
-                //no drivers means set the driver_uid value to "none" 
+                //no drivers means set the driver_uid value to "none"
                 
                 return
                 
@@ -213,7 +187,10 @@ class FirstViewController: UIViewController {
         }
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+    // Plan on doing the same for Schedule Ride button as Ride Now.
+    // Would rather have a view pop up over the map in which the user
+    // can enter info rather than switch to a entirely new view controller.
+    @IBAction func onScheduleRideTapped(_ sender: Any) {
     }
 
     @IBAction func toggleLeftDrawer(_ sender: Any) {
@@ -222,19 +199,39 @@ class FirstViewController: UIViewController {
     }
     
     func createMap() {
-        // Create a GMSCameraPosition that tells the map to display the
-        // coordinate -33.86,151.20 at zoom level 6.
-        let camera = GMSCameraPosition.camera(withLatitude: -33.86, longitude: 151.20, zoom: 6.0)
-        self.googleMapsView.camera = camera
         
-        // Creates a marker in the center of the map.
-        let marker = GMSMarker()
-        marker.position = CLLocationCoordinate2D(latitude: -33.86, longitude: 151.20)
-        marker.title = "Sydney"
-        marker.snippet = "Australia"
-        marker.map = self.googleMapsView
+        self.googleMapsView.isMyLocationEnabled = true
+        self.googleMapsView.settings.myLocationButton = true
+        
     }
-
-    
 }
 
+extension FirstViewController: CLLocationManagerDelegate {
+    
+    private func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
+        
+        if status == .authorizedWhenInUse {
+            
+            locationManager.startUpdatingLocation()
+            
+            self.googleMapsView.isMyLocationEnabled = true
+            self.googleMapsView.settings.myLocationButton = true
+        } else {
+            print("\nNOT AUTHORIZED\n")
+        }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        if let location = locations.last {
+            
+            let camera = GMSCameraPosition(target: location.coordinate, zoom: 15, bearing: 0, viewingAngle: 0)
+            
+            //self.googleMapsView.animate(to: camera)
+            self.googleMapsView.camera = camera
+            
+            locationManager.stopUpdatingLocation()
+        } else {
+            print("No location found!")
+        }
+    }
+}

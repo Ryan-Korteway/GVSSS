@@ -141,9 +141,5 @@ class accountTableViewController: UITableViewController {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         appDelegate.centerViewController = appDelegate.rideViewController()
     }
-    
-    
-    @IBAction func backToAccount(segue:UIStoryboardSegue) {
-    }
 
 }
