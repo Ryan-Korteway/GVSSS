@@ -378,7 +378,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         //get black and whitelist too.
         
         ref.child("users/\(userID)/rider/whiteList").observe( .value, with: { snapshot in
-            var localList: NSArray
+            var localList: NSArray = []
             for wl in snapshot.children {
                 localList = localList.adding((wl as! FIRDataSnapshot).key ) as NSArray;
             }
@@ -386,7 +386,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         })
         
         ref.child("users/\(userID)/rider/blackList").observe( .value, with: { snapshot in
-            var localList: NSArray
+            var localList: NSArray = []
             for wl in snapshot.children {
                 localList = localList.adding((wl as! FIRDataSnapshot).key ) as NSArray;
             }
@@ -394,7 +394,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         })
         
         ref.child("users/\(userID)/driver/whiteList").observe( .value, with: { snapshot in
-            var localList: NSArray
+            var localList: NSArray = []
             for wl in snapshot.children {
                 localList = localList.adding((wl as! FIRDataSnapshot).key ) as NSArray;
             }
@@ -402,7 +402,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         })
         
         ref.child("users/\(userID)/driver/blackList").observe( .value, with: { snapshot in
-            var localList: NSArray
+            var localList: NSArray = []
             for wl in snapshot.children {
                 localList = localList.adding( (wl as! FIRDataSnapshot).key ) as NSArray;
             }
@@ -454,7 +454,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     }
                 })
                 
-                FirstViewController.ride_offer(item: localCell)
+                let localFirst = FirstViewController()
+                localFirst.ride_offer(item: localCell);
                 
             }
             
@@ -506,7 +507,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                             print(error.localizedDescription)
                         }
                     })
-                    DriveViewController.ride_request(item: localCell)
+                    
+                    let localDriver = DriveViewController() //hopefully these local redeclarations hold.
+                    localDriver.ride_request(item: localCell)
             }
         })
     }
@@ -590,13 +593,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         ref.child("users/\(toWatchUid)/rider/offers/immediate").observeSingleEvent(of: .childRemoved, with: { snapshot in
             //if we are in a riders portion of the app, currentViewController has rider offers function, call it, there we load the view however we want.
             
-            var current = self._centerViewController
+            let current = self._centerViewController
             
             switch(current){
             //switches and casts here
             case is DriveViewController:
-                    current = current as! DriveViewController
-                    current.ride_accept(snapshot as FIRDataSnapshot); //and then on the other end, if the accept really iss an accept, then we announce as much, otherwise not so much.
+                    let localcurrent = current as! DriveViewController
+                    localcurrent.ride_accept(item: cellItem.init(snapshot: snapshot as FIRDataSnapshot)); //and then on the other end, if the accept really iss an accept, then we announce as much, otherwise not so much.
             default:
                 // to do
                 print("local notification here about offer acceptance");

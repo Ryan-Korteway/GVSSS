@@ -148,14 +148,14 @@ class DriveViewController: UIViewController, driver_notifications {
         let destinationInfo: NSDictionary = cellInfo["destination"] as! NSDictionary
         
         let marker = GMSMarker()
-        marker.position = CLLocationCoordinate2D(latitude: locationInfo["lat"], longitude: locationInfo["long"])
+        marker.position = CLLocationCoordinate2D(latitude: locationInfo.value(forKey: "lat") as! CLLocationDegrees, longitude: locationInfo.value(forKey: "long") as! CLLocationDegrees)
         marker.title = "Potential Rider: \(cellInfo["name"])"
         marker.snippet = "Close enough to Grand Valley."
-        
+        marker.icon = GMSMarker.markerImage(with: .green)
         marker.map = self.googleMap
         
         let marker2 = GMSMarker()
-        marker2.position = CLLocationCoordinate2D(latitude: destinationInfo["lat"], longitude: destinationInfo["long"])
+        marker2.position = CLLocationCoordinate2D(latitude: destinationInfo.value(forKey: "lat") as! CLLocationDegrees, longitude: destinationInfo.value(forKey: "long") as! CLLocationDegrees)
         marker2.title = "Potential Rider Destination"
         marker2.snippet = "Close enough to Grand Valley."
         
@@ -178,14 +178,14 @@ class DriveViewController: UIViewController, driver_notifications {
         let destinationInfo: NSDictionary = cellInfo["destination"] as! NSDictionary
         
         let marker = GMSMarker()
-        marker.position = CLLocationCoordinate2D(latitude: locationInfo["lat"], longitude: locationInfo["long"])
+        marker.position = CLLocationCoordinate2D(latitude: locationInfo.value(forKey: "lat") as! CLLocationDegrees, longitude: locationInfo.value(forKey: "long") as! CLLocationDegrees)
         marker.title = "White Listed Rider: \(cellInfo["name"])"
         marker.snippet = "Close enough to Grand Valley."
-        
+        marker.icon = GMSMarker.markerImage(with: .blue)
         marker.map = self.googleMap
         
         let marker2 = GMSMarker()
-        marker2.position = CLLocationCoordinate2D(latitude: destinationInfo["lat"], longitude: destinationInfo["long"])
+        marker2.position = CLLocationCoordinate2D(latitude: destinationInfo.value(forKey: "lat") as! CLLocationDegrees, longitude: destinationInfo.value(forKey: "long") as! CLLocationDegrees)
         marker2.title = "Potential Rider Destination"
         marker2.snippet = "Close enough to Grand Valley."
         

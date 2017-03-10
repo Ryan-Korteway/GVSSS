@@ -113,6 +113,14 @@ class FirstViewController: UIViewController, rider_notifications {
         self.googleMapsView.isMyLocationEnabled = true
         self.googleMapsView.settings.myLocationButton = true
         
+//        let marker = GMSMarker()
+//        marker.position = CLLocationCoordinate2D(latitude: 51.507351, longitude: -0.127758)
+//        marker.title = "Driver"
+//        marker.snippet = "Close enough to Grand Valley."
+//        marker.icon = GMSMarker.markerImage(with: .blue) //custom icon color code here.
+        // can also do marker.icon = UIImage(named: "house") and then our app would just have to have a house.png file in it to use that marker. better to use a constant to hold that UIImage and to set the icon off of that instead of doing lots of redeclarations/assignments fresh each time.
+        //marker.map = self.googleMapsView
+        
     }
     
     func isRider() -> Bool {
@@ -133,7 +141,7 @@ class FirstViewController: UIViewController, rider_notifications {
         let locationInfo: NSDictionary = cellInfo["origin"] as! NSDictionary
         
         let marker = GMSMarker()
-        marker.position = CLLocationCoordinate2D(latitude: locationInfo["lat"], longitude: locationInfo["long"])
+        marker.position = CLLocationCoordinate2D(latitude: locationInfo.value(forKey: "lat") as! CLLocationDegrees, longitude: locationInfo.value(forKey: "long") as! CLLocationDegrees)
         marker.title = "Driver: \(cellInfo["name"])"
         marker.snippet = "Close enough to Grand Valley."
         marker.map = self.googleMapsView
@@ -143,11 +151,11 @@ class FirstViewController: UIViewController, rider_notifications {
         //uid and just knowing the rest of the path. then whenever the observer gets triggered, the markers posistions just get reset to the new lats and longs.
         
         self.ref.child("/users/\(currentUser!.uid)/rider/offers/immediate/\(cellInfo["uid"]))").observe( .value, with: { snapshot in
-             let newCell = cellInfo.init(snapshot)
+             let newCell = cellItem.init(snapshot: snapshot)
              let newInfo = newCell.toAnyObject() as! NSDictionary
              let newLocation = newInfo["origin"] as! NSDictionary
             
-            marker.position = CLLocationCoordinate2D(latitude: newLocation["lat"], longitude: newLocation["long"])
+            marker.position = CLLocationCoordinate2D(latitude: newLocation.value(forKey: "lat") as! CLLocationDegrees, longitude: newLocation.value(forKey: "long") as! CLLocationDegrees)
         }) //hopefully this makes the pins update their locations and then its needed in the driver stuff to set up the driver to update these fields.
     }
 }
