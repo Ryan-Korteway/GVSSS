@@ -37,6 +37,8 @@
 		0BE676311E3D78B5009675F2 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0BE6762F1E3D78B5009675F2 /* GoogleService-Info.plist */; };
 		0BE676321E3D78B5009675F2 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0BE6762F1E3D78B5009675F2 /* GoogleService-Info.plist */; };
 		851AAD191E58C54B0023F0D7 /* findingRidersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 851AAD181E58C54B0023F0D7 /* findingRidersViewController.swift */; };
+		852AD80A1E707B1A00155C24 /* cellFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 852AD8091E707B1A00155C24 /* cellFile.swift */; };
+		852AD80C1E707B4F00155C24 /* GVBNotificationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 852AD80B1E707B4F00155C24 /* GVBNotificationDelegate.swift */; };
 		85365DE51E3E8ACB003709C3 /* RegisterAsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85365DE41E3E8ACB003709C3 /* RegisterAsViewController.swift */; };
 		8D7CC2232AD3A68143663BA2 /* Pods_GVBandwagonTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A09C8C265162B5784985937B /* Pods_GVBandwagonTests.framework */; };
 		E95A7E4BE11C558326F54189 /* Pods_GVBandwagon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1F2583AB45790452F36E20D /* Pods_GVBandwagon.framework */; };
@@ -95,6 +97,8 @@
 		1FBE53FF6CE82D3A9B6283BB /* Pods-GVBandwagonTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GVBandwagonTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-GVBandwagonTests/Pods-GVBandwagonTests.release.xcconfig"; sourceTree = "<group>"; };
 		6EA9EDCC8B7D08BD0D8F9580 /* Pods-GVBandwagonTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GVBandwagonTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-GVBandwagonTests/Pods-GVBandwagonTests.debug.xcconfig"; sourceTree = "<group>"; };
 		851AAD181E58C54B0023F0D7 /* findingRidersViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = findingRidersViewController.swift; sourceTree = "<group>"; };
+		852AD8091E707B1A00155C24 /* cellFile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = cellFile.swift; sourceTree = "<group>"; };
+		852AD80B1E707B4F00155C24 /* GVBNotificationDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GVBNotificationDelegate.swift; sourceTree = "<group>"; };
 		85365DE41E3E8ACB003709C3 /* RegisterAsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegisterAsViewController.swift; sourceTree = "<group>"; };
 		92439C4256939807408E1F10 /* Pods-GVBandwagonUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GVBandwagonUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-GVBandwagonUITests/Pods-GVBandwagonUITests.release.xcconfig"; sourceTree = "<group>"; };
 		A09C8C265162B5784985937B /* Pods_GVBandwagonTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GVBandwagonTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -158,6 +162,8 @@
 		0B197CDF1E32815200392B40 /* GVBandwagon */ = {
 			isa = PBXGroup;
 			children = (
+				852AD80B1E707B4F00155C24 /* GVBNotificationDelegate.swift */,
+				852AD8091E707B1A00155C24 /* cellFile.swift */,
 				0BC8F62D1E3A795A00E94F5B /* GVBandwagon.entitlements */,
 				0B197CE01E32815200392B40 /* AppDelegate.swift */,
 				0B3DE4FB1E3BB57C00733810 /* SignInViewController.swift */,
@@ -527,7 +533,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				852AD80C1E707B4F00155C24 /* GVBNotificationDelegate.swift in Sources */,
 				0B3DE4FC1E3BB57C00733810 /* SignInViewController.swift in Sources */,
+				852AD80A1E707B1A00155C24 /* cellFile.swift in Sources */,
 				0B944AAD1E6BB0D800A856DE /* FutureRidesTableViewController.swift in Sources */,
 				0B556BBF1E51390400EAE537 /* DriveViewController.swift in Sources */,
 				0B396B1F1E6F7ECC00573A94 /* ScheduledRidesTableViewController.swift in Sources */,

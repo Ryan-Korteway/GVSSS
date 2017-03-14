@@ -10,7 +10,7 @@ import UIKit
 import Firebase
 import GoogleMaps
 
-class FirstViewController: UIViewController {
+class FirstViewController: UIViewController, rider_notifications {
 
     @IBOutlet var rideNowButton: UIButton!
     @IBOutlet var scheduleRideButton: UIButton!
@@ -19,8 +19,10 @@ class FirstViewController: UIViewController {
     
     let locationManager = CLLocationManager()
     
-    var startingFrom: String = "Bing"
-    var goingTo: String = "Bong"
+    
+    //TODO TAKE OUT THE HARD CODED LAT AND LONGS.
+    var startingFrom: NSDictionary = ["lat": 43.013570, "long": -85.775875 ]
+    var goingTo: NSDictionary = ["lat": 42.013570, "long": -85.775875]
     
     //let userid = "0001" //hardcoded values, should be the fireauth current user stuff.
     let currentUser = FIRAuth.auth()!.currentUser
@@ -41,57 +43,6 @@ class FirstViewController: UIViewController {
         /* Link to pay on venmo
         UIApplication.shared.open(NSURL(string:"https://venmo.com/?txn=pay&audience=private&recipients=@michael-christensen-20&amount=3&note=GVB") as! URL, options: [:], completionHandler: nil)
          */
-        
-        // COPY FOR POP UP'S ABOUT RIDER DRIVR OFFERS STARTS HERE.
-       
-        let riderRef = FIRDatabase.database().reference(withPath: "users/\(currentUser!.uid)/rider/")
-        var riderfirst = true;
-        
-        riderRef.child("driver_found").observe(.value, with: { (snapshot) in
-            //let postDict = snapshot.value as? [String : AnyObject] ?? [:]
-            if (riderfirst) {
-                riderfirst = false;
-            } else {
-                //may need to further restrict the alert so that it does not pop up when the riderfound value is being reset to false.
-                
-                if(snapshot.value! as! Bool) {
-                    riderRef.child("driver_uid").observeSingleEvent(of: .value, with: { (snapshot) in
-                    //inner if for accepted, else for rejected.
-                    if( snapshot.value! as! String == "none") {
-                        let alert = UIAlertController(title:"Driver Alert", message:"We are sorry but this driver is unavailable.", preferredStyle: .actionSheet);
-                        
-                        let defaultAction = UIAlertAction(title:"OK", style:.default) { action -> Void in
-                            //code for the action can go here. so accepts or deny's
-                            riderRef.child("driver_found").setValue(false)
-                        }
-                        
-                        alert.addAction(defaultAction);
-                        self.present(alert, animated:true, completion:nil);
-                        
-                    } else {
-                        
-                        let alert = UIAlertController(title:"Driver Alert", message:"The driver has accepted.", preferredStyle: .actionSheet);
-                        //maybe add a see profile action that triggers a seque to a page that pre fills itself with the drivers info based on his UID?
-                        
-                        let defaultAction = UIAlertAction(title:"OK", style:.default) { action -> Void in
-                            //code for the action can go here. so accepts or deny's
-                            riderRef.child("driver_found").setValue(false)
-                        }
-                        
-                        alert.addAction(defaultAction);
-                        self.present(alert, animated:true, completion:nil);
-                    } //inner else end
-
-                    
-                }) //inner snapshot end
-                
-               } //outer if end
-           } //outer else end
-        }) //observe end        COPY STOPS HERE
-        
-        ref.child("users/\(currentUser!.uid)/rider/driver_uid").observe(.value, with: { (snapshot) in
-            self.uid_forDriver = snapshot.value! as! String ;
-        })
         
         //user location stuff
         locationManager.delegate = self
@@ -121,70 +72,29 @@ class FirstViewController: UIViewController {
     // Looking into adding an on-screen "bar" for searching up addresses, etc.
     // Will take some time.
     @IBAction func onRideNowTapped(_ sender: Any) {
-        if (self.startingFrom == "Null" || self.goingTo == "Null") {
-            // Display a pop telling the user they must select a From and To location
-            print("Select a FROM and TO location.")
-            return
-        } else {
-            // TODO: Send the locations to Firebase
+        
+        //need text alerts asking for a valid address that they want to head to, and their origin will just be their current lat and long if allowed, else we need to ask them for their starting address as well.
+        
+        //TODO, set up the text alerts to ask for a destination address, and if we are not allowed to just get the users location from their phone, then we need to ask them for requests as well.
+        
+        //if the look up results can fail, we may need while loops to ask for the address over and over again if the user fails to enter a valid address the second time.
+        
+        let alert = UIAlertController(title:"Ride Alert", message:"Your ride request will be presented to any available drivers nearby. If you do not hear back quickly enough, try remaking your request with a higher rate offer.", preferredStyle: .alert);
+            
+            let defaultAction = UIAlertAction(title:"OK", style:.default) { action -> Void in
+            }
+            
+            alert.addAction(defaultAction);
+            self.present(alert, animated:true, completion:nil);
+       
             print("Leaving from \(self.startingFrom)")
             print("Going to \(self.goingTo)")
             
-            ref.child("users/\(currentUser!.uid)/location/").setValue(["start": self.startingFrom, "stop": self.goingTo]) //locations being sent here.
-            
-            ref.child("activedrivers").queryOrdered(byChild: "jointime").observeSingleEvent(of: .value, with: { snapshot in //needs to be singleevent of.
-                
-                for driver in snapshot.children {
-                    print((driver as! FIRDataSnapshot).key)
-                    print((driver as! FIRDataSnapshot).childSnapshot(forPath: "location").value as! NSDictionary) //this could be it for group value pull down.
-                    let driver_dict = (driver as! FIRDataSnapshot).childSnapshot(forPath: "location").value as! NSDictionary
-                    
-                    if ( driver_dict["start"] as! String == "Bing" && driver_dict["end"] as! String == "Bong" ) { //Bing and Bong are hardcoded values for the sake of testing and demonstrations.
-                        
-                        self.ref.child("users/\((driver as! FIRDataSnapshot).key)/driver/rider_uid").setValue(self.currentUser!.uid)
-                        self.ref.child("users/\((driver as! FIRDataSnapshot).key)/driver/rider_found").setValue(true)
-                        
-                        print(self.uid_forDriver)
-                        
-                        sleep(30) //neither sleep nor infinite wait loop will do it... ACTUALLY SHOULD WORK BETWEEN DEVICES, JUST NOT FROM ONE USER TO THE SAME USER.
-                        
-                        //set a timer perhaps and when it goes off in 30 seconds, trigger this pop up etc... idk still how we would wait without freezing the app...
-                        
-                        print(self.uid_forDriver)
-                        
-                        if (self.uid_forDriver != "none") {
-                            let alert = UIAlertController(title:"Driver Alert", message:"Your Driver has been found. They are on their way.", preferredStyle: .alert);
-                            
-                            let defaultAction = UIAlertAction(title:"OK", style:.default) { action -> Void in
-                            }
-                            
-                            alert.addAction(defaultAction);
-                            self.present(alert, animated:true, completion:nil);
-                            
-                            return
-                        }//end if
-                    }
-                    
-                }
-                
-                let alert = UIAlertController(title:"Driver Alert", message:"We are sorry but there are no drivers.", preferredStyle: .alert);
-                
-                let defaultAction = UIAlertAction(title:"OK", style:.default) { action -> Void in
-                }
-                
-                alert.addAction(defaultAction);
-                self.present(alert, animated:true, completion:nil);
-                
-                //no drivers means set the driver_uid value to "none"
-                
-                return
-                
-            })
-            
-            print("about to leave find driver");
-            
+            ref.child("requests/immediate/\(currentUser!.uid)/").setValue(["name": currentUser!.displayName!, "uid": currentUser!.uid, "venmoID": "none", "ref": ref, "origin": self.startingFrom, "destination": self.goingTo, "rate" : 15, "accepted": 0]) //locations being sent here.
+        
+        //This works out nicely because making a new request would override the old one in case it goes on too long.
+        
             return;
-        }
     }
     
     // Plan on doing the same for Schedule Ride button as Ride Now.
@@ -203,6 +113,50 @@ class FirstViewController: UIViewController {
         self.googleMapsView.isMyLocationEnabled = true
         self.googleMapsView.settings.myLocationButton = true
         
+//        let marker = GMSMarker()
+//        marker.position = CLLocationCoordinate2D(latitude: 51.507351, longitude: -0.127758)
+//        marker.title = "Driver"
+//        marker.snippet = "Close enough to Grand Valley."
+//        marker.icon = GMSMarker.markerImage(with: .blue) //custom icon color code here.
+        // can also do marker.icon = UIImage(named: "house") and then our app would just have to have a house.png file in it to use that marker. better to use a constant to hold that UIImage and to set the icon off of that instead of doing lots of redeclarations/assignments fresh each time.
+        //marker.map = self.googleMapsView
+        
+    }
+    
+    func isRider() -> Bool {
+        return true;
+    }
+    
+    func isDriver() -> Bool {
+        return false;
+    }
+    
+    func ride_offer(item: cellItem) {
+        
+        //TO DO make an observer that updates this particular pins position each time that the pins
+        //lats and longs are updated. And on the drivers side we need to set up the correct timers
+        //to update said pins lats and longs every 30 seconds to 1 minute as the driver is moving etc.
+        
+        let cellInfo: NSDictionary = item.toAnyObject() as! NSDictionary
+        let locationInfo: NSDictionary = cellInfo["origin"] as! NSDictionary
+        
+        let marker = GMSMarker()
+        marker.position = CLLocationCoordinate2D(latitude: locationInfo.value(forKey: "lat") as! CLLocationDegrees, longitude: locationInfo.value(forKey: "long") as! CLLocationDegrees)
+        marker.title = "Driver: \(cellInfo["name"])"
+        marker.snippet = "Close enough to Grand Valley."
+        marker.map = self.googleMapsView
+        
+        //so it would be down here that we would set up an observer based on potentially the reference
+        //from the cell item itself, or at the least we can create the path by hand from the cell items
+        //uid and just knowing the rest of the path. then whenever the observer gets triggered, the markers posistions just get reset to the new lats and longs.
+        
+        self.ref.child("/users/\(currentUser!.uid)/rider/offers/immediate/\(cellInfo["uid"]))").observe( .value, with: { snapshot in
+             let newCell = cellItem.init(snapshot: snapshot)
+             let newInfo = newCell.toAnyObject() as! NSDictionary
+             let newLocation = newInfo["origin"] as! NSDictionary
+            
+            marker.position = CLLocationCoordinate2D(latitude: newLocation.value(forKey: "lat") as! CLLocationDegrees, longitude: newLocation.value(forKey: "long") as! CLLocationDegrees)
+        }) //hopefully this makes the pins update their locations and then its needed in the driver stuff to set up the driver to update these fields.
     }
 }
 

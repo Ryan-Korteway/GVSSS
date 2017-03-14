@@ -11,7 +11,7 @@ import Firebase
 import GoogleSignIn
 import GoogleMaps
 
-class DriveViewController: UIViewController {
+class DriveViewController: UIViewController, driver_notifications {
     
     @IBOutlet var driverPanelButton: UIButton!
     @IBOutlet var displayMsgBtmCons: NSLayoutConstraint!
@@ -122,6 +122,75 @@ class DriveViewController: UIViewController {
     
     @IBAction func onDismissTapped(_ sender: Any) {
         self.displayOnlineMessage()
+    }
+    
+    func isRider() -> Bool {
+        return false;
+    }
+    
+    func isDriver() -> Bool {
+        return true;
+    }
+    
+    func ride_accept(item: cellItem) {
+        print("Ride offer accepted.")
+        
+        return //placeholder
+    }
+    
+    func ride_request(item: cellItem) {
+        //make a rider icon on the drivers map
+        
+        //make a pin and an observer that watches for changes to that pin to specifically watch? for updates?...
+        
+        let cellInfo: NSDictionary = item.toAnyObject() as! NSDictionary
+        let locationInfo: NSDictionary = cellInfo["origin"] as! NSDictionary
+        let destinationInfo: NSDictionary = cellInfo["destination"] as! NSDictionary
+        
+        let marker = GMSMarker()
+        marker.position = CLLocationCoordinate2D(latitude: locationInfo.value(forKey: "lat") as! CLLocationDegrees, longitude: locationInfo.value(forKey: "long") as! CLLocationDegrees)
+        marker.title = "Potential Rider: \(cellInfo["name"])"
+        marker.snippet = "Close enough to Grand Valley."
+        marker.icon = GMSMarker.markerImage(with: .green)
+        marker.map = self.googleMap
+        
+        let marker2 = GMSMarker()
+        marker2.position = CLLocationCoordinate2D(latitude: destinationInfo.value(forKey: "lat") as! CLLocationDegrees, longitude: destinationInfo.value(forKey: "long") as! CLLocationDegrees)
+        marker2.title = "Potential Rider Destination"
+        marker2.snippet = "Close enough to Grand Valley."
+        
+        marker2.map = self.googleMap
+        
+        // same here needing observers to update the pins with the riders locations as they move
+        
+    }
+    
+    func white_ride(item: cellItem) {
+        //a call to ride request even when the phone is closed i guess?... or the map only shows that one
+        //rider pin?
+        
+        //make a pin and an observer that watches for changes to that pin to specifically watch? for updates?...
+        
+        // cant seem to make the marker a different color to make it stand out more...
+        
+        let cellInfo: NSDictionary = item.toAnyObject() as! NSDictionary
+        let locationInfo: NSDictionary = cellInfo["origin"] as! NSDictionary
+        let destinationInfo: NSDictionary = cellInfo["destination"] as! NSDictionary
+        
+        let marker = GMSMarker()
+        marker.position = CLLocationCoordinate2D(latitude: locationInfo.value(forKey: "lat") as! CLLocationDegrees, longitude: locationInfo.value(forKey: "long") as! CLLocationDegrees)
+        marker.title = "White Listed Rider: \(cellInfo["name"])"
+        marker.snippet = "Close enough to Grand Valley."
+        marker.icon = GMSMarker.markerImage(with: .blue)
+        marker.map = self.googleMap
+        
+        let marker2 = GMSMarker()
+        marker2.position = CLLocationCoordinate2D(latitude: destinationInfo.value(forKey: "lat") as! CLLocationDegrees, longitude: destinationInfo.value(forKey: "long") as! CLLocationDegrees)
+        marker2.title = "Potential Rider Destination"
+        marker2.snippet = "Close enough to Grand Valley."
+        
+        marker2.map = self.googleMap
+
     }
 }
 
