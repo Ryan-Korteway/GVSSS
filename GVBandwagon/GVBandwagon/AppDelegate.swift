@@ -234,7 +234,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // Right drawer is for the driver's panel only
         drawerViewController.rightViewController = driverPanelViewController()
-        drawerViewController.backgroundImage = UIImage(named: "sky3")
+        drawerViewController.backgroundImage = UIImage(named: "bkgd")
         
         _drawerViewController = drawerViewController
         
