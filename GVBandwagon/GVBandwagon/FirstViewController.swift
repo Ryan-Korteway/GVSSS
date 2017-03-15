@@ -33,6 +33,9 @@ class FirstViewController: UIViewController, rider_notifications {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        self.navigationController?.navigationBar.shadowImage = UIImage()
+        self.navigationController?.navigationBar.isTranslucent = true
         
         self.rideNowButton.layer.borderWidth = 1
         self.rideNowButton.layer.borderColor = UIColor.blue.cgColor
@@ -45,15 +48,21 @@ class FirstViewController: UIViewController, rider_notifications {
          */
         
         //user location stuff
-        locationManager.delegate = self
-        locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
-        locationManager.activityType = .automotiveNavigation
-        locationManager.requestWhenInUseAuthorization()
-        locationManager.startUpdatingLocation()
+        //locationManager.delegate = self
+        //locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+        //locationManager.activityType = .automotiveNavigation
+        //locationManager.requestWhenInUseAuthorization()
+        //locationManager.startUpdatingLocation()
         
         self.createMap()
+
+        
         
     } //end of view did load.
+    
+    // 6
+    
+    
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -106,6 +115,15 @@ class FirstViewController: UIViewController, rider_notifications {
 //        marker.icon = GMSMarker.markerImage(with: .blue) //custom icon color code here.
         // can also do marker.icon = UIImage(named: "house") and then our app would just have to have a house.png file in it to use that marker. better to use a constant to hold that UIImage and to set the icon off of that instead of doing lots of redeclarations/assignments fresh each time.
         //marker.map = self.googleMapsView
+        if CLLocationManager.locationServicesEnabled() {
+            locationManager.requestAlwaysAuthorization()
+            locationManager.requestWhenInUseAuthorization()
+            locationManager.delegate = self
+            locationManager.desiredAccuracy = kCLLocationAccuracyBest
+            locationManager.startUpdatingLocation()
+            
+        }
+        
         
     }
     
@@ -159,6 +177,8 @@ extension FirstViewController: CLLocationManagerDelegate {
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        var locValue:CLLocationCoordinate2D = self.locationManager.location!.coordinate
+        print("locations = \(locValue.latitude) \(locValue.longitude)")
         if let location = locations.last {
             
             let camera = GMSCameraPosition(target: location.coordinate, zoom: 15, bearing: 0, viewingAngle: 0)
