@@ -19,6 +19,7 @@ class FirstViewController: UIViewController, rider_notifications {
     
     let locationManager = CLLocationManager()
     
+    let localDelegate = UIApplication.shared.delegate as! AppDelegate
     
     //TODO TAKE OUT THE HARD CODED LAT AND LONGS.
     var startingFrom: NSDictionary = ["lat": 43.013570, "long": -85.775875 ]
@@ -74,6 +75,8 @@ class FirstViewController: UIViewController, rider_notifications {
         
         self.ref.child("users/\(userID)/name").setValue(name)
         self.ref.child("users/\(userID)/phone").setValue(phone)
+        
+        //need other updates here too. if this is called at all anymore.
     }
     
     
@@ -82,26 +85,10 @@ class FirstViewController: UIViewController, rider_notifications {
     // Will take some time.
     @IBAction func onRideNowTapped(_ sender: Any) {
         
-        //need text alerts asking for a valid address that they want to head to, and their origin will just be their current lat and long if allowed, else we need to ask them for their starting address as well.
+        //all this to be moved into new view controller logic at some point.
+        ref.child("requests/immediate/\(currentUser!.uid)/").setValue(["name": currentUser!.displayName!, "uid": currentUser!.uid, "venmoID": "none", "origin": self.startingFrom, "destination": self.goingTo, "rate" : 15, "accepted": 0, "repeats": 0, "duration": "none"]) //locations being sent here.
         
-        //TODO, set up the text alerts to ask for a destination address, and if we are not allowed to just get the users location from their phone, then we need to ask them for requests as well.
-        
-        //if the look up results can fail, we may need while loops to ask for the address over and over again if the user fails to enter a valid address the second time.
-        
-        let alert = UIAlertController(title:"Ride Alert", message:"Your ride request will be presented to any available drivers nearby. If you do not hear back quickly enough, try remaking your request with a higher rate offer.", preferredStyle: .alert);
-            
-            let defaultAction = UIAlertAction(title:"OK", style:.default) { action -> Void in
-            }
-            
-            alert.addAction(defaultAction);
-            self.present(alert, animated:true, completion:nil);
-       
-            print("Leaving from \(self.startingFrom)")
-            print("Going to \(self.goingTo)")
-            
-            ref.child("requests/immediate/\(currentUser!.uid)/").setValue(["name": currentUser!.displayName!, "uid": currentUser!.uid, "venmoID": "none", "ref": ref, "origin": self.startingFrom, "destination": self.goingTo, "rate" : 15, "accepted": 0]) //locations being sent here.
-        
-        //This works out nicely because making a new request would override the old one in case it goes on too long.
+        localDelegate.startTimer();
         
             return;
     }
@@ -151,10 +138,6 @@ class FirstViewController: UIViewController, rider_notifications {
     
     func ride_offer(item: cellItem) {
         
-        //TO DO make an observer that updates this particular pins position each time that the pins
-        //lats and longs are updated. And on the drivers side we need to set up the correct timers
-        //to update said pins lats and longs every 30 seconds to 1 minute as the driver is moving etc.
-        
         let cellInfo: NSDictionary = item.toAnyObject() as! NSDictionary
         let locationInfo: NSDictionary = cellInfo["origin"] as! NSDictionary
         
@@ -168,13 +151,14 @@ class FirstViewController: UIViewController, rider_notifications {
         //from the cell item itself, or at the least we can create the path by hand from the cell items
         //uid and just knowing the rest of the path. then whenever the observer gets triggered, the markers posistions just get reset to the new lats and longs.
         
-        self.ref.child("/users/\(currentUser!.uid)/rider/offers/immediate/\(cellInfo["uid"]))").observe( .value, with: { snapshot in
+        self.ref.child("/users/\(currentUser!.uid)/rider/offers/immediate/\(cellInfo["uid"]))").observe( .childChanged, with: { snapshot in
              let newCell = cellItem.init(snapshot: snapshot)
              let newInfo = newCell.toAnyObject() as! NSDictionary
              let newLocation = newInfo["origin"] as! NSDictionary
             
             marker.position = CLLocationCoordinate2D(latitude: newLocation.value(forKey: "lat") as! CLLocationDegrees, longitude: newLocation.value(forKey: "long") as! CLLocationDegrees)
         }) //hopefully this makes the pins update their locations and then its needed in the driver stuff to set up the driver to update these fields.
+        //once we accept the offer, we will need a .value to get each key to remove each observer before we delete the whole section.
     }
 }
 
@@ -194,7 +178,7 @@ extension FirstViewController: CLLocationManagerDelegate {
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        var locValue:CLLocationCoordinate2D = self.locationManager.location!.coordinate
+        let locValue:CLLocationCoordinate2D = self.locationManager.location!.coordinate
         print("locations = \(locValue.latitude) \(locValue.longitude)")
         if let location = locations.last {
             
