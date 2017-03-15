@@ -691,24 +691,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             if(self.status == "request") {
                 
                 if(self.mode == "rider") {
-                    ref.child("request/immediate/\(ourID)").setValue(["origin": ["lat": self.ourlat, "long": self.ourlong]]);
+                    ref.child("request/immediate/\(ourID)/origin").setValue(["lat": self.ourlat, "long": self.ourlong]);
                 } else {
-                    ref.child("activedrivers/\(ourID)").setValue(["origin": ["lat": self.ourlat, "long": self.ourlong]]);
+                    ref.child("activedrivers/\(ourID)/origin").setValue(["lat": self.ourlat, "long": self.ourlong]);
                 }
                 
             } else if (self.status == "offer") {
                 
                 if(self.mode == "rider") {
-                    ref.child("users/\(ourID)/rider/requests/immediate/\(ourID)").setValue(["origin": ["lat": self.ourlat, "long": self.ourlong]]);
+                    ref.child("users/\(ourID)/rider/requests/immediate/\(ourID)/origin").setValue(["lat": self.ourlat, "long": self.ourlong]);
                 } else {
-                    ref.child("users/\(self.offeredID)/rider/requests/immediate/\(ourID)").setValue(["origin": ["lat": self.ourlat, "long": self.ourlong]]);
+                    ref.child("users/\(self.offeredID)/rider/requests/immediate/\(ourID)/origin").setValue(["lat": self.ourlat, "long": self.ourlong]);
                 }
             } else if (self.status == "accepted") {
                 
                 if(self.mode == "rider") {
-                    ref.child("users/\(ourID)/rider/requests/accepted/\(ourID)").setValue(["origin": ["lat": self.ourlat, "long": self.ourlong]]);
+                    ref.child("users/\(ourID)/rider/requests/accepted/\(ourID)/origin").setValue(["lat": self.ourlat, "long": self.ourlong]);
                 } else {
-                    ref.child("users/\(self.offeredID)/rider/requests/accepted/\(ourID)").setValue(["origin": ["lat": self.ourlat, "long": self.ourlong]]);
+                    ref.child("users/\(self.offeredID)/rider/requests/accepted/\(ourID)/origin").setValue( ["lat": self.ourlat, "long": self.ourlong]);
                 }
             } else {
                 print("something up with timer")
