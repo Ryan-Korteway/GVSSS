@@ -33,6 +33,9 @@ class FirstViewController: UIViewController, rider_notifications {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        self.navigationController?.navigationBar.shadowImage = UIImage()
+        self.navigationController?.navigationBar.isTranslucent = true
         
         self.rideNowButton.layer.borderWidth = 1
         self.rideNowButton.layer.borderColor = UIColor.blue.cgColor

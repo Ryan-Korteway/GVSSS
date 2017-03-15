@@ -39,7 +39,7 @@ Copyright 2015 Google Inc.
 
 ## GoogleMaps
 
-Copyright 2016 Google
+Copyright 2017 Google
 
 ## GoogleNetworkingUtilities
 

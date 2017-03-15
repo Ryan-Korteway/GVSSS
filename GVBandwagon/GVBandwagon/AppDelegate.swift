@@ -23,6 +23,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     let kKGDrawersStoryboardName = "Main"
     
+    let rideNavControllerStoryboardId = "rideNavController"
     let rideViewControllerStoryboardId = "rideViewControllerStoryboardId"
     let driveViewControllerStoryboardId = "driveViewControllerStoryboardId"
     let menuTableViewControllerStoryboardId = "menuViewControllerStoryboardId"
@@ -257,9 +258,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return viewController
     }
     
-    func rideViewController() -> UIViewController {
-        let viewController = viewControllerForStoryboardId(storyboardId: rideViewControllerStoryboardId)
-        return viewController
+    func rideViewController() -> UINavigationController {
+        let viewController = viewControllerForStoryboardId(storyboardId: rideNavControllerStoryboardId)
+        return viewController as! UINavigationController
     }
     
     func driveViewController() -> UITabBarController {
