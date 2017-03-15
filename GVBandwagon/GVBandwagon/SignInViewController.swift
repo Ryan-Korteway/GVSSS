@@ -134,7 +134,7 @@ class SignInViewController: UIViewController, GIDSignInDelegate, GIDSignInUIDele
         // ...
     }
     
-    func directUserToCorrectView() {
+    func directUserToCorrectView() {            //CURRENTLY IS NOT BEING CALLED. DISCUSS THIS AT SOME POINT.
         // Check if user has registered already.
         // Firebase rule to add: auth != null && auth.uid == root.child('users').child(auth.uid).exists()
         // Hardcoded for 0001 so need to change:
@@ -143,16 +143,18 @@ class SignInViewController: UIViewController, GIDSignInDelegate, GIDSignInUIDele
         
         let userID = FIRAuth.auth()!.currentUser!.uid
         
-        ref.child("userStates").child("\(userID)").observeSingleEvent(of: .value, with: { (snapshot) in
+        print("our ID: \(userID)")
+        
+        ref.child("userStates").child("\(userID)").observeSingleEvent(of: .value, with: { snapshot in
             //if the user is found in user state, then they are signInApproved, otherwise they need to register to add themselves to users or drivers and either way get an entry with their UID and a 
             //boolean value based on their choice into the database.
             
             guard snapshot.value! is Bool else { //this was working at one point and now isnt. not sure what happened...
-                    print(snapshot.value!)
+                print("our value: \(snapshot.value!)") //might need to work on this....
                     self.performSegue(withIdentifier: "needsToRegister", sender: self)
                     return //not sure if necessary but it silences the auto compilier.
                 }
-            print(snapshot.value!)
+            print("our value \(snapshot.value!)")
             
             self.performSegue(withIdentifier: "signInApproved", sender: self)
             

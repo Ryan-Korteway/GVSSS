@@ -23,6 +23,9 @@ class GVBNotificationDelegate: NSObject, UNUserNotificationCenterDelegate {
                                 didReceive response: UNNotificationResponse,
                                 withCompletionHandler completionHandler: @escaping () -> Void) {
         
+        
+        // THE ACTIONS NEED TO CHANGE THE APP DELEGATES TIMER STATES.
+        
         // Determine the user action
         print(response.actionIdentifier)
         
@@ -48,6 +51,8 @@ class GVBNotificationDelegate: NSObject, UNUserNotificationCenterDelegate {
             //maybe venmo id is a global var in app delegate with a getter/setter for moments like this.
             ref.child("\(user.uid)").setValue(["name": user.displayName!, "uid": user.uid, "venmoID": "idk where/how to get this", "origin": "drivers lat/longs here", "destination": notification.userInfo["destination"], "rate": notification.userInfo["rate"], "accepted" : 0]) //value set needs to be all of our info for the snapshot.
             
+            AppDelegate.changeStatus("offer")
+            
             print("ride offered") //this one is if you hit the snooze button
             
         case "accept":
@@ -63,6 +68,8 @@ class GVBNotificationDelegate: NSObject, UNUserNotificationCenterDelegate {
             ref.child("/accepted/").setValue(notification.userInfo) //create an accepted branch of the riders table
             
             ref.child("/immediate/").removeValue() //remove the offers immediate branch from the riders account so that the drivers are able to observe the destruction and if they were selected or not.
+            
+            AppDelegate.changeStatus("accepted")
             
             //if accepted, then the driver knows to start a timer to update the lat longs in the users rider offers acepted path.
             

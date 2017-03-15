@@ -43,22 +43,24 @@ struct cellItem {
     let uid: String
     let name: String
     let venmoID: String
-    let ref: FIRDatabaseReference
     let origin: NSDictionary
     let destination: NSDictionary
     let rate: NSInteger
     var accepted: NSInteger
+    var repeats: NSInteger
+    var duration: NSString
     
     init(snapshot: FIRDataSnapshot) {
         uid = snapshot.key
-        let snapshotValue = snapshot.value as! [String: AnyObject]
+        let snapshotValue = snapshot.value as! [String: AnyObject] // opening and closing the app causing crashes here for some reason.
         name = snapshotValue["name"] as! String
         venmoID = snapshotValue["venmoID"] as! String //needs to be added automatically with FIRAuth.auth().currentUser.email etc.
-        ref = snapshot.ref
         rate = snapshotValue["rate"] as! NSInteger
         origin = snapshotValue["origin"] as! NSDictionary //should be a dictionary of lats and longs
         destination = snapshotValue["destination"] as! NSDictionary //should be a dictionary of lats and longs
-        accepted = snapshotValue["accepted"] as! NSInteger //if its set to 0, its false/no ride acceptance, else it is 1 and ride accepted. 
+        accepted = snapshotValue["accepted"] as! NSInteger //if its set to 0, its false/no ride acceptance, else it is 1 and ride accepted.
+        repeats = snapshotValue["repeats"] as! NSInteger
+        duration = snapshotValue["duration"] as! NSString
     }
     
     func toAnyObject() -> Any {
@@ -69,10 +71,11 @@ struct cellItem {
             "rate": rate,
             "origin" : origin,
             "destination": destination,
-            "ref" : ref,
             "rate": rate,
-            "accepted" : accepted
-        ]
+            "accepted" : accepted,
+            "repeats": repeats,
+            "duration": duration
+        ];
     }
     
 }

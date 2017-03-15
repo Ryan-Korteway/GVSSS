@@ -21,6 +21,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
     
+    var timer = Timer()
+    
+    var status = "request";
+    var mode = "rider";
+    var offeredID = "none"; //the id of the offered rider, to be set when we offer a ride to someone.
+    
     let kKGDrawersStoryboardName = "Main"
     
     let rideViewControllerStoryboardId = "rideViewControllerStoryboardId"
@@ -67,6 +73,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var acceptsToWatch: NSArray = []
     var lastState = "rider"
     
+    var driverVenmoID = "none" //the drivers venmo ID to be updated etc.
+    
     // Overriding init() and putting FIRApp.configure() here to ensure it's configured before
     // the first view controller tries to retreive a reference to it.
     override init() {
@@ -108,7 +116,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // self.initiateDrawer()
         
         window?.makeKeyAndVisible()
-        
+    
         return true
     }
 
@@ -119,7 +127,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let lastView = self._centerViewController //neeeds to be moved to
         //custom coding class and use KG's floating drawers and references instead of this whole floating drawers things.
         
-        switch(lastView) {
+        switch(lastView) { //bad switch statement?
         case is FirstViewController:
             lastState = "rider"
         case is DriveViewController:
@@ -191,6 +199,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 
             })
         }
+        
+        timer.invalidate();
         
     }
     
@@ -377,7 +387,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         //get black and whitelist too.
         
-        ref.child("users/\(userID)/rider/whiteList").observe( .value, with: { snapshot in
+        ref.child("users/\(userID)/rider/whiteList").observeSingleEvent(of: .value, with: { snapshot in
             var localList: NSArray = []
             for wl in snapshot.children {
                 localList = localList.adding((wl as! FIRDataSnapshot).key ) as NSArray;
@@ -385,7 +395,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             self.riderWhiteList = localList;
         })
         
-        ref.child("users/\(userID)/rider/blackList").observe( .value, with: { snapshot in
+        ref.child("users/\(userID)/rider/blackList").observeSingleEvent(of: .value, with: { snapshot in
             var localList: NSArray = []
             for wl in snapshot.children {
                 localList = localList.adding((wl as! FIRDataSnapshot).key ) as NSArray;
@@ -393,7 +403,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             self.riderBlackList = localList;
         })
         
-        ref.child("users/\(userID)/driver/whiteList").observe( .value, with: { snapshot in
+        ref.child("users/\(userID)/driver/whiteList").observeSingleEvent(of: .value, with: { snapshot in
             var localList: NSArray = []
             for wl in snapshot.children {
                 localList = localList.adding((wl as! FIRDataSnapshot).key ) as NSArray;
@@ -401,7 +411,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             self.driverWhiteList = localList;
         })
         
-        ref.child("users/\(userID)/driver/blackList").observe( .value, with: { snapshot in
+        ref.child("users/\(userID)/driver/blackList").observeSingleEvent(of: .value, with: { snapshot in
             var localList: NSArray = []
             for wl in snapshot.children {
                 localList = localList.adding( (wl as! FIRDataSnapshot).key ) as NSArray;
@@ -409,96 +419,52 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             self.driverBlackList = localList;
         })
         
-        //watching for ride offers, and whitelist ride requests. BIG NOTE HERE ride acceptances will have to be watched for elsewhere/later when we know the uid that we will need to watch.
-        ref.child("users/\(userID)/rider/offers/immediate").observe( .value, with: { snapshot in
-            //if we are in a riders portion of the app, currentViewController has rider offers function, call it, there we load the view however we want.
-            
-            let lastView = self._centerViewController //neeeds to be moved to
-            //custom coding class and use KG's floating drawers and references instead of this whole floating drawers things.
-            
-            //and again need switch for casting etc.
-            
-            // is lastView stupid/irrelephant?
-            switch(lastView) {
-            case is FirstViewController:
-                let newView = self._centerViewController as! FirstViewController
-                
-                if(newView.isRider()) {
-                    newView.ride_offer(item: cellItem.init(snapshot:snapshot as FIRDataSnapshot));
-                } else {
-                    //ignore alert
-                }
-            case is DriveViewController:
-                print("ignore alert? if its a driver controller on screen and its a rider offer notification")
-                
-            default:
-                //local notification creation.
-                let localCell = cellItem.init(snapshot: snapshot)
-                
-                let content = UNMutableNotificationContent()
-                content.title = "New Driver Offer"
-                content.body = "Navigate to the riders map to see the new pin/offer"
-                content.sound = UNNotificationSound.default()
-                content.categoryIdentifier = "nothing_category"
-                content.userInfo = localCell.toAnyObject() as! [AnyHashable : Any] //compiler forced the conversion.
-                
-                let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
-                
-                let identifier = "Driver Offer"
-                let request = UNNotificationRequest(identifier: identifier,
-                                                    content: content, trigger: trigger)
-                self.center.add(request, withCompletionHandler: { (error) in
-                    
-                    if let error = error {
-                        print(error.localizedDescription)
-                    }
-                })
-                
-                let localFirst = FirstViewController()
-                localFirst.ride_offer(item: localCell);
-                
+        ref.child("users/\(userID)/driver/venmoID").observeSingleEvent(of: .value, with: { snapshot in
+        
+            for local in snapshot.children { //grab venmo id.
+                driverVenmoID = local!.value;
             }
-            
-            
-            //make other view controllers follow the protocols.
         })
         
-        ref.child("requests/immediate").observe( .value, with: { snapshot in //.value allows us to see adds, removes, and lat/long updates.
+        //watching for ride offers, and whitelist ride requests. BIG NOTE HERE ride acceptances will have to be watched for elsewhere/later when we know the uid that we will need to watch.
+        ref.child("users/\(userID)/rider/offers/immediate").observe( .childAdded, with: { snapshot in
             //if we are in a riders portion of the app, currentViewController has rider offers function, call it, there we load the view however we want.
-            //let current = self.window?.rootViewController?.presentedViewController //not sure if this is the view controller we want.
-            
             
             let lastView = self._centerViewController //neeeds to be moved to
             //custom coding class and use KG's floating drawers and references instead of this whole floating drawers things.
             
             //and again need switch for casting etc.
-            switch(lastView) {
+            
+            if(snapshot.value is NSNull) {
+                print("snapshot null, doing nothing");
+            } else {
+                // is lastView stupid/irrelephant?
+                switch(lastView) {
                 case is FirstViewController:
-                    print("ignoring the observe, doing rider things")
+                    let newView = self._centerViewController as! FirstViewController
+                    
+                    if(newView.isRider()) {
+                        newView.ride_offer(item: cellItem.init(snapshot:snapshot as FIRDataSnapshot));
+                    } else {
+                        //ignore alert
+                    }
                 case is DriveViewController:
+                    print("ignore alert? if its a driver controller on screen and its a rider offer notification")
                     
-                    // TO DO, set up the observers to highlight or ignore white and black listed riders/drivers
-                    
-                    // and in here is where you would make the call of if its a white listed rider or not.
-                    // OR if its a black listed rider to ignore the requests.
-                    
-                    let newView = lastView as! DriveViewController
-                    newView.ride_request(item: cellItem.init(snapshot: snapshot as FIRDataSnapshot))
-                
                 default:
                     //local notification creation.
                     let localCell = cellItem.init(snapshot: snapshot)
                     
                     let content = UNMutableNotificationContent()
-                    content.title = "New Rider Request"
-                    content.body = "Navigate to the drivers map to see the new pin/request"
+                    content.title = "New Driver Offer"
+                    content.body = "Navigate to the riders map to see the new pin/offer"
                     content.sound = UNNotificationSound.default()
                     content.categoryIdentifier = "nothing_category"
                     content.userInfo = localCell.toAnyObject() as! [AnyHashable : Any] //compiler forced the conversion.
                     
                     let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
                     
-                    let identifier = "Rider request"
+                    let identifier = "Driver Offer"
                     let request = UNNotificationRequest(identifier: identifier,
                                                         content: content, trigger: trigger)
                     self.center.add(request, withCompletionHandler: { (error) in
@@ -508,8 +474,70 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                         }
                     })
                     
-                    let localDriver = DriveViewController() //hopefully these local redeclarations hold.
-                    localDriver.ride_request(item: localCell)
+                    let localFirst = FirstViewController()
+                    localFirst.ride_offer(item: localCell);
+                    
+                }
+            }
+            
+            //make other view controllers follow the protocols.
+        })
+        
+        ref.child("requests/immediate").observe( .childAdded, with: { snapshot in //.value allows us to see adds, removes, and lat/long updates.
+            //if we are in a riders portion of the app, currentViewController has rider offers function, call it, there we load the view however we want.
+            //let current = self.window?.rootViewController?.presentedViewController //not sure if this is the view controller we want.
+            
+            
+            //MIGHT NEED TO ITERATE THROUGH THE SNAPSHOT SINCE ITS PULLING EVERYTHING DOWN EACH TIME WE OPEN/CLOSE THE APP.
+            
+            let lastView = self._centerViewController //neeeds to be moved to
+            //custom coding class and use KG's floating drawers and references instead of this whole floating drawers things.
+            
+            if(snapshot.value is NSNull) {
+                print("snapshot null, doing nothing");
+            } else {
+                
+                //and again need switch for casting etc.
+                switch(lastView) {
+                    case is FirstViewController:
+                        print("ignoring the observe, doing rider things")
+                    case is DriveViewController:
+                        
+                        // TO DO, set up the observers to highlight or ignore white and black listed riders/drivers
+                        
+                        // and in here is where you would make the call of if its a white listed rider or not.
+                        // OR if its a black listed rider to ignore the requests.
+                        
+                        let newView = lastView as! DriveViewController
+                        newView.ride_request(item: cellItem.init(snapshot: snapshot as FIRDataSnapshot))
+                    
+                    default:
+                        //local notification creation.
+                        let localCell = cellItem.init(snapshot: snapshot)
+                        
+                        let content = UNMutableNotificationContent()
+                        content.title = "New Rider Request"
+                        content.body = "Navigate to the drivers map to see the new pin/request"
+                        content.sound = UNNotificationSound.default()
+                        content.categoryIdentifier = "nothing_category"
+                        content.userInfo = localCell.toAnyObject() as! [AnyHashable : Any] //compiler forced the conversion.
+                        
+                        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
+                        
+                        let identifier = "Rider request"
+                        let request = UNNotificationRequest(identifier: identifier,
+                                                            content: content, trigger: trigger)
+                        self.center.add(request, withCompletionHandler: { (error) in
+                            
+                            if let error = error {
+                                print(error.localizedDescription)
+                            }
+                        })
+                        
+                        let localDriver = DriveViewController() //hopefully these local redeclarations hold.
+                        localDriver.ride_request(item: localCell)
+                }
+                
             }
         })
     }
@@ -645,4 +673,54 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         })
     }
     
+    func startTimer() {
+        
+        let ref = FIRDatabase.database().reference();
+        let ourID = FIRAuth.auth()!.currentUser!.uid;
+        
+        timer = Timer.scheduledTimer(withTimeInterval: 30, repeats: true, block: {_ in
+        
+            //get the location here if possible, else print an error.
+            var ourCords = CLLocation.coordinate; //idk if this will work but hopefully it will.
+            
+            if(status == "request") {
+                
+                if(mode == "rider") {
+                    ref.child("request/immediate/\(ourID)").setValue(["origin": ["lat": "lat from phone", "long": "long from phone"]]);
+                } else {
+                    ref.child("activedrivers\(ourID)").setValue(["origin": ["lat": "lat from phone", "long": "long from phone"]]);
+                }
+                
+            } else if (status == "offer") {
+                
+                if(mode == "rider") {
+                    ref.child("users/\(ourID)/rider/requests/immediate/\(ourID)").setValue(["origin": ["lat": "lat from phone", "long": "long from phone"]]);
+                } else {
+                    ref.child("users/\(offeredID)/rider/requests/immediate/\(ourID)").setValue(["origin": ["lat": "lat from phone", "long": "long from phone"]]);
+                }
+            } else if (status == "accepted") {
+                
+                if(mode == "rider") {
+                    ref.child("users/\(ourID)/rider/requests/accepted/\(ourID)").setValue(["origin": ["lat": "lat from phone", "long": "long from phone"]]);
+                } else {
+                    ref.child("users/\(offeredID)/rider/requests/accepted/\(ourID)").setValue(["origin": ["lat": "lat from phone", "long": "long from phone"]]);
+                }
+            } else {
+                print("something up with timer")
+            }
+        })
+        
+    }
+    
+    func changeStatus(status: String) {
+        self.status = status;
+    }
+    
+    func changeMode(mode: String) {
+        self.mode = mode;
+    }
+    
+    func getVenmoID() {
+        return self.driverVenmoID;
+    }
 }

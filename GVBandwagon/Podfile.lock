@@ -34,10 +34,10 @@ PODS:
     - GoogleSymbolUtilities (~> 1.0)
   - GoogleInterchangeUtilities (1.2.1):
     - GoogleSymbolUtilities (~> 1.0)
-  - GoogleMaps (2.1.1):
-    - GoogleMaps/Maps (= 2.1.1)
-  - GoogleMaps/Base (2.1.1)
-  - GoogleMaps/Maps (2.1.1):
+  - GoogleMaps (2.2.0):
+    - GoogleMaps/Maps (= 2.2.0)
+  - GoogleMaps/Base (2.2.0)
+  - GoogleMaps/Maps (2.2.0):
     - GoogleMaps/Base
   - GoogleNetworkingUtilities (1.2.1):
     - GoogleSymbolUtilities (~> 1.0)
@@ -71,7 +71,7 @@ SPEC CHECKSUMS:
   GoogleAppUtilities: f1730f91f67767b453c289577040dd3f425ffdc7
   GoogleAuthUtilities: d7a19615cd7627688afcf181737f1011ee8b5a23
   GoogleInterchangeUtilities: def8415a862effc67d549d5b5b0b9c7a2f97d4de
-  GoogleMaps: a5b5bbe47734e2443bde781a6aa64e69fdb6d785
+  GoogleMaps: 104c418d61ab8a05dff06ed0784c25ea9d37da45
   GoogleNetworkingUtilities: 3e83269048cfb498dc7ec83ab36813360965c74f
   GoogleSignIn: 09036ed61f8e75f1424100d63f7719480b2428c3
   GoogleSymbolUtilities: 33117db1b5f290c6fbf259585e4885b4c84b98d7
@@ -80,4 +80,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 51bb9931b0e70df5ca10dc694d9281f01d0e923b
 
-COCOAPODS: 1.1.1
+COCOAPODS: 1.2.0

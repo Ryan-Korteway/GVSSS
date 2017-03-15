@@ -7,10 +7,15 @@
 //
 
 import UIKit
+import Firebase
+import CoreFoundation
 
 class DriverPanelViewController: UIViewController {
 
     @IBOutlet var goOnlineSwitch: UISwitch!
+    
+    let ref = FIRDatabase.database().reference()
+    let ourid = FIRAuth.auth()!.currentUser!.uid
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,8 +32,19 @@ class DriverPanelViewController: UIViewController {
             let centerVC = appDelegate.centerViewController as? UITabBarController
             let driveVC = centerVC?.childViewControllers[0] as? DriveViewController
             driveVC?.goOnlineLabelBtnTapped(mySwitch)
+            
+            var ourOrigin = CLLocationManager.coordinate //hopefully our origin is in something easy to convert to our dictionary.
+            
+            print(ourOrigin)
+            
+            ref.child("/activedrivers/\(ourid)").setValue(["name": FIRAuth.auth()!.currentUser!.displayName!, "uid": ourid, "venmoID": AppDelegate.getVenmoID(), "origin": ourOrigin, "destination": ["lat": "none", "long": "none"], "rate" : 0, "accepted": 0, "repeats": 0, "duration": "none"]) //need protections of if destination is none, dont make a pin.
+        
+            AppDelegate.changeMode("driver")
+            AppDelegate.startTimer()
         } else {
             // Remove driver from active driver list
+            ref.child("/activedrivers/\(ourid)").removeValue();
+            AppDelegate.changeMode("rider")
         }
     }
 
