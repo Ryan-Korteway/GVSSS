@@ -714,7 +714,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func changeStatus(status: String) {
+        
         self.status = status;
+        
     }
     
     func changeMode(mode: String) {
