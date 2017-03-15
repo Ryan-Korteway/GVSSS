@@ -687,6 +687,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         timer = Timer.scheduledTimer(withTimeInterval: 30, repeats: true, block: {_ in
         
         //still need working lat long.
+            print("timer firing");
             
             if(self.status == "request") {
                 
