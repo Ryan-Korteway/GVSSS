@@ -38,6 +38,7 @@
 		0BE676321E3D78B5009675F2 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0BE6762F1E3D78B5009675F2 /* GoogleService-Info.plist */; };
 		0BF1B4F81E79C5780062739B /* checkmark.png in Resources */ = {isa = PBXBuildFile; fileRef = 0BF1B4F71E79C5780062739B /* checkmark.png */; };
 		0BF1B4FA1E79C92F0062739B /* RequestRideViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF1B4F91E79C92F0062739B /* RequestRideViewController.swift */; };
+		0BF1B4FC1E79EB6C0062739B /* MapMarkerWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF1B4FB1E79EB6C0062739B /* MapMarkerWindow.swift */; };
 		851AAD191E58C54B0023F0D7 /* findingRidersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 851AAD181E58C54B0023F0D7 /* findingRidersViewController.swift */; };
 		852AD80A1E707B1A00155C24 /* cellFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 852AD8091E707B1A00155C24 /* cellFile.swift */; };
 		852AD80C1E707B4F00155C24 /* GVBNotificationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 852AD80B1E707B4F00155C24 /* GVBNotificationDelegate.swift */; };
@@ -97,6 +98,7 @@
 		0BE6762F1E3D78B5009675F2 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		0BF1B4F71E79C5780062739B /* checkmark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = checkmark.png; path = GVBandwagon/Assets.xcassets/checkmark.png; sourceTree = "<group>"; };
 		0BF1B4F91E79C92F0062739B /* RequestRideViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestRideViewController.swift; sourceTree = "<group>"; };
+		0BF1B4FB1E79EB6C0062739B /* MapMarkerWindow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapMarkerWindow.swift; sourceTree = "<group>"; };
 		1456442C274CA1E608152DE7 /* Pods-GVBandwagon.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GVBandwagon.release.xcconfig"; path = "Pods/Target Support Files/Pods-GVBandwagon/Pods-GVBandwagon.release.xcconfig"; sourceTree = "<group>"; };
 		1FBE53FF6CE82D3A9B6283BB /* Pods-GVBandwagonTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GVBandwagonTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-GVBandwagonTests/Pods-GVBandwagonTests.release.xcconfig"; sourceTree = "<group>"; };
 		6EA9EDCC8B7D08BD0D8F9580 /* Pods-GVBandwagonTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GVBandwagonTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-GVBandwagonTests/Pods-GVBandwagonTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -192,6 +194,7 @@
 				0B396B1A1E6F658200573A94 /* DriverPanelViewController.swift */,
 				0B396B1C1E6F7EBA00573A94 /* MyHistoryTableViewController.swift */,
 				0B396B1E1E6F7ECC00573A94 /* ScheduledRidesTableViewController.swift */,
+				0BF1B4FB1E79EB6C0062739B /* MapMarkerWindow.swift */,
 			);
 			path = GVBandwagon;
 			sourceTree = "<group>";
@@ -555,6 +558,7 @@
 				0B77D5DE1E64CFB700DDF96C /* CustomKGDrawerViewController.swift in Sources */,
 				0BABBF771E4A912D00108DC2 /* userInfoTableViewController.swift in Sources */,
 				0B197CE31E32815200392B40 /* FirstViewController.swift in Sources */,
+				0BF1B4FC1E79EB6C0062739B /* MapMarkerWindow.swift in Sources */,
 				0BABBF731E4A84A600108DC2 /* accountTableViewController.swift in Sources */,
 				851AAD191E58C54B0023F0D7 /* findingRidersViewController.swift in Sources */,
 				0B6935291E3CE6C300F551CB /* RegistrationViewController.swift in Sources */,

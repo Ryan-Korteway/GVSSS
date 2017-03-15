@@ -656,24 +656,24 @@
                                 <rect key="frame" x="16" y="7" width="83" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Cancel"/>
+                                <connections>
+                                    <action selector="cancelTapped:" destination="4uF-J8-gBb" eventType="touchUpInside" id="aHY-2R-wbm"/>
+                                </connections>
                             </button>
-                            <connections>
-                                <action selector="cancelTapped:" destination="4uF-J8-gBb" id="uTn-eD-Pnx"/>
-                            </connections>
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" style="plain" id="Ihf-Cv-0Wd">
                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="fks-LK-BV1">
                                 <rect key="frame" x="276" y="7" width="83" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Submit"/>
+                                <connections>
+                                    <action selector="submitTapped:" destination="4uF-J8-gBb" eventType="touchUpInside" id="eh3-1O-e7g"/>
+                                </connections>
                             </button>
-                            <connections>
-                                <action selector="submitTapped:" destination="4uF-J8-gBb" id="HUo-vy-eAN"/>
-                            </connections>
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="cancelButton" destination="pfu-k0-R4Q" id="d3P-rd-LuY"/>
+                        <outlet property="cancelButton" destination="pfu-k0-R4Q" id="nHh-xA-uhL"/>
                         <outlet property="dollarSignLabel" destination="hXp-d1-68o" id="ihN-uQ-GoI"/>
                         <outlet property="freqSwitch" destination="PKZ-fU-MM6" id="k6r-KI-5z9"/>
                         <outlet property="freqView" destination="bJe-fe-Uj3" id="Gtj-01-Ywe"/>

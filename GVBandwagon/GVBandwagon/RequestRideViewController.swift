@@ -68,19 +68,14 @@ class RequestRideViewController: UIViewController {
         })
     }
     
-    @IBAction func cancelTapped(_ sender: Any) {
-        self.dismiss(animated: true) {
-            self.presentingViewController?.dismiss(animated: false, completion: nil)
-        }
-        print("Cancel Tapped")
+    @IBAction func cancelTapped(_ sender: UIButton) {
+        _ = self.navigationController?.popViewController(animated: true)
     }
     
-    
-    @IBAction func submitTapped(_ sender: Any) {
+    @IBAction func submitTapped(_ sender: UIButton) {
         // Do something
-        print("Submit tapped")
     }
-
+    
     /*
     // MARK: - Navigation
 

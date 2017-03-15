@@ -11,7 +11,7 @@ import Firebase
 import GoogleSignIn
 import GoogleMaps
 
-class DriveViewController: UIViewController, driver_notifications {
+class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifications {
     
     @IBOutlet var driverPanelButton: UIButton!
     @IBOutlet var displayMsgBtmCons: NSLayoutConstraint!
@@ -37,6 +37,22 @@ class DriveViewController: UIViewController, driver_notifications {
         locationManager.startUpdatingLocation()
         
         self.createMap()
+        
+        // Test Marker
+        let testMarker = GMSMarker()
+        testMarker.position = CLLocationCoordinate2D(latitude: 10, longitude: 10)
+        //marker.title = "Potential Rider: \(cellInfo["name"])"
+        //marker.snippet = "Close enough to Grand Valley."
+        testMarker.icon = GMSMarker.markerImage(with: .green)
+        testMarker.map = self.googleMap
+        
+        var user = testMarker.userData as? location
+        user?.name = "Nick"
+        user?.dest = "Downtown"
+        user?.rate = "$5"
+        user?.lat = testMarker.position.latitude
+        user?.lon = testMarker.position.longitude
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -192,6 +208,66 @@ class DriveViewController: UIViewController, driver_notifications {
         marker2.map = self.googleMap
 
     }
+    
+    // Google Maps functions
+    
+    // initialize and keep a marker and a custom infowindow
+    var tappedMarker = GMSMarker()
+    var infoWindow = MapMarkerWindow(frame: CGRect(x: 0, y: 0, width: 200, height: 100))
+    
+    //empty the default infowindow
+    func mapView(_ mapView: GMSMapView, markerInfoWindow marker: GMSMarker) -> UIView? {
+        return UIView()
+    }
+    
+    // reset custom infowindow whenever marker is tapped
+    func mapView(_ mapView: GMSMapView, didTap marker: GMSMarker) -> Bool {
+        let location = CLLocationCoordinate2D(latitude: (marker.userData as! location).lat, longitude: (marker.userData as! location).lon)
+
+        tappedMarker = marker
+        infoWindow.removeFromSuperview()
+        infoWindow = MapMarkerWindow(frame: CGRect(x: 0, y: 0, width: 200, height: 100))
+        infoWindow.nameLabel.text = (marker.userData as! location).name
+        infoWindow.destLabel.text = (marker.userData as! location).dest
+        infoWindow.rateLabel.text = (marker.userData as! location).rate
+        infoWindow.center = mapView.projection.point(for: location)
+        infoWindow.acceptButton.addTarget(self, action: #selector(acceptTapped(button:)), for: .touchUpInside)
+        infoWindow.declineButton.addTarget(self, action: #selector(declineTapped(button:)), for: .touchUpInside)
+        self.view.addSubview(infoWindow)
+        
+        // Remember to return false
+        // so marker event is still handled by delegate
+        return false
+    }
+    
+    // let the custom infowindow follows the camera
+    func mapView(_ mapView: GMSMapView, didChange position: GMSCameraPosition) {
+        if (tappedMarker.userData != nil){
+            let location = CLLocationCoordinate2D(latitude: (tappedMarker.userData as! location).lat, longitude: (tappedMarker.userData as! location).lon)
+            infoWindow.center = mapView.projection.point(for: location)
+        }
+    }
+    
+    // take care of the close event
+    func mapView(_ mapView: GMSMapView, didTapAt coordinate: CLLocationCoordinate2D) {
+        infoWindow.removeFromSuperview()
+    }
+    
+    func acceptTapped(button: UIButton) -> Void {
+        
+    }
+    
+    func declineTapped(button: UIButton) -> Void {
+        
+    }
+}
+
+struct location {
+    var lat: CLLocationDegrees
+    var lon: CLLocationDegrees
+    var name: String
+    var dest: String
+    var rate: String
 }
 
 extension DriveViewController: CLLocationManagerDelegate {
