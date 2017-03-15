@@ -19,6 +19,7 @@ class FirstViewController: UIViewController, rider_notifications {
     
     let locationManager = CLLocationManager()
     
+    let localDelegate = UIApplication.shared.delegate as! AppDelegate
     
     //TODO TAKE OUT THE HARD CODED LAT AND LONGS.
     var startingFrom: NSDictionary = ["lat": 43.013570, "long": -85.775875 ]
@@ -87,7 +88,7 @@ class FirstViewController: UIViewController, rider_notifications {
         //all this to be moved into new view controller logic at some point.
         ref.child("requests/immediate/\(currentUser!.uid)/").setValue(["name": currentUser!.displayName!, "uid": currentUser!.uid, "venmoID": "none", "origin": self.startingFrom, "destination": self.goingTo, "rate" : 15, "accepted": 0, "repeats": 0, "duration": "none"]) //locations being sent here.
         
-        AppDelegate.startTimer();
+        localDelegate.startTimer();
         
             return;
     }
@@ -177,7 +178,7 @@ extension FirstViewController: CLLocationManagerDelegate {
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        var locValue:CLLocationCoordinate2D = self.locationManager.location!.coordinate
+        let locValue:CLLocationCoordinate2D = self.locationManager.location!.coordinate
         print("locations = \(locValue.latitude) \(locValue.longitude)")
         if let location = locations.last {
             

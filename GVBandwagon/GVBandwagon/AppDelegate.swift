@@ -27,6 +27,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var mode = "rider";
     var offeredID = "none"; //the id of the offered rider, to be set when we offer a ride to someone.
     
+    let locationManager = CLLocationManager()
+    
+    var ourlat : CLLocationDegrees = 0.0
+    var ourlong : CLLocationDegrees = 0.0
+    
     let kKGDrawersStoryboardName = "Main"
     
     let rideNavControllerStoryboardId = "rideNavController"
@@ -423,7 +428,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         ref.child("users/\(userID)/driver/venmoID").observeSingleEvent(of: .value, with: { snapshot in
         
             for local in snapshot.children { //grab venmo id.
-                driverVenmoID = local!.value;
+                self.driverVenmoID = (local as AnyObject).value;
             }
         })
         
@@ -681,30 +686,29 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         timer = Timer.scheduledTimer(withTimeInterval: 30, repeats: true, block: {_ in
         
-            //get the location here if possible, else print an error.
-            var ourCords = CLLocation.coordinate; //idk if this will work but hopefully it will.
+        //still need working lat long.
             
-            if(status == "request") {
+            if(self.status == "request") {
                 
-                if(mode == "rider") {
-                    ref.child("request/immediate/\(ourID)").setValue(["origin": ["lat": "lat from phone", "long": "long from phone"]]);
+                if(self.mode == "rider") {
+                    ref.child("request/immediate/\(ourID)").setValue(["origin": ["lat": self.ourlat, "long": self.ourlong]]);
                 } else {
-                    ref.child("activedrivers\(ourID)").setValue(["origin": ["lat": "lat from phone", "long": "long from phone"]]);
+                    ref.child("activedrivers/\(ourID)").setValue(["origin": ["lat": self.ourlat, "long": self.ourlong]]);
                 }
                 
-            } else if (status == "offer") {
+            } else if (self.status == "offer") {
                 
-                if(mode == "rider") {
-                    ref.child("users/\(ourID)/rider/requests/immediate/\(ourID)").setValue(["origin": ["lat": "lat from phone", "long": "long from phone"]]);
+                if(self.mode == "rider") {
+                    ref.child("users/\(ourID)/rider/requests/immediate/\(ourID)").setValue(["origin": ["lat": self.ourlat, "long": self.ourlong]]);
                 } else {
-                    ref.child("users/\(offeredID)/rider/requests/immediate/\(ourID)").setValue(["origin": ["lat": "lat from phone", "long": "long from phone"]]);
+                    ref.child("users/\(self.offeredID)/rider/requests/immediate/\(ourID)").setValue(["origin": ["lat": self.ourlat, "long": self.ourlong]]);
                 }
-            } else if (status == "accepted") {
+            } else if (self.status == "accepted") {
                 
-                if(mode == "rider") {
-                    ref.child("users/\(ourID)/rider/requests/accepted/\(ourID)").setValue(["origin": ["lat": "lat from phone", "long": "long from phone"]]);
+                if(self.mode == "rider") {
+                    ref.child("users/\(ourID)/rider/requests/accepted/\(ourID)").setValue(["origin": ["lat": self.ourlat, "long": self.ourlong]]);
                 } else {
-                    ref.child("users/\(offeredID)/rider/requests/accepted/\(ourID)").setValue(["origin": ["lat": "lat from phone", "long": "long from phone"]]);
+                    ref.child("users/\(self.offeredID)/rider/requests/accepted/\(ourID)").setValue(["origin": ["lat": self.ourlat, "long": self.ourlong]]);
                 }
             } else {
                 print("something up with timer")
@@ -723,7 +727,29 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.mode = mode;
     }
     
-    func getVenmoID() {
+    func getVenmoID() -> String {
         return self.driverVenmoID;
+    }
+}
+
+extension AppDelegate: CLLocationManagerDelegate {
+    
+    private func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
+        
+        if status == .authorizedWhenInUse {
+            
+            locationManager.startUpdatingLocation()
+            
+        } else {
+            print("\nNOT AUTHORIZED\n")
+        }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        let locValue:CLLocationCoordinate2D = self.locationManager.location!.coordinate
+        print("locations = \(locValue.latitude) \(locValue.longitude)")
+        
+        ourlat = locValue.latitude
+        ourlong = locValue.longitude
     }
 }

@@ -12,6 +12,8 @@ import Firebase
 
 class GVBNotificationDelegate: NSObject, UNUserNotificationCenterDelegate {
     
+    let localDelegate = UIApplication.shared.delegate as! AppDelegate
+    
     func userNotificationCenter(_ center: UNUserNotificationCenter,
                                 willPresent notification: UNNotification,
                                 withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
@@ -51,7 +53,7 @@ class GVBNotificationDelegate: NSObject, UNUserNotificationCenterDelegate {
             //maybe venmo id is a global var in app delegate with a getter/setter for moments like this.
             ref.child("\(user.uid)").setValue(["name": user.displayName!, "uid": user.uid, "venmoID": "idk where/how to get this", "origin": "drivers lat/longs here", "destination": notification.userInfo["destination"], "rate": notification.userInfo["rate"], "accepted" : 0]) //value set needs to be all of our info for the snapshot.
             
-            AppDelegate.changeStatus("offer")
+            localDelegate.changeStatus(status: "offer")
             
             print("ride offered") //this one is if you hit the snooze button
             
@@ -69,7 +71,7 @@ class GVBNotificationDelegate: NSObject, UNUserNotificationCenterDelegate {
             
             ref.child("/immediate/").removeValue() //remove the offers immediate branch from the riders account so that the drivers are able to observe the destruction and if they were selected or not.
             
-            AppDelegate.changeStatus("accepted")
+            localDelegate.changeStatus(status: "accepted")
             
             //if accepted, then the driver knows to start a timer to update the lat longs in the users rider offers acepted path.
             
