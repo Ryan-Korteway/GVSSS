@@ -18,7 +18,6 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
     @IBOutlet var messageDismissButton: UIButton!
     @IBOutlet var onlineMessageView: UIView!
     @IBOutlet var googleMap: GMSMapView!
-    @IBOutlet var goOnlineButton: UIButton!
     
     var isMessageDisplayed = false
     let locationManager = CLLocationManager()
@@ -28,6 +27,10 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        self.navigationController?.navigationBar.shadowImage = UIImage()
+        self.navigationController?.navigationBar.isTranslucent = true
 
         //user location stuff
         locationManager.delegate = self
@@ -54,6 +57,21 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
         let user: location = location(lat: lat, lon: lon, name: name, dest: dest, rate: rate)
         testMarker.userData = user
         
+        // If driver is in an active ride, show the "Active Ride" button
+        // Need an observer?
+        
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        // Test Marker 2
+        let testMarker = GMSMarker()
+        testMarker.position = CLLocationCoordinate2D(latitude: 41.973984, longitude: -86.695527)
+        //marker.title = "Potential Rider: \(cellInfo["name"])"
+        //marker.snippet = "Close enough to Grand Valley."
+        //testMarker.icon = GMSMarker.markerImage(with: .green)
+        testMarker.map = self.googleMap
     }
 
     override func didReceiveMemoryWarning() {
@@ -264,19 +282,27 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
     
     func acceptTapped(button: UIButton) -> Void {
         print("Accept Tapped")
+        
+        performSegue(withIdentifier: "driverAcceptsSegue", sender: self)
+        infoWindow.removeFromSuperview()
+        
+        // Set Active Trip of Right Drawer to riders name and set it to clickable.
+        
     }
     
     func declineTapped(button: UIButton) -> Void {
         print("Decline Tapped")
+        infoWindow.removeFromSuperview()
     }
-}
-
-struct location {
-    var lat: CLLocationDegrees
-    var lon: CLLocationDegrees
-    var name: String
-    var dest: String
-    var rate: String
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "driverAcceptsSegue" {
+            if let nextVC = segue.destination as? RideSummaryTableViewController {
+                // Set the attributes in the next VC.
+                nextVC.paymentText = "Request Payment"
+            }
+        }
+    }
 }
 
 extension DriveViewController: CLLocationManagerDelegate {
@@ -307,4 +333,12 @@ extension DriveViewController: CLLocationManagerDelegate {
             print("No location found!")
         }
     }
+}
+
+struct location {
+    var lat: CLLocationDegrees
+    var lon: CLLocationDegrees
+    var name: String
+    var dest: String
+    var rate: String
 }
