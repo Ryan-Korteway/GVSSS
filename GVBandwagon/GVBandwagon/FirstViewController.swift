@@ -85,10 +85,7 @@ class FirstViewController: UIViewController, rider_notifications {
     // Will take some time.
     @IBAction func onRideNowTapped(_ sender: Any) {
         
-        //all this to be moved into new view controller logic at some point.
-        ref.child("requests/immediate/\(currentUser!.uid)/").setValue(["name": currentUser!.displayName!, "uid": currentUser!.uid, "venmoID": "none", "origin": self.startingFrom, "destination": self.goingTo, "rate" : 15, "accepted": 0, "repeats": 0, "duration": "none"]) //locations being sent here.
         
-        localDelegate.startTimer();
         
             return;
     }
