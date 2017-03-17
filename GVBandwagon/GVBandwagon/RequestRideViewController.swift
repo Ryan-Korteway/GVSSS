@@ -22,8 +22,9 @@ class RequestRideViewController: UIViewController {
     let ref = FIRDatabase.database().reference()
     let currentUser = FIRAuth.auth()!.currentUser
     let localDelegate = UIApplication.shared.delegate as! AppDelegate
+    
     var startingFrom: NSDictionary = ["lat": 43.013570, "long": -85.775875 ]
-    var goingTo: NSDictionary = ["lat": 42.013570, "long": -85.775875]
+    var goingTo: NSDictionary = ["latitude": 42.013570, "longitude": -85.775875]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -81,6 +82,9 @@ class RequestRideViewController: UIViewController {
     @IBAction func submitTapped(_ sender: UIButton) {
         // Do something
         //all this to be moved into new view controller logic at some point.
+        
+        //SELF GOING TO AND STARTING FROM NEED REPLACING WITH THE SEARCHING OF A DESTINATION FROM THE PAGE.
+        
         ref.child("requests/immediate/\(currentUser!.uid)/").setValue(["name": currentUser!.displayName!, "uid": currentUser!.uid, "venmoID": "none", "origin": self.startingFrom, "destination": self.goingTo, "rate" : 15, "accepted": 0, "repeats": 0, "duration": "none"]) //locations being sent here.
         
         localDelegate.startTimer();

@@ -203,7 +203,7 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
         marker.map = self.googleMap
         
         let marker2 = GMSMarker()
-        marker2.position = CLLocationCoordinate2D(latitude: destinationInfo.value(forKey: "lat") as! CLLocationDegrees, longitude: destinationInfo.value(forKey: "long") as! CLLocationDegrees)
+        marker2.position = CLLocationCoordinate2D(latitude: destinationInfo.value(forKey: "latitude") as! CLLocationDegrees, longitude: destinationInfo.value(forKey: "longitude") as! CLLocationDegrees)
         marker2.title = "Potential Rider Destination"
         marker2.snippet = "Close enough to Grand Valley."
         
