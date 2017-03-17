@@ -119,12 +119,8 @@ class SignInViewController: UIViewController, GIDSignInDelegate, GIDSignInUIDele
                 print("sign in error: \(error.localizedDescription)")
                 return
             }
-            //self.directUserToCorrectView()
-            
-            // Load up the drawer from AppDelegate:
-            let appDelegate = UIApplication.shared.delegate as! AppDelegate
-            appDelegate.initiateDrawer()
-            
+            self.directUserToCorrectView()
+        
         }
     }
     
@@ -156,7 +152,12 @@ class SignInViewController: UIViewController, GIDSignInDelegate, GIDSignInUIDele
                 }
             print("our value \(snapshot.value!)")
             
-            self.performSegue(withIdentifier: "signInApproved", sender: self)
+            // Load up the drawer from AppDelegate:
+            let appDelegate = UIApplication.shared.delegate as! AppDelegate
+            appDelegate.initiateDrawer()
+            appDelegate.setUpOpenObservers();
+            
+            //self.performSegue(withIdentifier: "signInApproved", sender: self)
             
             /* if(ref.child("users").child("\(userID)").) {
                 self.performSegue(withIdentifier: "signInApproved", sender: self)

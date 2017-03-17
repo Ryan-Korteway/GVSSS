@@ -439,6 +439,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             let lastView = self._centerViewController //neeeds to be moved to
             //custom coding class and use KG's floating drawers and references instead of this whole floating drawers things.
             
+            
             //and again need switch for casting etc.
             
             if(snapshot.value is NSNull) {
@@ -493,6 +494,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             //if we are in a riders portion of the app, currentViewController has rider offers function, call it, there we load the view however we want.
             //let current = self.window?.rootViewController?.presentedViewController //not sure if this is the view controller we want.
             
+            
+            print("\n\n REQUEST OBSERVED!! \n\n")
             
             //MIGHT NEED TO ITERATE THROUGH THE SNAPSHOT SINCE ITS PULLING EVERYTHING DOWN EACH TIME WE OPEN/CLOSE THE APP.
             
@@ -690,7 +693,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             locationManager.delegate = self
             locationManager.desiredAccuracy = kCLLocationAccuracyBest
             locationManager.distanceFilter = 10 //might need to slow this down here.
-            //locationManager.startUpdatingLocation() 
+            locationManager.startUpdatingLocation()
         }
         
         timer = Timer.scheduledTimer(withTimeInterval: 30, repeats: true, block: {_ in
@@ -701,7 +704,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             if(self.status == "request") {
                 
                 if(self.mode == "rider") {
-                    ref.child("request/immediate/\(ourID)/origin").setValue(["lat": self.ourlat, "long": self.ourlong]);
+                    ref.child("requests/immediate/\(ourID)/origin").setValue(["lat": self.ourlat, "long": self.ourlong]);
                 } else {
                     ref.child("activedrivers/\(ourID)/origin").setValue(["lat": self.ourlat, "long": self.ourlong]);
                 }

@@ -62,9 +62,6 @@ class RegistrationViewController: UIViewController {
             
             self.ref.child("users/\(self.currentUser!.uid)/name").setValue(self.fNameField.text! + " " + self.lNameField.text!)
             self.ref.child("users/\(self.currentUser!.uid)/phone").setValue(self.phoneField.text)
-            self.ref.child("users/\(self.currentUser!.uid)/location").setValue("start")
-            self.ref.child("users/\(self.currentUser!.uid)/destination").setValue("stop")
-        
             self.ref.child("users/\(self.currentUser!.uid)/driver/rider_found").setValue(false)
             //self.ref.child("users/\(self.currentUser!.uid)/rider_UIDs").setValue() //rider_UID's should be added and removed as riders sign up to use the driver as their ride to the destination.
             self.ref.child("users/\(self.currentUser!.uid)/driver/total_riders").setValue(0) //gets incremented by one for each rider the driver drives.
@@ -75,7 +72,13 @@ class RegistrationViewController: UIViewController {
             
             // Obviously will need to check fields are formatted correctly
             // and data successfully transferred before segue.
-        self.performSegue(withIdentifier: "toContainer", sender: self)
+          
+            // Load up the drawer from AppDelegate:
+            let appDelegate = UIApplication.shared.delegate as! AppDelegate
+            appDelegate.initiateDrawer()
+            appDelegate.setUpOpenObservers()
+            
+        //self.performSegue(withIdentifier: "toContainer", sender: self)
             
             }) { (error) in
                 print("Update Error, \(error.localizedDescription)")
