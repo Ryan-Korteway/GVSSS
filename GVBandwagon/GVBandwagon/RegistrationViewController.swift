@@ -75,7 +75,13 @@ class RegistrationViewController: UIViewController {
             
             // Obviously will need to check fields are formatted correctly
             // and data successfully transferred before segue.
-        self.performSegue(withIdentifier: "toContainer", sender: self)
+          
+            // Load up the drawer from AppDelegate:
+            let appDelegate = UIApplication.shared.delegate as! AppDelegate
+            appDelegate.initiateDrawer()
+            appDelegate.setUpOpenObservers()
+            
+        //self.performSegue(withIdentifier: "toContainer", sender: self)
             
             }) { (error) in
                 print("Update Error, \(error.localizedDescription)")
