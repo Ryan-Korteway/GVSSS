@@ -40,18 +40,19 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
         
         // Test Marker
         let testMarker = GMSMarker()
-        testMarker.position = CLLocationCoordinate2D(latitude: 10, longitude: 10)
+        testMarker.position = CLLocationCoordinate2D(latitude: 42.973984, longitude: -85.695527)
         //marker.title = "Potential Rider: \(cellInfo["name"])"
         //marker.snippet = "Close enough to Grand Valley."
         testMarker.icon = GMSMarker.markerImage(with: .green)
         testMarker.map = self.googleMap
         
-        var user = testMarker.userData as? location
-        user?.name = "Nick"
-        user?.dest = "Downtown"
-        user?.rate = "$5"
-        user?.lat = testMarker.position.latitude
-        user?.lon = testMarker.position.longitude
+        let name = "Nick"
+        let dest = "Downtown"
+        let rate = "$5"
+        let lat = testMarker.position.latitude
+        let lon = testMarker.position.longitude
+        let user: location = location(lat: lat, lon: lon, name: name, dest: dest, rate: rate)
+        testMarker.userData = user
         
     }
 
@@ -101,6 +102,7 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
     func createMap() {
         self.googleMap.isMyLocationEnabled = true
         self.googleMap.settings.myLocationButton = true
+        self.googleMap.delegate = self
     }
     
     func displayOnlineMessage() -> Void {
@@ -227,13 +229,19 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
         tappedMarker = marker
         infoWindow.removeFromSuperview()
         infoWindow = MapMarkerWindow(frame: CGRect(x: 0, y: 0, width: 200, height: 100))
+        
         infoWindow.nameLabel.text = (marker.userData as! location).name
         infoWindow.destLabel.text = (marker.userData as! location).dest
         infoWindow.rateLabel.text = (marker.userData as! location).rate
+        
         infoWindow.center = mapView.projection.point(for: location)
+        infoWindow.center.y -= 90
+        
         infoWindow.acceptButton.addTarget(self, action: #selector(acceptTapped(button:)), for: .touchUpInside)
         infoWindow.declineButton.addTarget(self, action: #selector(declineTapped(button:)), for: .touchUpInside)
+        
         self.view.addSubview(infoWindow)
+        
         
         // Remember to return false
         // so marker event is still handled by delegate
@@ -245,6 +253,7 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
         if (tappedMarker.userData != nil){
             let location = CLLocationCoordinate2D(latitude: (tappedMarker.userData as! location).lat, longitude: (tappedMarker.userData as! location).lon)
             infoWindow.center = mapView.projection.point(for: location)
+            infoWindow.center.y -= 90
         }
     }
     
@@ -254,11 +263,11 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
     }
     
     func acceptTapped(button: UIButton) -> Void {
-        
+        print("Accept Tapped")
     }
     
     func declineTapped(button: UIButton) -> Void {
-        
+        print("Decline Tapped")
     }
 }
 
