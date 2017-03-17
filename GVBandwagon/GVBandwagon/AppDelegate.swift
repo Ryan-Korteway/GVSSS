@@ -27,7 +27,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var mode = "rider";
     var offeredID = "none"; //the id of the offered rider, to be set when we offer a ride to someone.
     
-    let locationManager = CLLocationManager()
+    var locationManager = CLLocationManager()
     
     var ourlat : CLLocationDegrees = 0.0
     var ourlong : CLLocationDegrees = 0.0
@@ -684,6 +684,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let ref = FIRDatabase.database().reference();
         let ourID = FIRAuth.auth()!.currentUser!.uid;
         
+        if CLLocationManager.locationServicesEnabled() {
+            locationManager.requestAlwaysAuthorization()
+            locationManager.requestWhenInUseAuthorization()
+            locationManager.delegate = self
+            locationManager.desiredAccuracy = kCLLocationAccuracyBest
+            locationManager.distanceFilter = 10 //might need to slow this down here.
+            //locationManager.startUpdatingLocation() 
+        }
+        
         timer = Timer.scheduledTimer(withTimeInterval: 30, repeats: true, block: {_ in
         
         //still need working lat long.
@@ -738,7 +747,7 @@ extension AppDelegate: CLLocationManagerDelegate {
     private func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
         
         if status == .authorizedWhenInUse {
-            
+            print("location being updated");
             locationManager.startUpdatingLocation()
             
         } else {

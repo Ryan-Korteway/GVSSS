@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 class RequestRideViewController: UIViewController {
 
@@ -18,6 +19,11 @@ class RequestRideViewController: UIViewController {
     @IBOutlet var offerLabel: UILabel!
     @IBOutlet var dollarSignLabel: UILabel!
     @IBOutlet var offerTextField: UITextField!
+    let ref = FIRDatabase.database().reference()
+    let currentUser = FIRAuth.auth()!.currentUser
+    let localDelegate = UIApplication.shared.delegate as! AppDelegate
+    var startingFrom: NSDictionary = ["lat": 43.013570, "long": -85.775875 ]
+    var goingTo: NSDictionary = ["lat": 42.013570, "long": -85.775875]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -74,6 +80,11 @@ class RequestRideViewController: UIViewController {
     
     @IBAction func submitTapped(_ sender: UIButton) {
         // Do something
+        //all this to be moved into new view controller logic at some point.
+        ref.child("requests/immediate/\(currentUser!.uid)/").setValue(["name": currentUser!.displayName!, "uid": currentUser!.uid, "venmoID": "none", "origin": self.startingFrom, "destination": self.goingTo, "rate" : 15, "accepted": 0, "repeats": 0, "duration": "none"]) //locations being sent here.
+        
+        localDelegate.startTimer();
+        _ = self.navigationController?.popViewController(animated: true)
     }
     
     /*
