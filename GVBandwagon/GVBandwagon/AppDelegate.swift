@@ -690,7 +690,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             locationManager.delegate = self
             locationManager.desiredAccuracy = kCLLocationAccuracyBest
             locationManager.distanceFilter = 10 //might need to slow this down here.
-            //locationManager.startUpdatingLocation() 
+            //locationManager.startUpdatingLocation()  
         }
         
         timer = Timer.scheduledTimer(withTimeInterval: 30, repeats: true, block: {_ in
