@@ -84,9 +84,6 @@ class FirstViewController: UIViewController, rider_notifications {
     // Looking into adding an on-screen "bar" for searching up addresses, etc.
     // Will take some time.
     @IBAction func onRideNowTapped(_ sender: Any) {
-        
-        
-        
             return;
     }
     
@@ -94,6 +91,7 @@ class FirstViewController: UIViewController, rider_notifications {
     // Would rather have a view pop up over the map in which the user
     // can enter info rather than switch to a entirely new view controller.
     @IBAction func onScheduleRideTapped(_ sender: Any) {
+        self.performSegue(withIdentifier: "riderAcceptsSegue", sender: self)
     }
 
     @IBAction func toggleLeftDrawer(_ sender: Any) {
@@ -156,6 +154,15 @@ class FirstViewController: UIViewController, rider_notifications {
             marker.position = CLLocationCoordinate2D(latitude: newLocation.value(forKey: "lat") as! CLLocationDegrees, longitude: newLocation.value(forKey: "long") as! CLLocationDegrees)
         }) //hopefully this makes the pins update their locations and then its needed in the driver stuff to set up the driver to update these fields.
         //once we accept the offer, we will need a .value to get each key to remove each observer before we delete the whole section.
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "riderAcceptsSegue" {
+            if let nextVC = segue.destination as? RideSummaryTableViewController {
+                // Set the attributes in the next VC.
+                nextVC.paymentText = "Submit Payment"
+            }
+        }
     }
 }
 

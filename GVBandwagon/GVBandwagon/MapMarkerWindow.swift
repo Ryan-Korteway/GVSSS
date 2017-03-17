@@ -23,16 +23,6 @@ class MapMarkerWindow: UIView {
         self.layer.cornerRadius = 10.0
         self.clipsToBounds = true
         
-        //create vertical stack view centered vertically and leading/trailing edges to view.
-        let labelArray = [nameLabel, destLabel, rateLabel, acceptButton, declineButton] as [Any]
-        let stackView = UIStackView(arrangedSubviews: labelArray as! [UIView])
-        stackView.axis = .horizontal
-        stackView.distribution = .fillEqually
-        stackView.alignment = .fill
-        stackView.spacing = 5
-        //stackView.translatesAutoresizingMaskIntoConstraints = false
-        self.addSubview(stackView)
-        
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -44,14 +34,14 @@ class MapMarkerWindow: UIView {
     
     override func draw(_ rect: CGRect) {
         
-        //self.addSubview(nameLabel)
-        //self.addSubview(destLabel)
-        //self.addSubview(rateLabel)
-        //self.addSubview(acceptButton)
-        //self.addSubview(declineButton)
+        self.addSubview(nameLabel)
+        self.addSubview(destLabel)
+        self.addSubview(rateLabel)
+        self.addSubview(acceptButton)
+        self.addSubview(declineButton)
         //self.translatesAutoresizingMaskIntoConstraints = false // Causes funkyness with infoWindow.
         
-        let margins = self.layoutMarginsGuide
+        //let margins = self.layoutMarginsGuide
         
         // Drawing code
         
@@ -63,7 +53,7 @@ class MapMarkerWindow: UIView {
         nameLabel.text = "Name"
         
         
-        //destLabel.center = CGPoint(x: 100, y: 30)
+        destLabel.center = CGPoint(x: 100, y: 30)
         //destLabel.leadingAnchor.constraint(equalTo: margins.leadingAnchor).isActive = true
         //destLabel.trailingAnchor.constraint(equalTo: margins.trailingAnchor).isActive = true
         //destLabel.topAnchor.constraint(equalTo: margins.topAnchor, constant: 30).isActive = true
@@ -76,7 +66,7 @@ class MapMarkerWindow: UIView {
         destLabel.text = "Downtown"
         
         
-        //rateLabel.center = CGPoint(x: 100, y: 50)
+        rateLabel.center = CGPoint(x: 100, y: 50)
         //rateLabel.leadingAnchor.constraint(equalTo: margins.leadingAnchor).isActive = true
         //rateLabel.trailingAnchor.constraint(equalTo: margins.trailingAnchor).isActive = true
         //rateLabel.topAnchor.constraint(equalTo: margins.topAnchor, constant: 60).isActive = true
@@ -84,7 +74,7 @@ class MapMarkerWindow: UIView {
         rateLabel.textAlignment = .center
         rateLabel.text = "$5"
         
-        //acceptButton.center = CGPoint(x: 50, y: 75)
+        acceptButton.center = CGPoint(x: 50, y: 75)
         //acceptButton.leadingAnchor.constraint(equalTo: margins.leadingAnchor).isActive = true
         //acceptButton.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 2).isActive = true
         //acceptButton.topAnchor.constraint(equalTo: margins.topAnchor, constant: 90).isActive = true
@@ -96,7 +86,7 @@ class MapMarkerWindow: UIView {
         acceptButton.setTitle("Accept", for: .normal)
         acceptButton.titleLabel?.textAlignment = .center
         
-        //declineButton.center = CGPoint(x: 150, y: 75)
+        declineButton.center = CGPoint(x: 150, y: 75)
         //declineButton.trailingAnchor.constraint(equalTo: margins.trailingAnchor).isActive = true
         //declineButton.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 0.5)
         declineButton.setTitleColor(UIColor.white, for: .normal)

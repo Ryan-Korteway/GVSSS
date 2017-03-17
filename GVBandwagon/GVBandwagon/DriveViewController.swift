@@ -18,7 +18,6 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
     @IBOutlet var messageDismissButton: UIButton!
     @IBOutlet var onlineMessageView: UIView!
     @IBOutlet var googleMap: GMSMapView!
-    @IBOutlet var goOnlineButton: UIButton!
     
     var isMessageDisplayed = false
     let locationManager = CLLocationManager()
@@ -28,6 +27,10 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        self.navigationController?.navigationBar.shadowImage = UIImage()
+        self.navigationController?.navigationBar.isTranslucent = true
 
         //user location stuff
         locationManager.delegate = self
@@ -288,10 +291,26 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
     
     func acceptTapped(button: UIButton) -> Void {
         print("Accept Tapped")
+        
+        performSegue(withIdentifier: "driverAcceptsSegue", sender: self)
+        infoWindow.removeFromSuperview()
+        
+        // Set Active Trip of Right Drawer to riders name and set it to clickable.
+        
     }
     
     func declineTapped(button: UIButton) -> Void {
         print("Decline Tapped")
+        infoWindow.removeFromSuperview()
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "driverAcceptsSegue" {
+            if let nextVC = segue.destination as? RideSummaryTableViewController {
+                // Set the attributes in the next VC.
+                nextVC.paymentText = "Request Payment"
+            }
+        }
     }
 }
 
@@ -323,4 +342,12 @@ extension DriveViewController: CLLocationManagerDelegate {
             print("No location found!")
         }
     }
+}
+
+struct location {
+    var lat: CLLocationDegrees
+    var lon: CLLocationDegrees
+    var name: String
+    var dest: String
+    var rate: String
 }

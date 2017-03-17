@@ -14,6 +14,8 @@ import GoogleMaps
 class DriverPanelViewController: UIViewController {
 
     @IBOutlet var goOnlineSwitch: UISwitch!
+    @IBOutlet var activeTripLabel: UILabel!
+    @IBOutlet var activeTripView: UIView!
     
     var ourlat : CLLocationDegrees = 0.0
     var ourlong : CLLocationDegrees = 0.0
@@ -30,6 +32,7 @@ class DriverPanelViewController: UIViewController {
 
         self.goOnlineSwitch.setOn(false, animated: false)
         self.goOnlineSwitch.addTarget(self, action: #selector(switchIsChanged(mySwitch:)), for: .valueChanged)
+        
     }
     
     func switchIsChanged(mySwitch: UISwitch) {
@@ -57,6 +60,19 @@ class DriverPanelViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    @IBAction func activeTripTapped(_ sender: Any) {
+        // Check if there is one, if not do nothing.
+        
+        // If there is an active trip, load the summary.
+        //self.performSegue(withIdentifier: "driverAcceptsRide", sender: self)
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        let centerVC = appDelegate.centerViewController
+        let driveVC = centerVC.childViewControllers[0].childViewControllers[0]
+        appDelegate.toggleRightDrawer(sender: self, animated: true)
+        driveVC.performSegue(withIdentifier: "driverAcceptsSegue", sender: driveVC)
+    }
+    
 
     /*
     // MARK: - Navigation
