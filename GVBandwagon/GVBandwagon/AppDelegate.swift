@@ -499,7 +499,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             
             //MIGHT NEED TO ITERATE THROUGH THE SNAPSHOT SINCE ITS PULLING EVERYTHING DOWN EACH TIME WE OPEN/CLOSE THE APP.
             
-            let lastView = self._centerViewController //neeeds to be moved to
+            //let lastView = self._centerViewController //neeeds to be moved to
             //custom coding class and use KG's floating drawers and references instead of this whole floating drawers things.
             
             if(snapshot.value is NSNull) {
@@ -507,44 +507,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             } else {
                 
                 //and again need switch for casting etc.
-                switch(lastView) {
-                    case is FirstViewController:
-                        print("ignoring the observe, doing rider things")
-                    case is DriveViewController:
-                        
-                        // TO DO, set up the observers to highlight or ignore white and black listed riders/drivers
-                        
-                        // and in here is where you would make the call of if its a white listed rider or not.
-                        // OR if its a black listed rider to ignore the requests.
-                        
-                        let newView = lastView as! DriveViewController
-                        newView.ride_request(item: cellItem.init(snapshot: snapshot as FIRDataSnapshot))
+                if( self._centerViewController is UITabBarController) {
                     
-                    default:
-                        //local notification creation.
-                        let localCell = cellItem.init(snapshot: snapshot)
-                        
-                        let content = UNMutableNotificationContent()
-                        content.title = "New Rider Request"
-                        content.body = "Navigate to the drivers map to see the new pin/request"
-                        content.sound = UNNotificationSound.default()
-                        content.categoryIdentifier = "nothing_category"
-                        content.userInfo = localCell.toAnyObject() as! [AnyHashable : Any] //compiler forced the conversion.
-                        
-                        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
-                        
-                        let identifier = "Rider request"
-                        let request = UNNotificationRequest(identifier: identifier,
-                                                            content: content, trigger: trigger)
-                        self.center.add(request, withCompletionHandler: { (error) in
-                            
-                            if let error = error {
-                                print(error.localizedDescription)
-                            }
-                        })
-                        
-                        let localDriver = DriveViewController() //hopefully these local redeclarations hold.
-                        localDriver.ride_request(item: localCell)
+                    let vc = self.centerViewController as! UITabBarController
+                    (vc.childViewControllers[0] as! DriveViewController).ride_request(item: cellItem.init(snapshot: snapshot as FIRDataSnapshot))
+                } else{
+                        print("default")
                 }
                 
             }

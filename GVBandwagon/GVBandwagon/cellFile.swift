@@ -71,11 +71,10 @@ struct cellItem {
             "rate": rate,
             "origin" : origin,
             "destination": destination,
-            "rate": rate,
             "accepted" : accepted,
             "repeats": repeats,
             "duration": duration
-        ];
+        ]
     }
     
 }
