@@ -51,7 +51,7 @@ class GVBNotificationDelegate: NSObject, UNUserNotificationCenterDelegate {
             //idk about user.displayName here.
             
             //maybe venmo id is a global var in app delegate with a getter/setter for moments like this.
-            ref.child("\(user.uid)").setValue(["name": user.displayName!, "uid": user.uid, "venmoID": "idk where/how to get this", "origin": notification.userInfo["origin"], "destination": notification.userInfo["destination"], "rate": notification.userInfo["rate"], "accepted" : 0, "repeats": 0]) //value set needs to be all of our info for the snapshot.
+            ref.child("\(user.uid)").setValue(["name": user.displayName!, "uid": user.uid, "venmoID": "idk where/how to get this", "origin": notification.userInfo["origin"], "destination": notification.userInfo["destination"], "rate": notification.userInfo["rate"], "accepted" : 0, "repeats": 0, "duration": "none"]) //value set needs to be all of our info for the snapshot.
             
             localDelegate.changeStatus(status: "offer")
             

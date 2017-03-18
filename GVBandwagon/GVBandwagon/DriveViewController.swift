@@ -293,13 +293,14 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
         //idk about user.displayName here.
         
         //maybe venmo id is a global var in app delegate with a getter/setter for moments like this.
-        ref.child("\(user.uid)").setValue(["name": user.displayName!, "uid": user.uid, "venmoID": localDelegate.getVenmoID(), "origin": baseDictionary.value(forKey: "origin"), "destination": baseDictionary.value(forKey: "destination"), "rate": baseDictionary.value(forKey: "rate"), "accepted" : 0, "repeats": 0]) //value set needs to be all of our info for the snapshot.
+        ref.child("\(user.uid)").setValue(["name": user.displayName!, "uid": user.uid, "venmoID": localDelegate.getVenmoID(), "origin": baseDictionary.value(forKey: "origin"), "destination": baseDictionary.value(forKey: "destination"), "rate": baseDictionary.value(forKey: "rate"), "accepted" : 0, "repeats": 0, "duration": "none"]) //value set needs to be all of our info for the snapshot.
         
         print("ride offered") //this one is if you hit the snooze button
         
         self.googleMap.clear() //clears the map of all pins so w can show only what w care about.
         
         //make the pin with only the riders info.
+        //make tracker observers etc from only the baseDictionaries uid etc?...
         
         performSegue(withIdentifier: "driverAcceptsSegue", sender: self)
         infoWindow.removeFromSuperview()
