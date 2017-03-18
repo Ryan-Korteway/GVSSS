@@ -70,6 +70,18 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
 //        testMarker.userData = newCell
 //        
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        // Test Marker 2
+        let testMarker = GMSMarker()
+        testMarker.position = CLLocationCoordinate2D(latitude: 41.973984, longitude: -86.695527)
+        //marker.title = "Potential Rider: \(cellInfo["name"])"
+        //marker.snippet = "Close enough to Grand Valley."
+        //testMarker.icon = GMSMarker.markerImage(with: .green)
+        testMarker.map = self.googleMap
+    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -290,7 +302,21 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
     }
     
     func acceptTapped(button: UIButton) -> Void {
+        localDelegate.changeStatus(status: "offer")
         print("Accept Tapped")
+        
+        let ref = FIRDatabase.database().reference().child("users/\(notification.userInfo["uid"]!)/rider/offers/immediate/")
+        
+        let user = FIRAuth.auth()!.currentUser!
+        
+        //idk about user.displayName here.
+        
+        //maybe venmo id is a global var in app delegate with a getter/setter for moments like this.
+        ref.child("\(user.uid)").setValue(["name": user.displayName!, "uid": user.uid, "venmoID": "idk where/how to get this", "origin": notification.userInfo["origin"], "destination": notification.userInfo["destination"], "rate": notification.userInfo["rate"], "accepted" : 0, "repeats": 0]) //value set needs to be all of our info for the snapshot.
+        
+        print("ride offered") //this one is if you hit the snooze button
+        
+        self.googleMap.clear() //clears the map of all pins so w can show only what w care about.
         
         performSegue(withIdentifier: "driverAcceptsSegue", sender: self)
         infoWindow.removeFromSuperview()

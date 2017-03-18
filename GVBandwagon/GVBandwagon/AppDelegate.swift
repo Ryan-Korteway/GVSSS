@@ -6,6 +6,10 @@
 //  Copyright © 2017 Nicolas Heady. All rights reserved.
 //
 
+
+// APP DELEGATE NEEDS TO HOLD COPY OF THE ACTIVE DRIVE AND RIDE VIEW CONTROLLERS SO THAT THEY CAN BE 
+// RETRIEVED AND USED TO MAKE PIN REQUESTS ETC WITHOUT THE MAPS BEING THE ONES ON SCREEN!!! could be furuther improved by init'ing them to UIViewcontrollers and then they only get reassigned to be used if the user ever opens up the driver controller etc.
+
 import UIKit
 import Firebase
 import GoogleSignIn
