@@ -53,10 +53,12 @@ class DriverPanelViewController: UIViewController {
         
             localDelegate.changeMode(mode: "driver")
             localDelegate.startTimer()
+            localDelegate.startRiderObservers()
         } else {
             // Remove driver from active driver list
             ref.child("/activedrivers/\(ourid)").removeValue();
             localDelegate.changeMode(mode: "rider")
+            localDelegate.timer.invalidate() //stop the timer.
         }
     }
 

@@ -25,6 +25,10 @@ class RideSummaryTableViewController: UITableViewController {
         super.viewDidLoad()
         
         self.paymentButton.setTitle(paymentText, for: .normal)
+        //UIApplication.shared.open(NSURL(string:"https://venmo.com/?txn=pay&audience=private&recipients=@michael-christensen-20&amount=3&note=GVB") as! URL, options: [:], completionHandler: nil)
+        
+            // PAYMENT CODE AFTER GETTING THE RATE AND VENMO ID OF THE DRIVER ETC.
+            // MIGHT JUST DO A SINGLE OBSERVE ON THE USERS RIDER
         
         // If this is a summary for the driver:
         // name and rating are of Rider
