@@ -26,7 +26,6 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
     let userID = FIRAuth.auth()!.currentUser!.uid
     
     let localDelegate = UIApplication.shared.delegate as! AppDelegate
-    var baseDictionary: NSDictionary = [:]
     
     var baseDictionary: NSDictionary = [:]
     
@@ -45,6 +44,8 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
         locationManager.startUpdatingLocation()
         
         self.createMap()
+        localDelegate.DriveViewController_AD = self; //again, hoping this assignment is okay.
+        localDelegate.DriveSet = true;
 
         //TEST MARKER CANCELLED OUT DUE TO BEING FILLED WITH LOCATION INSTEAD OF cellItem user data and being hard to change.
         
@@ -280,8 +281,8 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
         infoWindow = MapMarkerWindow(frame: CGRect(x: 0, y: 0, width: 200, height: 100))
         
         infoWindow.nameLabel.text = (baseDictionary.value(forKey: "name") as! NSString) as String
-        infoWindow.destLabel.text = baseDictionary.value(forKey: "destination") as! String
-        infoWindow.rateLabel.text = baseDictionary.value(forKey: "rate") as! String?
+        infoWindow.destLabel.text = baseDictionary.value(forKey: "destination").debugDescription
+        infoWindow.rateLabel.text = "\(baseDictionary.value(forKey: "rate"))"
         
         infoWindow.center = mapView.projection.point(for: location)
         infoWindow.center.y -= 90
@@ -300,10 +301,7 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
     // let the custom infowindow follows the camera
     func mapView(_ mapView: GMSMapView, didChange position: GMSCameraPosition) {
         if (tappedMarker.userData != nil){
-            
-            baseDictionary = tappedMarker.userData as! NSDictionary
-            let locationDictionary = baseDictionary.value(forKey: "origin") as! NSDictionary
-            let location = CLLocationCoordinate2D(latitude: locationDictionary.value(forKey: "lat") as! CLLocationDegrees, longitude: locationDictionary.value(forKey: "long") as! CLLocationDegrees)
+            let location = CLLocationCoordinate2D(latitude: tappedMarker.position.latitude, longitude: tappedMarker.position.longitude)
             infoWindow.center = mapView.projection.point(for: location)
             infoWindow.center.y -= 90
         }
@@ -318,7 +316,7 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
         localDelegate.changeStatus(status: "offer")
         print("Accept Tapped but it is really an offer.")
         
-        let ref = FIRDatabase.database().reference().child("users/\(baseDictionary.value(forKey: "uid"))/rider/offers/immediate/")
+        let ref = FIRDatabase.database().reference().child("users/\(baseDictionary.value(forKey: "uid")!)/rider/offers/immediate/")
         
         let user = FIRAuth.auth()!.currentUser!
         

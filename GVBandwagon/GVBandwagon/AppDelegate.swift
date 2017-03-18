@@ -459,10 +459,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 if(!self.firstSet) {
                     print("first view controller not set up yet")
                     
-                    let vc = self.centerViewController as! UITabBarController
-                    (vc.childViewControllers[0].childViewControllers[0] as! DriveViewController).ride_request(item: cellItem.init(snapshot: snapshot as FIRDataSnapshot))
-                } else{
-                        print("default")
+                } else {
+                    print("calling ride offer")
+                    (self.firstViewController as! FirstViewController).ride_offer(item: cellItem.init(snapshot: snapshot as! FIRDataSnapshot))
                 }
             
             }

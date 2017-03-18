@@ -50,6 +50,7 @@ class FirstViewController: UIViewController, rider_notifications {
          */
         
         self.createMap()
+        
         let localDelegate = UIApplication.shared.delegate as! AppDelegate
         print("delegate being set")
         localDelegate.firstViewController = self; //hopefully this cast is okay.
