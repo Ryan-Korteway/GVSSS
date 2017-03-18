@@ -461,7 +461,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     
                 } else {
                     print("calling ride offer")
-                    (self.firstViewController as! FirstViewController).ride_offer(item: cellItem.init(snapshot: snapshot as! FIRDataSnapshot))
+                    (self.firstViewController as! FirstViewController).ride_offer(item: cellItem.init(snapshot: snapshot))
                 }
             
             }
