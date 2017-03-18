@@ -13,7 +13,6 @@ import GoogleMaps
 class FirstViewController: UIViewController, rider_notifications {
 
     @IBOutlet var rideNowButton: UIButton!
-    @IBOutlet var scheduleRideButton: UIButton!
     @IBOutlet var superViewTapGesture: UITapGestureRecognizer!
     @IBOutlet var googleMapsView: GMSMapView!
     
@@ -32,17 +31,29 @@ class FirstViewController: UIViewController, rider_notifications {
     let ref = FIRDatabase.database().reference()
     var uid_forDriver = "wait";
     
+    // For the Ride Now button
+    var shadowLayer: CAShapeLayer!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
         self.navigationController?.navigationBar.shadowImage = UIImage()
         self.navigationController?.navigationBar.isTranslucent = true
         
-        self.rideNowButton.layer.borderWidth = 1
-        self.rideNowButton.layer.borderColor = UIColor.blue.cgColor
-        
-        self.scheduleRideButton.layer.borderWidth = 1
-        self.scheduleRideButton.layer.borderColor = UIColor.blue.cgColor
+        // Custom button design. We should put this in its own clas later.
+        if shadowLayer == nil {
+            shadowLayer = CAShapeLayer()
+            shadowLayer.path = UIBezierPath(roundedRect: self.rideNowButton.bounds, cornerRadius: 12).cgPath
+            shadowLayer.fillColor = UIColor.blue.cgColor
+            
+            shadowLayer.shadowColor = UIColor.darkGray.cgColor
+            shadowLayer.shadowPath = shadowLayer.path
+            shadowLayer.shadowOffset = CGSize(width: 2.0, height: 2.0)
+            shadowLayer.shadowOpacity = 0.8
+            shadowLayer.shadowRadius = 2
+            
+            self.rideNowButton.layer.insertSublayer(shadowLayer, at: 0)
+        }
         
         /* Link to pay on venmo
         UIApplication.shared.open(NSURL(string:"https://venmo.com/?txn=pay&audience=private&recipients=@michael-christensen-20&amount=3&note=GVB") as! URL, options: [:], completionHandler: nil)
@@ -86,17 +97,18 @@ class FirstViewController: UIViewController, rider_notifications {
     @IBAction func onRideNowTapped(_ sender: Any) {
             return;
     }
-    
-    // Plan on doing the same for Schedule Ride button as Ride Now.
-    // Would rather have a view pop up over the map in which the user
-    // can enter info rather than switch to a entirely new view controller.
-    @IBAction func onScheduleRideTapped(_ sender: Any) {
-        self.performSegue(withIdentifier: "riderAcceptsSegue", sender: self)
-    }
 
     @IBAction func toggleLeftDrawer(_ sender: Any) {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         appDelegate.toggleLeftDrawer(sender: sender as AnyObject, animated: false)
+    }
+    
+    @IBAction func onUserPanelTapped(_ sender: Any) {
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        appDelegate.toggleRightDrawer(sender: sender as AnyObject, animated: false)
+        if let panelVC = appDelegate.drawerViewController.rightViewController as? DriverPanelViewController {
+            panelVC.mode = "Ride"
+        }
     }
     
     func createMap() {

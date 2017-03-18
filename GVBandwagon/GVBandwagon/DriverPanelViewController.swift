@@ -17,6 +17,8 @@ class DriverPanelViewController: UIViewController {
     @IBOutlet var activeTripLabel: UILabel!
     @IBOutlet var activeTripView: UIView!
     
+    var mode = "Ride"
+    
     var ourlat : CLLocationDegrees = 0.0
     var ourlong : CLLocationDegrees = 0.0
     
@@ -32,7 +34,6 @@ class DriverPanelViewController: UIViewController {
 
         self.goOnlineSwitch.setOn(false, animated: false)
         self.goOnlineSwitch.addTarget(self, action: #selector(switchIsChanged(mySwitch:)), for: .valueChanged)
-        
     }
     
     func switchIsChanged(mySwitch: UISwitch) {
@@ -71,11 +72,17 @@ class DriverPanelViewController: UIViewController {
         //self.performSegue(withIdentifier: "driverAcceptsRide", sender: self)
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         let centerVC = appDelegate.centerViewController
-        let driveVC = centerVC.childViewControllers[0].childViewControllers[0]
-        appDelegate.toggleRightDrawer(sender: self, animated: true)
-        driveVC.performSegue(withIdentifier: "driverAcceptsSegue", sender: driveVC)
+        
+        if (self.mode == "Ride") {
+            let rideVC = centerVC.childViewControllers[0]
+            appDelegate.toggleRightDrawer(sender: self, animated: true)
+            rideVC.performSegue(withIdentifier: "riderAcceptsSegue", sender: rideVC)
+        } else {
+            let driveVC = centerVC.childViewControllers[0].childViewControllers[0]
+            appDelegate.toggleRightDrawer(sender: self, animated: true)
+            driveVC.performSegue(withIdentifier: "driverAcceptsSegue", sender: driveVC)
+        }
     }
-    
 
     /*
     // MARK: - Navigation

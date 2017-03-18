@@ -107,7 +107,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ru3-th-MUL">
-                                                    <rect key="frame" x="20" y="-3.5" width="50" height="50"/>
+                                                    <rect key="frame" x="20" y="-4" width="50" height="51"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="50" id="Arw-Ry-iWh"/>
                                                         <constraint firstAttribute="width" constant="50" id="BBA-Ch-qxQ"/>
@@ -343,22 +343,26 @@
                                     <outletCollection property="gestureRecognizers" destination="mks-Nd-eOc" appends="YES" id="YcX-9F-Agz"/>
                                 </connections>
                             </imageView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="M8l-eP-QAP">
-                                <rect key="frame" x="131" y="541" width="112" height="41"/>
-                                <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="22"/>
-                                <state key="normal" title="Active Ride"/>
-                                <connections>
-                                    <action selector="onScheduleRideTapped:" destination="9pv-A4-QxB" eventType="touchUpInside" id="shE-CH-eyk"/>
-                                    <segue destination="4uF-J8-gBb" kind="show" id="rqv-QO-axn"/>
-                                </connections>
-                            </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hXc-TC-jma">
-                                <rect key="frame" x="134" y="490" width="107" height="41"/>
+                                <rect key="frame" x="88" y="511" width="200" height="41"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="200" id="tJe-Bi-Tj1"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="22"/>
-                                <state key="normal" title="Ride Now!"/>
+                                <state key="normal" title="Ride Now!">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
                                 <connections>
                                     <action selector="onRideNowTapped:" destination="9pv-A4-QxB" eventType="touchUpInside" id="djb-Df-OdA"/>
                                     <segue destination="4uF-J8-gBb" kind="show" id="4o4-Ge-wAU"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="U3j-bg-JB0">
+                                <rect key="frame" x="249" y="47" width="110" height="37"/>
+                                <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="19"/>
+                                <state key="normal" title="User Panel &gt;"/>
+                                <connections>
+                                    <action selector="onUserPanelTapped:" destination="9pv-A4-QxB" eventType="touchUpInside" id="9CH-Zs-l1g"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -368,15 +372,15 @@
                             <constraint firstItem="C44-G5-euM" firstAttribute="top" secondItem="tsR-hK-woN" secondAttribute="top" id="9ZR-fU-lIm"/>
                             <constraint firstItem="4ug-Mw-9AY" firstAttribute="top" secondItem="C44-G5-euM" secondAttribute="bottom" id="FOS-jd-Ibm"/>
                             <constraint firstItem="KQZ-1w-vlD" firstAttribute="centerX" secondItem="tsR-hK-woN" secondAttribute="centerX" id="V4w-RW-GWg"/>
-                            <constraint firstItem="4ug-Mw-9AY" firstAttribute="top" secondItem="M8l-eP-QAP" secondAttribute="bottom" constant="85" id="cTC-VA-aCg"/>
+                            <constraint firstItem="4ug-Mw-9AY" firstAttribute="top" secondItem="hXc-TC-jma" secondAttribute="bottom" constant="115" id="Ynz-k6-zlT"/>
                             <constraint firstItem="KQZ-1w-vlD" firstAttribute="centerY" secondItem="7ik-oC-2hf" secondAttribute="centerY" id="cWX-84-tZS"/>
                             <constraint firstItem="7ik-oC-2hf" firstAttribute="top" secondItem="tsR-hK-woN" secondAttribute="topMargin" constant="50" id="cd6-xK-2rU"/>
                             <constraint firstItem="hXc-TC-jma" firstAttribute="centerX" secondItem="tsR-hK-woN" secondAttribute="centerX" id="f68-j4-zCx"/>
-                            <constraint firstItem="M8l-eP-QAP" firstAttribute="top" secondItem="hXc-TC-jma" secondAttribute="bottom" constant="10" id="g5K-KQ-wQk"/>
                             <constraint firstAttribute="trailing" secondItem="C44-G5-euM" secondAttribute="trailing" id="gl7-gC-fdc"/>
                             <constraint firstItem="C44-G5-euM" firstAttribute="leading" secondItem="tsR-hK-woN" secondAttribute="leading" id="loU-jR-k3z"/>
                             <constraint firstItem="7ik-oC-2hf" firstAttribute="leading" secondItem="tsR-hK-woN" secondAttribute="leadingMargin" id="p6S-hg-Mfo"/>
-                            <constraint firstItem="M8l-eP-QAP" firstAttribute="centerX" secondItem="tsR-hK-woN" secondAttribute="centerX" id="xxY-zv-hrj"/>
+                            <constraint firstItem="U3j-bg-JB0" firstAttribute="centerY" secondItem="7ik-oC-2hf" secondAttribute="centerY" id="ww6-tS-S2R"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="U3j-bg-JB0" secondAttribute="trailing" id="xkD-oj-piG"/>
                         </constraints>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="LfR-zQ-KAl" appends="YES" id="nwe-1y-WIa"/>
@@ -386,7 +390,6 @@
                     <connections>
                         <outlet property="googleMapsView" destination="C44-G5-euM" id="0Gx-sX-wYj"/>
                         <outlet property="rideNowButton" destination="hXc-TC-jma" id="DUB-HX-h4R"/>
-                        <outlet property="scheduleRideButton" destination="M8l-eP-QAP" id="lGM-SY-aSG"/>
                         <outlet property="superViewTapGesture" destination="LfR-zQ-KAl" id="56l-vL-gdb"/>
                         <segue destination="V9b-CB-B2E" kind="show" identifier="riderAcceptsSegue" id="qU9-iD-UHd"/>
                     </connections>
@@ -1267,7 +1270,7 @@
             <objects>
                 <navigationController storyboardIdentifier="settingsNavigationController" title="Account Navigation" automaticallyAdjustsScrollViewInsets="NO" id="qie-e8-3Lv" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="o1k-9W-jfW">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="o1k-9W-jfW">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1421,9 +1424,9 @@
                                 </connections>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="52f-Aj-kqq">
-                                <rect key="frame" x="248" y="48" width="111" height="35"/>
-                                <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="17"/>
-                                <state key="normal" title="Driver Panel &gt;"/>
+                                <rect key="frame" x="249" y="47" width="110" height="37"/>
+                                <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="19"/>
+                                <state key="normal" title="User Panel &gt;"/>
                                 <connections>
                                     <action selector="onDriverPanelTapped:" destination="MRT-6q-8L6" eventType="touchUpInside" id="RGe-co-z8e"/>
                                 </connections>
@@ -1499,7 +1502,7 @@
                             <outlet property="delegate" destination="6Sx-aN-E6m" id="Eep-Sz-ugx"/>
                         </connections>
                     </tableView>
-                    <tabBarItem key="tabBarItem" title="Future Rides" id="Uxj-y7-cY8"/>
+                    <tabBarItem key="tabBarItem" title="Future Rides" image="clockTab" id="Uxj-y7-cY8"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="PmZ-NO-5Nm" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -1569,6 +1572,7 @@
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <gestureRecognizers/>
                     </view>
                     <connections>
                         <outlet property="activeTripLabel" destination="32L-kN-KEu" id="gBy-w4-8qq"/>
@@ -1589,7 +1593,7 @@
         <scene sceneID="doC-82-JO4">
             <objects>
                 <tableViewController id="V9b-CB-B2E" customClass="RideSummaryTableViewController" customModule="GVBandwagon" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" id="PVq-mG-fp9">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" sectionIndexMinimumDisplayRowCount="4" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" id="PVq-mG-fp9">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
@@ -1597,7 +1601,7 @@
                             <tableViewSection headerTitle="Rider" id="nUZ-Tz-9ML">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="XdC-it-j8G">
-                                        <rect key="frame" x="0.0" y="55.5" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="56" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="XdC-it-j8G" id="BlY-EY-okG">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
@@ -1614,7 +1618,7 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="ZgU-DW-yml">
-                                        <rect key="frame" x="0.0" y="99.5" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="100" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ZgU-DW-yml" id="QBK-Gm-SEt">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
@@ -1635,7 +1639,7 @@
                             <tableViewSection headerTitle="Origin" id="QaR-be-RPa">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="SN4-UO-4sQ">
-                                        <rect key="frame" x="0.0" y="199.5" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="201" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="SN4-UO-4sQ" id="zLW-AO-1kv">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
@@ -1652,7 +1656,7 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="Zu5-O7-Dfa">
-                                        <rect key="frame" x="0.0" y="243.5" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="245" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Zu5-O7-Dfa" id="jRn-hy-VBk">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
@@ -1673,7 +1677,7 @@
                             <tableViewSection headerTitle="Destination" id="M8H-Zm-wY9">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="olG-Mq-mSj">
-                                        <rect key="frame" x="0.0" y="343.5" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="346" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="olG-Mq-mSj" id="17A-X7-t4V">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
@@ -1690,7 +1694,7 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="wso-bN-JSG">
-                                        <rect key="frame" x="0.0" y="387.5" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="390" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="wso-bN-JSG" id="T9X-yz-ln1">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
@@ -1711,7 +1715,7 @@
                             <tableViewSection headerTitle="Rate" id="kAZ-xg-x8k">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="COZ-aU-OpB">
-                                        <rect key="frame" x="0.0" y="487.5" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="491" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="COZ-aU-OpB" id="ff1-m1-5vS">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
@@ -1732,7 +1736,7 @@
                             <tableViewSection id="ehb-cq-0Bp">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="hqu-vr-2KP">
-                                        <rect key="frame" x="0.0" y="567.5" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="571" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="hqu-vr-2KP" id="Hcg-35-LND">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
@@ -1767,7 +1771,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="CmU-uq-zUd" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3343" y="-973"/>
+            <point key="canvasLocation" x="3377" y="-973"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="CTM-KT-ee1">
@@ -1793,7 +1797,7 @@
             <objects>
                 <navigationController storyboardIdentifier="myHistoryNavigationController" automaticallyAdjustsScrollViewInsets="NO" id="uFx-a6-EjB" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="cEz-5G-en9">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="cEz-5G-en9">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1811,7 +1815,7 @@
             <objects>
                 <navigationController storyboardIdentifier="scheduledRidesNavigationController" automaticallyAdjustsScrollViewInsets="NO" id="wlc-uO-mCg" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="T4E-88-yjo">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="T4E-88-yjo">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1829,7 +1833,7 @@
             <objects>
                 <navigationController storyboardIdentifier="rideNavController" automaticallyAdjustsScrollViewInsets="NO" id="HC5-ET-4zC" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="VD2-H3-46M">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="VD2-H3-46M">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1846,9 +1850,9 @@
         <scene sceneID="9jN-4P-GcB">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Jyl-nh-N2F" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Urgent Rides" id="E42-3c-tFb"/>
+                    <tabBarItem key="tabBarItem" title="Urgent Rides" image="expointTab" id="E42-3c-tFb"/>
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="4eg-G6-LA2">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="4eg-G6-LA2">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1864,11 +1868,12 @@
     </scenes>
     <resources>
         <image name="checkmark.png" width="240" height="240"/>
+        <image name="clockTab" width="25" height="25"/>
+        <image name="expointTab" width="5" height="25"/>
         <image name="gvbwlogo.jpg" width="889" height="1334"/>
         <image name="imagicon.png" width="57" height="45"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="rqv-QO-axn"/>
         <segue reference="gXi-1e-BDf"/>
         <segue reference="JZw-DP-dT2"/>
     </inferredMetricsTieBreakers>

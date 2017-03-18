@@ -154,6 +154,9 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
     @IBAction func onDriverPanelTapped(_ sender: Any) {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         appDelegate.toggleRightDrawer(sender: sender as AnyObject, animated: false)
+        if let panelVC = appDelegate.drawerViewController.rightViewController as? DriverPanelViewController {
+            panelVC.mode = "Drive"
+        }
     }
     
     @IBAction func onDismissTapped(_ sender: Any) {
@@ -191,11 +194,12 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
         marker.map = self.googleMap
         
         let marker2 = GMSMarker()
-        marker2.position = CLLocationCoordinate2D(latitude: destinationInfo.value(forKey: "lat") as! CLLocationDegrees, longitude: destinationInfo.value(forKey: "long") as! CLLocationDegrees)
+        marker2.position = CLLocationCoordinate2D(latitude: destinationInfo.value(forKey: "latitude") as! CLLocationDegrees, longitude: destinationInfo.value(forKey: "longitude") as! CLLocationDegrees)
         marker2.title = "Potential Rider Destination"
         marker2.snippet = "Close enough to Grand Valley."
         
         marker2.map = self.googleMap
+ 
         
         // same here needing observers to update the pins with the riders locations as they move
         
