@@ -63,6 +63,7 @@ struct cellItem {
         duration = snapshotValue["duration"] as! NSString
     }
     
+    // removed duplicate key: "rate": rate,
     func toAnyObject() -> Any {
         return [
             "name": name,

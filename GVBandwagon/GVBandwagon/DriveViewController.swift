@@ -155,6 +155,9 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
     @IBAction func onDriverPanelTapped(_ sender: Any) {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         appDelegate.toggleRightDrawer(sender: sender as AnyObject, animated: false)
+        if let panelVC = appDelegate.drawerViewController.rightViewController as? DriverPanelViewController {
+            panelVC.mode = "Drive"
+        }
     }
     
     @IBAction func onDismissTapped(_ sender: Any) {
@@ -209,6 +212,7 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
         marker2.snippet = "Close enough to Grand Valley."
         
         marker2.map = self.googleMap
+ 
         
         // same here needing observers to update the pins with the riders locations as they move
         
