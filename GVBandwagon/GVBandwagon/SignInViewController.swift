@@ -17,7 +17,6 @@ class SignInViewController: UIViewController, GIDSignInDelegate, GIDSignInUIDele
     var isUserLoggedIn = false
     var ref: FIRDatabaseReference!
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         print("\nSIGNIN viewDidLoad called.\n")

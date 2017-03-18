@@ -35,6 +35,8 @@
 	<string>We need your location to find you riders and drivers.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>We need your location to find you riders and drivers.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>This app would like to access your photos.</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

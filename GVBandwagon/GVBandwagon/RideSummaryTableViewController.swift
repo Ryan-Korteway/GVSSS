@@ -24,10 +24,6 @@ class RideSummaryTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
-        self.navigationController?.navigationBar.shadowImage = UIImage()
-        self.navigationController?.navigationBar.isTranslucent = true
-        
         self.paymentButton.setTitle(paymentText, for: .normal)
         
         // If this is a summary for the driver:

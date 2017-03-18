@@ -43,7 +43,7 @@ class DriverPanelViewController: UIViewController {
             appDelegate.toggleRightDrawer(sender: mySwitch, animated: true)
             let centerVC = appDelegate.centerViewController as? UITabBarController
             let driveVC = centerVC?.childViewControllers[0].childViewControllers[0] as? DriveViewController
-            driveVC?.goOnlineLabelBtnTapped(mySwitch)
+            driveVC?.displayOnlineMessage()
 
             
             ref.child("/activedrivers/\(ourid)").setValue(["name": FIRAuth.auth()!.currentUser!.displayName! as NSString,

@@ -514,7 +514,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 if( self._centerViewController is UITabBarController) {
                     
                     let vc = self.centerViewController as! UITabBarController
-                    (vc.childViewControllers[0] as! DriveViewController).ride_request(item: cellItem.init(snapshot: snapshot as FIRDataSnapshot))
+                    (vc.childViewControllers[0].childViewControllers[0] as! DriveViewController).ride_request(item: cellItem.init(snapshot: snapshot as FIRDataSnapshot))
                 } else{
                         print("default")
                 }

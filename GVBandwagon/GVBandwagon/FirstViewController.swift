@@ -59,13 +59,6 @@ class FirstViewController: UIViewController, rider_notifications {
         UIApplication.shared.open(NSURL(string:"https://venmo.com/?txn=pay&audience=private&recipients=@michael-christensen-20&amount=3&note=GVB") as! URL, options: [:], completionHandler: nil)
          */
         
-        //user location stuff
-        //locationManager.delegate = self
-        //locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
-        //locationManager.activityType = .automotiveNavigation
-        //locationManager.requestWhenInUseAuthorization()
-        //locationManager.startUpdatingLocation()
-        
         self.createMap()
 
         

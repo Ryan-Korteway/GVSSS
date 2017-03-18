@@ -12,6 +12,7 @@ target 'GVBandwagon' do
   pod 'Firebase/Database'
   pod 'GoogleSignIn'
   pod 'Firebase/Auth'
+  pod 'Firebase/Storage'
   pod 'KGFloatingDrawer', '~> 0.2.0'
   pod 'GoogleMaps'
 

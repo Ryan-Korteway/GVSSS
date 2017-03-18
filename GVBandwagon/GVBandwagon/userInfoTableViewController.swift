@@ -9,7 +9,8 @@
 import UIKit
 import Firebase
 
-class userInfoTableViewController: UITableViewController {
+class userInfoTableViewController: UITableViewController, UIImagePickerControllerDelegate,
+UINavigationControllerDelegate {
 
     @IBOutlet var fNameField: UITextField!
     @IBOutlet var lNameField: UITextField!
@@ -19,12 +20,15 @@ class userInfoTableViewController: UITableViewController {
     @IBOutlet var makeField: UITextField!
     @IBOutlet var colorField: UITextField!
     @IBOutlet var modelField: UITextField!
+    @IBOutlet var profilePicView: UIImageView!
     
     var currentUser : FIRUser?
+    var userID: String?
     var ref: FIRDatabaseReference = FIRDatabase.database().reference()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.tableView.delegate = self
 
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -33,7 +37,7 @@ class userInfoTableViewController: UITableViewController {
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
         
         self.currentUser = FIRAuth.auth()?.currentUser
-        let userID = self.currentUser?.uid
+        userID = self.currentUser?.uid
         //self.fNameField.text = currentUser?.displayName
         print("What is display name? : \(currentUser?.displayName)")
         
@@ -79,12 +83,19 @@ class userInfoTableViewController: UITableViewController {
         }
     }
 
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if (indexPath.section == 0) {
+            
+            // Open the photo library
+            self.openPhotoLibrary()
+        }
+    }
+    
     /*
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
 
         // Configure the cell...
-
         return cell
     }
     */
@@ -148,6 +159,59 @@ class userInfoTableViewController: UITableViewController {
                 
             }) { (error) in
                 print("Update Error, \(error.localizedDescription)")
+            }
+        }
+    }
+    
+    @IBAction func openPhotoLibrary() {
+        if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.photoLibrary) {
+            let imagePicker = UIImagePickerController()
+            imagePicker.delegate = self
+            imagePicker.sourceType = UIImagePickerControllerSourceType.photoLibrary;
+            imagePicker.allowsEditing = true
+            self.present(imagePicker, animated: true, completion: nil)
+        }
+    }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        
+        picker.dismiss(animated: true, completion: nil)
+        
+        if let image = info[UIImagePickerControllerEditedImage] as? UIImage {
+            self.profilePicView.image = image
+        } else if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
+            self.profilePicView.image = image
+        } else {
+            self.profilePicView.image = nil
+        }
+        
+        // Capture the image path for uploading to Firebase:
+        //let url: NSURL = info.value(forKey: "UIImagePickerControllerReferenceURL") as! NSURL
+        let url = info["UIImagePickerControllerReferenceURL"] as! NSURL
+        //print("Image path: \(url.absoluteString)")
+        
+        self.updateProfilePic(localFile: url)
+    }
+    
+    func updateProfilePic(localFile: NSURL) {
+        
+        let storage = FIRStorage.storage()
+        let storageRef = storage.reference()
+        
+        // Create a reference to 'images/profilepic.jpg'
+        let profileImageRef = storageRef.child("images/\(self.userID)/profilepic.jpg")
+
+            
+        print("Path from update: \(localFile.absoluteString)")
+            
+        // Upload the file to the path "images/rivers.jpg"
+        let uploadTask = profileImageRef.putFile(localFile as URL, metadata: nil) { metadata, error in
+            if let error = error {
+                // Uh-oh, an error occurred!
+                print(error.localizedDescription)
+            } else {
+                // Metadata contains file metadata such as size, content-type, and download URL.
+                let downloadURL = metadata!.downloadURL()
             }
         }
     }

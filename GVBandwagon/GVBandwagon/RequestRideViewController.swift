@@ -85,7 +85,13 @@ class RequestRideViewController: UIViewController {
         
         //SELF GOING TO AND STARTING FROM NEED REPLACING WITH THE SEARCHING OF A DESTINATION FROM THE PAGE.
         
-        ref.child("requests/immediate/\(currentUser!.uid)/").setValue(["name": currentUser!.displayName!, "uid": currentUser!.uid, "venmoID": "none", "origin": self.startingFrom, "destination": self.goingTo, "rate" : 15, "accepted": 0, "repeats": 0, "duration": "none"]) //locations being sent here.
+        
+        let currentLat = self.localDelegate.locationManager.location!.coordinate.latitude 
+        let currentLong = self.localDelegate.locationManager.location!.coordinate.longitude
+        
+        print("Current lat and long: \(currentLat) \(currentLong)")
+        
+        ref.child("requests/immediate/\(currentUser!.uid)/").setValue(["name": currentUser!.displayName!, "uid": currentUser!.uid, "venmoID": "none", "origin": ["lat": currentLat, "long": currentLong], "destination": self.goingTo, "rate" : 15, "accepted": 0, "repeats": 0, "duration": "none"]) //locations being sent here.
         
         localDelegate.startTimer();
         _ = self.navigationController?.popViewController(animated: true)

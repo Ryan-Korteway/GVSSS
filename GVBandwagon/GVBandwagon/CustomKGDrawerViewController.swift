@@ -8,16 +8,28 @@
 
 import UIKit
 import KGFloatingDrawer
-
+import Firebase
 
 class CustomKGDrawerViewController: KGDrawerViewController {
+    
+    // Find a way to get this in viewDidLoad?
+    
+    // Get a reference to the storage service using the default Firebase App
+    let storage = FIRStorage.storage()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
         print("KGViewController in viewDidLoad")
+        
+        let userID = FIRAuth.auth()!.currentUser!.uid
 
-        // Do any additional setup after loading the view.
+        // Image references
+        let storageRef = storage.reference()
+        
+        // Create a reference to 'images/profilepic.jpg'
+        let profileImageRef = storageRef.child("images/\(userID)/profilepic.jpg")
+            
     }
     
     override func viewWillAppear(_ animated: Bool) {
