@@ -132,7 +132,7 @@ class FirstViewController: UIViewController, rider_notifications {
         marker.map = self.googleMapsView
         
         let currentUser = FIRAuth.auth()!.currentUser
-        self.ref.child("/users/\(currentUser!.uid)/rider/offers/immediate/\(cellInfo["uid"])/origin)").observe( .childChanged, with: { snapshot in
+        self.ref.child("/users/\(currentUser!.uid)/rider/offers/immediate/\(cellInfo["uid"]!)/origin)").observe( .childChanged, with: { snapshot in
             if(snapshot.key == "lat") {
                 marker.position.latitude = snapshot.value as! CLLocationDegrees
             } else {
