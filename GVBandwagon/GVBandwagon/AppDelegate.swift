@@ -85,6 +85,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var driverVenmoID = "none" //the drivers venmo ID to be updated etc.
     
+    var firstViewController = UIViewController()
+    var firstSet = false
+    var DriveViewController_AD = UIViewController()
+    var DriveSet = false
+    
     // Overriding init() and putting FIRApp.configure() here to ensure it's configured before
     // the first view controller tries to retreive a reference to it.
     override init() {
@@ -98,6 +103,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         center.setNotificationCategories([categoryAccept, categoryOffer, categoryNothing])
 
         super.init()
+        
+        print("configuring FIRApp")
         FIRApp.configure()
         // not really needed unless you really need it FIRDatabase.database().persistenceEnabled = true
         
@@ -127,6 +134,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         window?.makeKeyAndVisible()
     
+        print("finished launching with options")
+        
         return true
     }
 
@@ -440,87 +449,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         ref.child("users/\(userID)/rider/offers/immediate").observe( .childAdded, with: { snapshot in
             //if we are in a riders portion of the app, currentViewController has rider offers function, call it, there we load the view however we want.
             
-            let lastView = self._centerViewController //neeeds to be moved to
-            //custom coding class and use KG's floating drawers and references instead of this whole floating drawers things.
-            
-            
             //and again need switch for casting etc.
             
             if(snapshot.value is NSNull) {
                 print("snapshot null, doing nothing");
             } else {
                 // is lastView stupid/irrelephant?
-                switch(lastView) {
-                case is FirstViewController:
-                    let newView = self._centerViewController as! FirstViewController
+                
+                if(!self.firstSet) {
+                    print("first view controller not set up yet")
                     
-                    if(newView.isRider()) {
-                        newView.ride_offer(item: cellItem.init(snapshot:snapshot as FIRDataSnapshot));
-                    } else {
-                        //ignore alert
-                    }
-                case is DriveViewController:
-                    print("ignore alert? if its a driver controller on screen and its a rider offer notification")
-                    
-                default:
-                    //local notification creation.
-                    let localCell = cellItem.init(snapshot: snapshot)
-                    
-                    let content = UNMutableNotificationContent()
-                    content.title = "New Driver Offer"
-                    content.body = "Navigate to the riders map to see the new pin/offer"
-                    content.sound = UNNotificationSound.default()
-                    content.categoryIdentifier = "nothing_category"
-                    content.userInfo = localCell.toAnyObject() as! [AnyHashable : Any] //compiler forced the conversion.
-                    
-                    let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
-                    
-                    let identifier = "Driver Offer"
-                    let request = UNNotificationRequest(identifier: identifier,
-                                                        content: content, trigger: trigger)
-                    self.center.add(request, withCompletionHandler: { (error) in
-                        
-                        if let error = error {
-                            print(error.localizedDescription)
-                        }
-                    })
-                    
-                    let localFirst = FirstViewController()
-                    localFirst.ride_offer(item: localCell);
-                    
+                } else {
+                    print("calling ride offer")
+                    (self.firstViewController as! FirstViewController).ride_offer(item: cellItem.init(snapshot: snapshot.value as! FIRDataSnapshot))
                 }
-            }
             
-            //make other view controllers follow the protocols.
+            }
         })
         
-        ref.child("requests/immediate").observe( .childAdded, with: { snapshot in //.value allows us to see adds, removes, and lat/long updates.
-            //if we are in a riders portion of the app, currentViewController has rider offers function, call it, there we load the view however we want.
-            //let current = self.window?.rootViewController?.presentedViewController //not sure if this is the view controller we want.
-            
-            
-            print("\n\n REQUEST OBSERVED!! \n\n")
-            
-            //MIGHT NEED TO ITERATE THROUGH THE SNAPSHOT SINCE ITS PULLING EVERYTHING DOWN EACH TIME WE OPEN/CLOSE THE APP.
-            
-            //let lastView = self._centerViewController //neeeds to be moved to
-            //custom coding class and use KG's floating drawers and references instead of this whole floating drawers things.
-            
-            if(snapshot.value is NSNull) {
-                print("snapshot null, doing nothing");
-            } else {
-                
-                //and again need switch for casting etc.
-                if( self._centerViewController is UITabBarController) {
-                    
-                    let vc = self.centerViewController as! UITabBarController
-                    (vc.childViewControllers[0] as! DriveViewController).ride_request(item: cellItem.init(snapshot: snapshot as FIRDataSnapshot))
-                } else{
-                        print("default")
-                }
-                
-            }
-        })
     }
     
     // entering background should make observers that make local notifications, versus calling the appropriate notification/data updating methods in the currently open view controller.
@@ -602,16 +548,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         ref.child("users/\(toWatchUid)/rider/offers/immediate").observeSingleEvent(of: .childRemoved, with: { snapshot in
             //if we are in a riders portion of the app, currentViewController has rider offers function, call it, there we load the view however we want.
             
-            let current = self._centerViewController
-            
-            switch(current){
-            //switches and casts here
-            case is DriveViewController:
-                    let localcurrent = current as! DriveViewController
-                    localcurrent.ride_accept(item: cellItem.init(snapshot: snapshot as FIRDataSnapshot)); //and then on the other end, if the accept really iss an accept, then we announce as much, otherwise not so much.
-            default:
-                // to do
-                print("local notification here about offer acceptance");
+            if(!self.DriveSet) {
+                print("driver class not set")
+            } else {
+                    (self.DriveViewController_AD as! DriveViewController).ride_accept(item: cellItem.init(snapshot: snapshot as FIRDataSnapshot));
             }
             
         })
@@ -714,6 +654,37 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func getVenmoID() -> String {
         return self.driverVenmoID;
+    }
+    
+    func startRiderObservers() {
+        let ref = FIRDatabase.database().reference()
+        ref.child("requests/immediate").observe( .childAdded, with: { snapshot in //.value allows us to see adds, removes, and lat/long updates.
+            //if we are in a riders portion of the app, currentViewController has rider offers function, call it, there we load the view however we want.
+            //let current = self.window?.rootViewController?.presentedViewController //not sure if this is the view controller we want.
+            
+            
+            print("\n\n REQUEST OBSERVED!! \n\n")
+            
+            //MIGHT NEED TO ITERATE THROUGH THE SNAPSHOT SINCE ITS PULLING EVERYTHING DOWN EACH TIME WE OPEN/CLOSE THE APP.
+            
+            //let lastView = self._centerViewController //neeeds to be moved to
+            //custom coding class and use KG's floating drawers and references instead of this whole floating drawers things.
+            
+            if(snapshot.value is NSNull) {
+                print("snapshot null, doing nothing");
+            } else {
+                
+                //and again need switch for casting etc.
+                if( self._centerViewController is UITabBarController) {
+                    
+                    let vc = self.centerViewController as! UITabBarController
+                    (vc.childViewControllers[0].childViewControllers[0] as! DriveViewController).ride_request(item: cellItem.init(snapshot: snapshot as FIRDataSnapshot))
+                } else{
+                    print("default")
+                }
+                
+            }
+        })
     }
 }
 

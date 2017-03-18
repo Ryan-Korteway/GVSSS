@@ -41,7 +41,7 @@ class DriverPanelViewController: UIViewController {
         
         if mySwitch.isOn {
             appDelegate.toggleRightDrawer(sender: mySwitch, animated: true)
-            let centerVC = appDelegate.centerViewController as? UITabBarController
+            let _ = appDelegate.centerViewController as? UITabBarController
             
             ref.child("/activedrivers/\(ourid)").setValue(["name": FIRAuth.auth()!.currentUser!.displayName! as NSString,
                                                            "uid": ourid, "venmoID": localDelegate.getVenmoID(), "origin": ["lat": ourlat, "long": ourlong],
@@ -50,10 +50,12 @@ class DriverPanelViewController: UIViewController {
         
             localDelegate.changeMode(mode: "driver")
             localDelegate.startTimer()
+            localDelegate.startRiderObservers()
         } else {
             // Remove driver from active driver list
             ref.child("/activedrivers/\(ourid)").removeValue();
             localDelegate.changeMode(mode: "rider")
+            localDelegate.timer.invalidate() //stop the timer.
         }
     }
 

@@ -17,17 +17,7 @@ class FirstViewController: UIViewController, rider_notifications {
     @IBOutlet var googleMapsView: GMSMapView!
     
     let locationManager = CLLocationManager()
-    
-    let localDelegate = UIApplication.shared.delegate as! AppDelegate
-    
-    //TODO TAKE OUT THE HARD CODED LAT AND LONGS.
-    var startingFrom: NSDictionary = ["lat": 43.013570, "long": -85.775875 ]
-    var goingTo: NSDictionary = ["lat": 42.013570, "long": -85.775875]
-    
-    //let userid = "0001" //hardcoded values, should be the fireauth current user stuff.
-    let currentUser = FIRAuth.auth()!.currentUser
-    let pickerData: [String] = ["Allendale", "Meijer", "Downtown"]
-    
+
     let ref = FIRDatabase.database().reference()
     var uid_forDriver = "wait";
     
@@ -39,7 +29,7 @@ class FirstViewController: UIViewController, rider_notifications {
         self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
         self.navigationController?.navigationBar.shadowImage = UIImage()
         self.navigationController?.navigationBar.isTranslucent = true
-        
+    
         // Custom button design. We should put this in its own clas later.
         if shadowLayer == nil {
             shadowLayer = CAShapeLayer()
@@ -67,29 +57,17 @@ class FirstViewController: UIViewController, rider_notifications {
         //locationManager.startUpdatingLocation()
         
         self.createMap()
-
-        
+        let localDelegate = UIApplication.shared.delegate as! AppDelegate
+        print("delegate being set")
+        localDelegate.firstViewController = self; //hopefully this cast is okay.
+        localDelegate.firstSet = true;
         
     } //end of view did load.
-    
-    // 6
-    
-    
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
-    func updateUserInfo(name: String, phone: String) {
-        let userID = FIRAuth.auth()!.currentUser!.uid
-        
-        self.ref.child("users/\(userID)/name").setValue(name)
-        self.ref.child("users/\(userID)/phone").setValue(phone)
-        
-        //need other updates here too. if this is called at all anymore.
-    }
-    
     
     // Ride Now button. Inside code, will add UI elements later.
     // Looking into adding an on-screen "bar" for searching up addresses, etc.
@@ -157,7 +135,7 @@ class FirstViewController: UIViewController, rider_notifications {
         //so it would be down here that we would set up an observer based on potentially the reference
         //from the cell item itself, or at the least we can create the path by hand from the cell items
         //uid and just knowing the rest of the path. then whenever the observer gets triggered, the markers posistions just get reset to the new lats and longs.
-        
+        let currentUser = FIRAuth.auth()!.currentUser
         self.ref.child("/users/\(currentUser!.uid)/rider/offers/immediate/\(cellInfo["uid"]))").observe( .childChanged, with: { snapshot in
              let newCell = cellItem.init(snapshot: snapshot)
              let newInfo = newCell.toAnyObject() as! NSDictionary
