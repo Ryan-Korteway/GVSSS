@@ -25,6 +25,8 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
     let ref = FIRDatabase.database().reference();
     let userID = FIRAuth.auth()!.currentUser!.uid
     
+    let localDelegate = UIApplication.shared.delegate as! AppDelegate
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -312,11 +314,13 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
         //idk about user.displayName here.
         
         //maybe venmo id is a global var in app delegate with a getter/setter for moments like this.
-        ref.child("\(user.uid)").setValue(["name": user.displayName!, "uid": user.uid, "venmoID": "idk where/how to get this", "origin": notification.userInfo["origin"], "destination": notification.userInfo["destination"], "rate": notification.userInfo["rate"], "accepted" : 0, "repeats": 0]) //value set needs to be all of our info for the snapshot.
+        ref.child("\(user.uid)").setValue(["name": user.displayName!, "uid": user.uid, "venmoID": localDelegate.getVenmoID(), "origin": notification.userInfo["origin"], "destination": notification.userInfo["destination"], "rate": notification.userInfo["rate"], "accepted" : 0, "repeats": 0]) //value set needs to be all of our info for the snapshot.
         
         print("ride offered") //this one is if you hit the snooze button
         
         self.googleMap.clear() //clears the map of all pins so w can show only what w care about.
+        
+        //make the pin with only the riders info.
         
         performSegue(withIdentifier: "driverAcceptsSegue", sender: self)
         infoWindow.removeFromSuperview()
