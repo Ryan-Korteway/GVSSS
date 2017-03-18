@@ -42,7 +42,7 @@ class DriverPanelViewController: UIViewController {
         if mySwitch.isOn {
             appDelegate.toggleRightDrawer(sender: mySwitch, animated: true)
             let centerVC = appDelegate.centerViewController as? UITabBarController
-            let driveVC = centerVC?.childViewControllers[0] as? DriveViewController
+            let driveVC = centerVC?.childViewControllers[0].childViewControllers[0] as? DriveViewController
             driveVC?.goOnlineLabelBtnTapped(mySwitch)
 
             
