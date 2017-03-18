@@ -75,7 +75,7 @@ struct cellItem {
             "accepted" : accepted,
             "repeats": repeats,
             "duration": duration
-        ];
+        ]
     }
     
 }

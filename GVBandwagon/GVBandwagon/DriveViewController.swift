@@ -25,6 +25,8 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
     let ref = FIRDatabase.database().reference();
     let userID = FIRAuth.auth()!.currentUser!.uid
     
+    let localDelegate = UIApplication.shared.delegate as! AppDelegate
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -40,26 +42,35 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
         locationManager.startUpdatingLocation()
         
         self.createMap()
+
+        //TEST MARKER CANCELLED OUT DUE TO BEING FILLED WITH LOCATION INSTEAD OF cellItem user data and being hard to change.
         
-        // Test Marker
-        let testMarker = GMSMarker()
-        testMarker.position = CLLocationCoordinate2D(latitude: 42.973984, longitude: -85.695527)
-        //marker.title = "Potential Rider: \(cellInfo["name"])"
-        //marker.snippet = "Close enough to Grand Valley."
-        testMarker.icon = GMSMarker.markerImage(with: .green)
-        testMarker.map = self.googleMap
-        
-        let name = "Nick"
-        let dest = "Downtown"
-        let rate = "$5"
-        let lat = testMarker.position.latitude
-        let lon = testMarker.position.longitude
-        let user: location = location(lat: lat, lon: lon, name: name, dest: dest, rate: rate)
-        testMarker.userData = user
-        
-        // If driver is in an active ride, show the "Active Ride" button
-        // Need an observer?
-        
+//        // Test Marker
+//        let testMarker = GMSMarker()
+//        testMarker.position = CLLocationCoordinate2D(latitude: 42.973984, longitude: -85.695527)
+//        //marker.title = "Potential Rider: \(cellInfo["name"])"
+//        //marker.snippet = "Close enough to Grand Valley."
+//        testMarker.icon = GMSMarker.markerImage(with: .green)
+//        testMarker.map = self.googleMap
+//        
+////        let name = "Nick"
+////        let dest = "Downtown"
+////        let rate = "$5"
+////        let lat = testMarker.position.latitude
+////        let lon = testMarker.position.longitude
+////        let user: location = location(lat: lat, lon: lon, name: name, dest: dest, rate: rate)
+//        
+//        let newCell :cellItem
+//        newCell.uid = "bing"
+//        newCell.name = "ryan"
+//        newCell.accepted = 0;
+//        newCell.duration = 0;
+//        newCell.rate = 12;
+//        newCell.repeats = 0;
+//        newCell.venmoID = "blazePyro"
+//        
+//        testMarker.userData = newCell
+//        
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -89,16 +100,6 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
     @IBAction func toggleLeftDrawer(_ sender: Any) {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         appDelegate.toggleLeftDrawer(sender: sender as AnyObject, animated: false)
-    }
-    
-    @IBAction func goOnlineLabelBtnTapped(_ sender: Any) {
-        
-        let tempRef = self.ref.child("activedrivers/\(self.userID)/");
-        
-        tempRef.child("jointime").setValue(NSDate().description)
-        tempRef.child("location").setValue(["start": "Bing", "end": "Bong"])
- 
-        self.displayOnlineMessage()
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -182,19 +183,31 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
         
         //make a pin and an observer that watches for changes to that pin to specifically watch? for updates?...
         
+        print("ride request being made")
+        
         let cellInfo: NSDictionary = item.toAnyObject() as! NSDictionary
         let locationInfo: NSDictionary = cellInfo["origin"] as! NSDictionary
         let destinationInfo: NSDictionary = cellInfo["destination"] as! NSDictionary
         
+        print("our start lat and long are \(locationInfo["lat"]) and \(locationInfo["long"])")
+        
+        print("our start lat and long are \(locationInfo.value(forKey: "lat") as! CLLocationDegrees) \(locationInfo.value(forKey: "long") as! CLLocationDegrees)")
+        
         let marker = GMSMarker()
-        marker.position = CLLocationCoordinate2D(latitude: locationInfo.value(forKey: "lat") as! CLLocationDegrees, longitude: locationInfo.value(forKey: "long") as! CLLocationDegrees)
+        
+        let lat = locationInfo.value(forKey: "lat") as! CLLocationDegrees
+        let long = locationInfo.value(forKey: "long") as! CLLocationDegrees
+        
+        marker.position = CLLocationCoordinate2D(latitude: lat, longitude: long)
         marker.title = "Potential Rider: \(cellInfo["name"])"
         marker.snippet = "Close enough to Grand Valley."
         marker.icon = GMSMarker.markerImage(with: .green)
+        marker.userData = cellInfo //giving each marker a dictionary of the info that set them up for future use.
         marker.map = self.googleMap
         
         let marker2 = GMSMarker()
         marker2.position = CLLocationCoordinate2D(latitude: destinationInfo.value(forKey: "latitude") as! CLLocationDegrees, longitude: destinationInfo.value(forKey: "longitude") as! CLLocationDegrees)
+        marker2.userData = cellInfo
         marker2.title = "Potential Rider Destination"
         marker2.snippet = "Close enough to Grand Valley."
         
@@ -203,6 +216,13 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
         
         // same here needing observers to update the pins with the riders locations as they move
         
+        let standard = GMSMarker()
+        standard.position = CLLocationCoordinate2D(latitude: 1.0, longitude: 1.0)
+        standard.title = "test"
+        standard.snippet = "far"
+        standard.icon = GMSMarker.markerImage(with: .red)
+        standard.map = self.googleMap
+
     }
     
     func white_ride(item: cellItem) {
@@ -246,15 +266,18 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
     
     // reset custom infowindow whenever marker is tapped
     func mapView(_ mapView: GMSMapView, didTap marker: GMSMarker) -> Bool {
-        let location = CLLocationCoordinate2D(latitude: (marker.userData as! location).lat, longitude: (marker.userData as! location).lon)
-
+        let baseDictionary = marker.userData as! NSDictionary
+        let locationDictionary = baseDictionary.value(forKey: "origin") as! NSDictionary
+        
+        let location = CLLocationCoordinate2D(latitude: locationDictionary.value(forKey: "lat") as! CLLocationDegrees, longitude: locationDictionary.value(forKey: "long") as! CLLocationDegrees)
+        
         tappedMarker = marker
         infoWindow.removeFromSuperview()
         infoWindow = MapMarkerWindow(frame: CGRect(x: 0, y: 0, width: 200, height: 100))
         
-        infoWindow.nameLabel.text = (marker.userData as! location).name
-        infoWindow.destLabel.text = (marker.userData as! location).dest
-        infoWindow.rateLabel.text = (marker.userData as! location).rate
+        infoWindow.nameLabel.text = baseDictionary.value(forKey: "name") as! NSString
+        infoWindow.destLabel.text = baseDictionary.value(forKey: "destination") as! NSDictionary
+        infoWindow.rateLabel.text = baseDictionary.value(forKey: "rate")
         
         infoWindow.center = mapView.projection.point(for: location)
         infoWindow.center.y -= 90
@@ -285,7 +308,23 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
     }
     
     func acceptTapped(button: UIButton) -> Void {
+        localDelegate.changeStatus(status: "offer")
         print("Accept Tapped")
+        
+        let ref = FIRDatabase.database().reference().child("users/\(notification.userInfo["uid"]!)/rider/offers/immediate/")
+        
+        let user = FIRAuth.auth()!.currentUser!
+        
+        //idk about user.displayName here.
+        
+        //maybe venmo id is a global var in app delegate with a getter/setter for moments like this.
+        ref.child("\(user.uid)").setValue(["name": user.displayName!, "uid": user.uid, "venmoID": localDelegate.getVenmoID(), "origin": notification.userInfo["origin"], "destination": notification.userInfo["destination"], "rate": notification.userInfo["rate"], "accepted" : 0, "repeats": 0]) //value set needs to be all of our info for the snapshot.
+        
+        print("ride offered") //this one is if you hit the snooze button
+        
+        self.googleMap.clear() //clears the map of all pins so w can show only what w care about.
+        
+        //make the pin with only the riders info.
         
         performSegue(withIdentifier: "driverAcceptsSegue", sender: self)
         infoWindow.removeFromSuperview()
