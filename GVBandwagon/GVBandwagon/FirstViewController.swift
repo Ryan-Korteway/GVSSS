@@ -10,11 +10,19 @@ import UIKit
 import Firebase
 import GoogleMaps
 
-class FirstViewController: UIViewController, rider_notifications {
+class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notifications {
+    
+    var localDelegate: AppDelegate!
 
     @IBOutlet var rideNowButton: UIButton!
     @IBOutlet var superViewTapGesture: UITapGestureRecognizer!
     @IBOutlet var googleMapsView: GMSMapView!
+    
+    // initialize and keep a marker and a custom infowindow
+    var tappedMarker = GMSMarker()
+    var infoWindow = MapMarkerWindow(frame: CGRect(x: 0, y: 0, width: 200, height: 100))
+    
+    var baseDictionary: NSDictionary = [:]
     
     let locationManager = CLLocationManager()
 
@@ -51,7 +59,7 @@ class FirstViewController: UIViewController, rider_notifications {
         
         self.createMap()
         
-        let localDelegate = UIApplication.shared.delegate as! AppDelegate
+        localDelegate = UIApplication.shared.delegate as! AppDelegate
         print("delegate being set")
         localDelegate.firstViewController = self; //hopefully this cast is okay.
         localDelegate.firstSet = true;
@@ -87,6 +95,7 @@ class FirstViewController: UIViewController, rider_notifications {
         
         self.googleMapsView.isMyLocationEnabled = true
         self.googleMapsView.settings.myLocationButton = true
+        self.googleMapsView.delegate = self
         
 //        let marker = GMSMarker()
 //        marker.position = CLLocationCoordinate2D(latitude: 51.507351, longitude: -0.127758)
@@ -103,8 +112,6 @@ class FirstViewController: UIViewController, rider_notifications {
             locationManager.startUpdatingLocation()
             
         }
-        
-        
     }
     
     func isRider() -> Bool {
@@ -125,11 +132,14 @@ class FirstViewController: UIViewController, rider_notifications {
         let marker = GMSMarker()
         let lat = locationInfo.value(forKey: "lat") as! CLLocationDegrees
         let long = locationInfo.value(forKey: "long") as! CLLocationDegrees
+        
+        print("Lat and Long: \(lat) : \(long)")
 
         marker.position = CLLocationCoordinate2D(latitude: lat, longitude: long)
-        marker.title = "Driver: \(cellInfo["name"])"
-        marker.snippet = "Close enough to Grand Valley."
+        //marker.title = "Driver: \(cellInfo["name"])"
+        //marker.snippet = "Close enough to Grand Valley."
         marker.map = self.googleMapsView
+        marker.userData = cellInfo
         
         let currentUser = FIRAuth.auth()!.currentUser
         self.ref.child("/users/\(currentUser!.uid)/rider/offers/immediate/\(cellInfo["uid"]!)/origin)").observe( .childChanged, with: { snapshot in
@@ -157,6 +167,91 @@ class FirstViewController: UIViewController, rider_notifications {
                 nextVC.paymentText = "Submit Payment"
             }
         }
+    }
+    
+    // Google Maps functions
+    
+    //empty the default infowindow
+    func mapView(_ mapView: GMSMapView, markerInfoWindow marker: GMSMarker) -> UIView? {
+        return UIView()
+    }
+    
+    // reset custom infowindow whenever marker is tapped
+    func mapView(_ mapView: GMSMapView, didTap marker: GMSMarker) -> Bool {
+        baseDictionary = marker.userData as! NSDictionary
+        let locationDictionary = baseDictionary.value(forKey: "origin") as! NSDictionary
+        
+        let location = CLLocationCoordinate2D(latitude: locationDictionary.value(forKey: "lat") as! CLLocationDegrees, longitude: locationDictionary.value(forKey: "long") as! CLLocationDegrees)
+        
+        tappedMarker = marker
+        infoWindow.removeFromSuperview()
+        infoWindow = MapMarkerWindow(frame: CGRect(x: 0, y: 0, width: 200, height: 100))
+        
+        infoWindow.nameLabel.text = (baseDictionary.value(forKey: "name") as! NSString) as String
+        infoWindow.destLabel.text = baseDictionary.value(forKey: "destination").debugDescription
+        infoWindow.rateLabel.text = "\(baseDictionary.value(forKey: "rate"))"
+        
+        infoWindow.center = mapView.projection.point(for: location)
+        infoWindow.center.y -= 90
+        
+        infoWindow.acceptButton.addTarget(self, action: #selector(acceptTapped(button:)), for: .touchUpInside)
+        infoWindow.declineButton.addTarget(self, action: #selector(declineTapped(button:)), for: .touchUpInside)
+        
+        self.view.addSubview(infoWindow)
+        
+        
+        // Remember to return false
+        // so marker event is still handled by delegate
+        return false
+    }
+    
+    // let the custom infowindow follows the camera
+    func mapView(_ mapView: GMSMapView, didChange position: GMSCameraPosition) {
+        if (tappedMarker.userData != nil){
+            let location = CLLocationCoordinate2D(latitude: tappedMarker.position.latitude, longitude: tappedMarker.position.longitude)
+            infoWindow.center = mapView.projection.point(for: location)
+            infoWindow.center.y -= 90
+        }
+    }
+    
+    // take care of the close event
+    func mapView(_ mapView: GMSMapView, didTapAt coordinate: CLLocationCoordinate2D) {
+        infoWindow.removeFromSuperview()
+    }
+    
+    // TODO: This is configured with Firebase from the DRIVERS point of view.
+    // We need to change it to from the RIDERS point of view.
+    func acceptTapped(button: UIButton) -> Void {
+        localDelegate.changeStatus(status: "offer")
+        print("Accept Tapped but it is really an offer.")
+        
+        let ref = FIRDatabase.database().reference().child("users/\(baseDictionary.value(forKey: "uid")!)/rider/offers/immediate/")
+        
+        let user = FIRAuth.auth()!.currentUser!
+        
+        //idk about user.displayName here.
+        
+        //maybe venmo id is a global var in app delegate with a getter/setter for moments like this.
+        ref.child("\(user.uid)").setValue(["name": user.displayName!, "uid": user.uid, "venmoID": localDelegate.getVenmoID(), "origin": baseDictionary.value(forKey: "origin"), "destination": baseDictionary.value(forKey: "destination"), "rate": baseDictionary.value(forKey: "rate"), "accepted" : 0, "repeats": 0, "duration": "none"]) //value set needs to be all of our info for the snapshot.
+        
+        print("ride offered") //this one is if you hit the snooze button
+        
+        self.googleMapsView.clear() //clears the map of all pins so w can show only what w care about.
+        
+        //make the pin with only the riders info.
+        //make tracker observers etc from only the baseDictionaries uid etc?...
+        
+        // If the RIDER accepts, we want to go to riderAcceptsSegue
+        performSegue(withIdentifier: "riderAcceptsSegue", sender: self)
+        infoWindow.removeFromSuperview()
+        
+        // Set Active Trip of Right Drawer to riders name and set it to clickable.
+        
+    }
+    
+    func declineTapped(button: UIButton) -> Void {
+        print("Decline Tapped")
+        infoWindow.removeFromSuperview()
     }
 }
 

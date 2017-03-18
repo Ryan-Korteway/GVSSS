@@ -12,7 +12,7 @@ import Firebase
 
 class CustomKGDrawerViewController: KGDrawerViewController {
     
-    // Find a way to get this in viewDidLoad?
+    var profileImage: UIImage!
     
     // Get a reference to the storage service using the default Firebase App
     let storage = FIRStorage.storage()
@@ -22,14 +22,42 @@ class CustomKGDrawerViewController: KGDrawerViewController {
         
         print("KGViewController in viewDidLoad")
         
-        let userID = FIRAuth.auth()!.currentUser!.uid
-
+        self.profileImage = getProfilePicFromFB()
+            
+    }
+    
+    func assignProfilePic() {
+        if let leftDrawer = self.leftViewController as? MenuTableViewController {
+            //let image = getProfilePicFromFB()
+            leftDrawer.profilePicImageView.image = self.profileImage
+            print("Assigned image to profile pic in menu.")
+        }
+    }
+    
+    func getProfilePicFromFB() -> UIImage {
+        
         // Image references
         let storageRef = storage.reference()
+        let userID = FIRAuth.auth()!.currentUser!.uid
         
         // Create a reference to 'images/profilepic.jpg'
         let profileImageRef = storageRef.child("images/\(userID)/profilepic.jpg")
-            
+        
+        var image = UIImage()
+        
+        // TODO: Compress Images before UPLOAD!
+        // Download in memory with a maximum allowed size of 1MB (1 * 1024 * 1024 bytes)
+        profileImageRef.data(withMaxSize: 1 * 10240 * 10240) { data, error in
+            if let error = error {
+                print("Error occurred: \(error.localizedDescription)")
+            } else {
+                // Data for "images/island.jpg" is returned
+                print("Downloaded profile pic successfully.")
+                image = UIImage(data: data!)!
+            }
+        }
+        
+        return image
     }
     
     override func viewWillAppear(_ animated: Bool) {
