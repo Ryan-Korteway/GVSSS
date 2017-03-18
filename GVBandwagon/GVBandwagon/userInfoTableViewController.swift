@@ -201,7 +201,6 @@ UINavigationControllerDelegate {
         // Create a reference to 'images/profilepic.jpg'
         let profileImageRef = storageRef.child("images/\(self.userID)/profilepic.jpg")
 
-            
         print("Path from update: \(localFile.absoluteString)")
             
         // Upload the file to the path "images/rivers.jpg"
