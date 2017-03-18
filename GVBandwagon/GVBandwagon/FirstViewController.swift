@@ -117,27 +117,37 @@ class FirstViewController: UIViewController, rider_notifications {
     
     func ride_offer(item: cellItem) {
         
+        print("ride offer being made")
+        
         let cellInfo: NSDictionary = item.toAnyObject() as! NSDictionary
         let locationInfo: NSDictionary = cellInfo["origin"] as! NSDictionary
         
         let marker = GMSMarker()
-        marker.position = CLLocationCoordinate2D(latitude: locationInfo.value(forKey: "lat") as! CLLocationDegrees, longitude: locationInfo.value(forKey: "long") as! CLLocationDegrees)
+        let lat = locationInfo.value(forKey: "lat") as! CLLocationDegrees
+        let long = locationInfo.value(forKey: "long") as! CLLocationDegrees
+
+        marker.position = CLLocationCoordinate2D(latitude: lat, longitude: long)
         marker.title = "Driver: \(cellInfo["name"])"
         marker.snippet = "Close enough to Grand Valley."
         marker.map = self.googleMapsView
         
-        //so it would be down here that we would set up an observer based on potentially the reference
-        //from the cell item itself, or at the least we can create the path by hand from the cell items
-        //uid and just knowing the rest of the path. then whenever the observer gets triggered, the markers posistions just get reset to the new lats and longs.
         let currentUser = FIRAuth.auth()!.currentUser
-        self.ref.child("/users/\(currentUser!.uid)/rider/offers/immediate/\(cellInfo["uid"]))").observe( .childChanged, with: { snapshot in
-             let newCell = cellItem.init(snapshot: snapshot)
-             let newInfo = newCell.toAnyObject() as! NSDictionary
-             let newLocation = newInfo["origin"] as! NSDictionary
-            
-            marker.position = CLLocationCoordinate2D(latitude: newLocation.value(forKey: "lat") as! CLLocationDegrees, longitude: newLocation.value(forKey: "long") as! CLLocationDegrees)
+        self.ref.child("/users/\(currentUser!.uid)/rider/offers/immediate/\(cellInfo["uid"]!)/origin)").observe( .childChanged, with: { snapshot in
+            if(snapshot.key == "lat") {
+                marker.position.latitude = snapshot.value as! CLLocationDegrees
+            } else {
+                marker.position.longitude = snapshot.value as! CLLocationDegrees
+            }
         }) //hopefully this makes the pins update their locations and then its needed in the driver stuff to set up the driver to update these fields.
         //once we accept the offer, we will need a .value to get each key to remove each observer before we delete the whole section.
+        
+        ref.child("/users/\(currentUser!.uid)/rider/offers/immediate/\(cellInfo["uid"])").observeSingleEvent(of: .childRemoved, with:{ snapshot in
+            print("PIN BEING DELETED")
+            marker.map = nil;
+            self.ref.child("requests/immediate/\(cellInfo["uid"])/origin/").removeAllObservers()
+        })
+
+        
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
