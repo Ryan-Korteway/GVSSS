@@ -187,13 +187,21 @@ UINavigationControllerDelegate {
         
         // Capture the image path for uploading to Firebase:
         //let url: NSURL = info.value(forKey: "UIImagePickerControllerReferenceURL") as! NSURL
-        let url = info["UIImagePickerControllerReferenceURL"] as! NSURL
+        let url = info["UIImagePickerControllerReferenceURL"] as! URL
         //print("Image path: \(url.absoluteString)")
         
-        self.updateProfilePic(localFile: url)
+        self.updateProfilePic(imageUrl: url)
     }
     
-    func updateProfilePic(localFile: NSURL) {
+    func updateProfilePic(imageUrl: URL) {
+        
+        let imageName         = imageUrl.lastPathComponent
+        let documentDirectory = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first as String!
+        let photoURL          = NSURL(fileURLWithPath: documentDirectory!)
+        let localFile         = photoURL.appendingPathComponent(imageName)
+        
+        //let localFile = URL(string: localPath)!
+
         
         let storage = FIRStorage.storage()
         let storageRef = storage.reference()
@@ -201,10 +209,10 @@ UINavigationControllerDelegate {
         // Create a reference to 'images/profilepic.jpg'
         let profileImageRef = storageRef.child("images/\(self.userID)/profilepic.jpg")
 
-        print("Path from update: \(localFile.absoluteString)")
+        print("Path from update: \(localFile!.absoluteString)")
             
         // Upload the file to the path "images/rivers.jpg"
-        let uploadTask = profileImageRef.putFile(localFile as URL, metadata: nil) { metadata, error in
+        let uploadTask = profileImageRef.putFile(localFile!, metadata: nil) { metadata, error in
             if let error = error {
                 // Uh-oh, an error occurred!
                 print(error.localizedDescription)
