@@ -235,21 +235,19 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
             
         ref.child("offers/immediate/\(cellInfo.value(forKey: "uid")!)/accepted").setValue(1); //set the accepted drivers accepted value to 1.
         
-        cellInfo.setValue(1, forKeyPath: "accepted")
-        
-        print("our cellInfo now \(cellInfo.description)")
-        
-        ref.child("offers/accepted/immediate/").setValue(cellInfo) //create an accepted branch of the riders table
-        
-        let localDelegate = UIApplication.shared.delegate as! AppDelegate
-        localDelegate.status = "accepted"
+        ref.child("offers/immediate/\(cellInfo.value(forKey: "uid")!)").observeSingleEvent(of: .value, with: { snapshot in
+            let dictionary: NSDictionary = snapshot.value! as! NSDictionary
+            ref.child("offers/accepted/immediate/").setValue(dictionary) //create an accepted branch of the riders table
+            let localDelegate = UIApplication.shared.delegate as! AppDelegate
+            localDelegate.status = "accepted"
+                
+            ref.child("offers/immediate/").removeValue() //remove the offers immediate branch from the riders account so that the drivers are able to observe the destruction and if they were selected or not.
             
-        ref.child("offers/immediate/").removeValue() //remove the offers immediate branch from the riders account so that the drivers are able to observe the destruction and if they were selected or not.
-        
-        self.googleMapsView.clear()
-        
-        //call make pins function.
-        localDelegate.startRiderMapObservers()
+            self.googleMapsView.clear()
+            
+            //call make pins function.
+            localDelegate.startRiderMapObservers()
+        })
         
     }
     
