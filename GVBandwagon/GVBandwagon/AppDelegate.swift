@@ -632,7 +632,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 }
             })
         } else if (status == "accepted"){
-            ref.child("/users/\(self.offeredID)/rider/accepted/immediate").observe( .childAdded, with: { snapshot in
+            ref.child("users/\(self.offeredID)/rider/offers/accepted/immediate").observe( .childAdded, with: { snapshot in
                     (self.DriveViewController_AD as! DriveViewController).fillWithAcceptance(item: cellItem.init(snapshot: snapshot))
             })
         } else if (status == "offer"){
@@ -640,7 +640,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 //offeredID is usable to reclaim the offered riders id/path.
             
             //watched the offered path for deletions and then call ride accepted in the driver view controller.
-            ref.child("/users/\(self.offeredID)/rider/offers/immediate").observe( .childRemoved, with: { snapshot in
+            ref.child("users/\(self.offeredID)/rider/offers/immediate").observe( .childRemoved, with: { snapshot in
                 
                 //need a check potentially to make sure that 
                 
@@ -688,7 +688,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 }
             })
         } else if (status == "accepted"){
-            ref.child("/users/\(userID)/rider/offers/accepted/immediate").observe(.childAdded, with: { snapshot in //child added may be an issue here...
+            ref.child("users/\(userID)/rider/offers/accepted/immediate").observe(.childAdded, with: { snapshot in //child added may be an issue here...
+                print(snapshot.key)
                 if(snapshot.key != userID) {
                     (self.firstViewController as! FirstViewController).fillWithAcceptance(item: cellItem.init(snapshot: snapshot))
                 }
