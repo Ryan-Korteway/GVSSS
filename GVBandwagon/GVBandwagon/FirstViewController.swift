@@ -237,7 +237,7 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
         
         ref.child("offers/immediate/\(cellInfo.value(forKey: "uid")!)").observeSingleEvent(of: .value, with: { snapshot in
             let dictionary: NSDictionary = snapshot.value! as! NSDictionary
-            ref.child("offers/accepted/immediate/").setValue(dictionary) //create an accepted branch of the riders table
+            ref.child("offers/accepted/immediate/\(cellInfo.value(forKey: "uid")!)").setValue(dictionary) //create an accepted branch of the riders table
             let localDelegate = UIApplication.shared.delegate as! AppDelegate
             localDelegate.status = "accepted"
                 

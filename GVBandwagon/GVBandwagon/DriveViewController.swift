@@ -196,7 +196,7 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
                 //do any of these matter thanks to the custom display window?...
                 marker.title = "Your Rider: \(cellInfo["name"])"
                 marker.snippet = "Close enough to Grand Valley."
-                marker.icon = GMSMarker.markerImage(with: .green)
+                marker.icon = GMSMarker.markerImage(with: .red)
                 marker.userData = cellInfo //giving each marker a dictionary of the info that set them up for future use.
                 marker.map = self.googleMap
                 
