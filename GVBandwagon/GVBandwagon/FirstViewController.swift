@@ -304,7 +304,7 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
         
             print("in acceptance, we are watching: \(cellInfo["uid"]!)")
         
-            self.ref.child("users/\(currentUser!.uid)/rider/accepted/immediate/driver/\(cellInfo["uid"]!)/origin").observe( .childChanged, with: { snapshot in
+            self.ref.child("users/\(currentUser!.uid)/rider/offers/accepted/immediate/driver/\(cellInfo["uid"]!)/origin").observe( .childChanged, with: { snapshot in
                 if(snapshot.key == "lat") {
                     marker.position.latitude = snapshot.value as! CLLocationDegrees
                 } else {
@@ -312,10 +312,10 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
                 }
             }) //hopefully this makes the pins update their locations and then its needed in the driver stuff to set up the driver to update these fields.
             
-            self.ref.child("users/\(currentUser!.uid)/rider/accepted/immediate/driver/\(cellInfo["uid"]!)").observeSingleEvent(of: .childRemoved, with:{ snapshot in
+            self.ref.child("users/\(currentUser!.uid)/rider/offers/accepted/immediate/driver/\(cellInfo["uid"]!)").observeSingleEvent(of: .childRemoved, with:{ snapshot in
                 print("PIN BEING DELETED")
                 marker.map = nil;
-                self.ref.child("users/\(currentUser!.uid)/rider/accepted/immediate/driver/\(cellInfo["uid"]!)/origin").removeAllObservers()
+                self.ref.child("users/\(currentUser!.uid)/rider/offers/accepted/immediate/driver/\(cellInfo["uid"]!)/origin").removeAllObservers()
             })
         
         }
