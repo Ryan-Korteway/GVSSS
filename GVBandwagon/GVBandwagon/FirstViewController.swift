@@ -301,6 +301,9 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
         marker.userData = cellInfo
             //self.googleMapsView.animate(to: camera)
             let currentUser = FIRAuth.auth()!.currentUser
+        
+            print("in acceptance, we are watching: \(cellInfo["uid"]!)")
+        
             self.ref.child("users/\(currentUser!.uid)/rider/accepted/immediate/driver/\(cellInfo["uid"]!)/origin").observe( .childChanged, with: { snapshot in
                 if(snapshot.key == "lat") {
                     marker.position.latitude = snapshot.value as! CLLocationDegrees
