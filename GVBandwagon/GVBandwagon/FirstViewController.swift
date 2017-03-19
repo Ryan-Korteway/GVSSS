@@ -23,6 +23,7 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
     var infoWindow = MapMarkerWindow(frame: CGRect(x: 0, y: 0, width: 200, height: 100))
     
     var baseDictionary: NSDictionary = [:]
+    var localCell: cellItem
     
     let locationManager = CLLocationManager()
 
@@ -173,7 +174,43 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
         }
     }
     
-    func ride_accept(item: cellItem) { //all map set ups/marker creations may need to be in their own functions in ride and drive
+    // Google Maps functions
+    
+    //empty the default infowindow
+    func mapView(_ mapView: GMSMapView, markerInfoWindow marker: GMSMarker) -> UIView? {
+        return UIView()
+    }
+    
+    // reset custom infowindow whenever marker is tapped
+    func mapView(_ mapView: GMSMapView, didTap marker: GMSMarker) -> Bool {
+        baseDictionary = marker.userData as! NSDictionary
+        localCell = marker.userData as cellItem //tap a marker to test this stuff.
+        let locationDictionary = baseDictionary.value(forKey: "origin") as! NSDictionary
+        
+        let location = CLLocationCoordinate2D(latitude: locationDictionary.value(forKey: "lat") as! CLLocationDegrees, longitude: locationDictionary.value(forKey: "long") as! CLLocationDegrees)
+        
+        tappedMarker = marker
+        infoWindow.removeFromSuperview()
+        infoWindow = MapMarkerWindow(frame: CGRect(x: 0, y: 0, width: 200, height: 100))
+        
+        infoWindow.nameLabel.text = (baseDictionary.value(forKey: "name") as! NSString) as String
+        infoWindow.destLabel.text = baseDictionary.value(forKey: "destination").debugDescription
+        infoWindow.rateLabel.text = "\(baseDictionary.value(forKey: "rate"))"
+            
+        infoWindow.center = mapView.projection.point(for: location)
+        infoWindow.center.y -= 90
+            
+        infoWindow.acceptButton.addTarget(self, action: #selector(acceptTapped(button:)), for: .touchUpInside)
+        infoWindow.declineButton.addTarget(self, action: #selector(declineTapped(button:)), for: .touchUpInside)
+            
+        self.view.addSubview(infoWindow)
+            
+        // Remember to return false
+        // so marker event is still handled by delegate
+        return false
+    }
+        
+        func ride_accept(item: cellItem) { //all map set ups/marker creations may need to be in their own functions in ride and drive
         //view controllers so that upon the map being reloaded, it can be repopulated with the correct data given the current user state.
         
         let user = FIRAuth.auth()!.currentUser!
@@ -187,9 +224,7 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
         ref.child("offers/immediate/").removeValue() //remove the offers immediate branch from the riders account so that the drivers are able to observe the destruction and if they were selected or not.
         
         let localDelegate = UIApplication.shared.delegate as! AppDelegate
-        localDelegate.changeStatus(status: "accepted")
-        
-        //clear the map and have it pull down the appropriate pin.
+        localDelegate.status = "accepted"
         
         self.googleMapsView.clear()
         
@@ -198,33 +233,90 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
         
     }
     
+    // let the custom infowindow follows the camera
+    func mapView(_ mapView: GMSMapView, didChange position: GMSCameraPosition) {
+        if (tappedMarker.userData != nil){
+            let location = CLLocationCoordinate2D(latitude: tappedMarker.position.latitude, longitude: tappedMarker.position.longitude)
+            infoWindow.center = mapView.projection.point(for: location)
+            infoWindow.center.y -= 90
+        }
+    }
+    
+    // take care of the close event
+    func mapView(_ mapView: GMSMapView, didTapAt coordinate: CLLocationCoordinate2D) {
+        infoWindow.removeFromSuperview()
+        
+        let ref = FIRDatabase.database().reference().child("users/\(baseDictionary.value(forKey: "uid")!)/rider/offers/immediate/")
+        
+        let user = FIRAuth.auth()!.currentUser!
+        
+        //idk about user.displayName here.
+        
+        //maybe venmo id is a global var in app delegate with a getter/setter for moments like this.
+        ref.child("\(user.uid)").setValue(["name": user.displayName!, "uid": user.uid, "venmoID": localDelegate.getVenmoID(), "origin": baseDictionary.value(forKey: "origin"), "destination": baseDictionary.value(forKey: "destination"), "rate": baseDictionary.value(forKey: "rate"), "accepted" : 0, "repeats": 0, "duration": "none"]) //value set needs to be all of our info for the snapshot.
+        
+        print("ride offered") //this one is if you hit the snooze button
+        
+        self.googleMapsView.clear() //clears the map of all pins so w can show only what w care about.
+        
+        //make the pin with only the riders info.
+        //make tracker observers etc from only the baseDictionaries uid etc?...
+        
+        // If the RIDER accepts, we want to go to riderAcceptsSegue
+        performSegue(withIdentifier: "riderAcceptsSegue", sender: self)
+        infoWindow.removeFromSuperview()
+        
+        // Set Active Trip of Right Drawer to riders name and set it to clickable.
+        
+    }
+    
+    func acceptTapped(button: UIButton) -> Void {
+        localDelegate.changeStatus(status: "accepted")
+        print("Accept Tapped but it is really an offer.")
+        
+        ride_accept(item: localCell) //local cell assignment might be bad/fail here.
+    }
+    
+    
+    func declineTapped(button: UIButton) -> Void {
+        print("Decline Tapped")
+        infoWindow.removeFromSuperview()
+    }
+        
     func fillWithAcceptance(item: cellItem) {
         let locationInfo: NSDictionary = cellInfo["origin"] as! NSDictionary
+            
+            let ref = FIRDatabase.database().reference().child("users/\(baseDictionary.value(forKey: "uid")!)/rider/offers/immediate/")
+            let marker = GMSMarker()
+            let lat = locationInfo.value(forKey: "lat") as! CLLocationDegrees
+            let long = locationInfo.value(forKey: "long") as! CLLocationDegrees
+            
+            let locValue:CLLocationCoordinate2D = self.locationManager.location!.coordinate
+            print("locations = \(locValue.latitude) \(locValue.longitude)")
+            
+            let user = FIRAuth.auth()!.currentUser!
         
-        let marker = GMSMarker()
-        let lat = locationInfo.value(forKey: "lat") as! CLLocationDegrees
-        let long = locationInfo.value(forKey: "long") as! CLLocationDegrees
+            marker.position = CLLocationCoordinate2D(latitude: lat, longitude: long)
+            marker.title = "Driver: \(cellInfo["name"])"
+            marker.map = self.googleMapsView
+            
+            //self.googleMapsView.animate(to: camera)
+            let currentUser = FIRAuth.auth()!.currentUser
+            self.ref.child("/users/\(currentUser!.uid)/rider/accepted/immediate/\(cellInfo["uid"]!)/origin)").observe( .childChanged, with: { snapshot in
+                if(snapshot.key == "lat") {
+                    marker.position.latitude = snapshot.value as! CLLocationDegrees
+                } else {
+                    marker.position.longitude = snapshot.value as! CLLocationDegrees
+                }
+            }) //hopefully this makes the pins update their locations and then its needed in the driver stuff to set up the driver to update these fields.
+            
+            ref.child("/users/\(currentUser!.uid)/rider/accepted/immediate/\(cellInfo["uid"]!)").observeSingleEvent(of: .childRemoved, with:{ snapshot in
+                print("PIN BEING DELETED")
+                marker.map = nil;
+                self.ref.child("/users/\(currentUser!.uid)/rider/accepted/immediate/\(cellInfo["uid"]!)/origin/").removeAllObservers()
+            })
         
-        marker.position = CLLocationCoordinate2D(latitude: lat, longitude: long)
-        marker.title = "Driver: \(cellInfo["name"])"
-        marker.map = self.googleMapsView
-        
-        let currentUser = FIRAuth.auth()!.currentUser
-        self.ref.child("/users/\(currentUser!.uid)/rider/accepted/immediate/\(cellInfo["uid"]!)/origin)").observe( .childChanged, with: { snapshot in
-            if(snapshot.key == "lat") {
-                marker.position.latitude = snapshot.value as! CLLocationDegrees
-            } else {
-                marker.position.longitude = snapshot.value as! CLLocationDegrees
-            }
-        }) //hopefully this makes the pins update their locations and then its needed in the driver stuff to set up the driver to update these fields.
-        //once we accept the offer, we will need a .value to get each key to remove each observer before we delete the whole section.
-        
-        ref.child("/users/\(currentUser!.uid)/rider/accepted/immediate/\(cellInfo["uid"]!)").observeSingleEvent(of: .childRemoved, with:{ snapshot in
-            print("PIN BEING DELETED")
-            marker.map = nil;
-            self.ref.child("/users/\(currentUser!.uid)/rider/accepted/immediate/\(cellInfo["uid"]!)/origin/").removeAllObservers()
-        })
-    }
+        }
 }
 
 extension FirstViewController: CLLocationManagerDelegate {
@@ -243,13 +335,13 @@ extension FirstViewController: CLLocationManagerDelegate {
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        let locValue:CLLocationCoordinate2D = self.locationManager.location!.coordinate
-        print("locations = \(locValue.latitude) \(locValue.longitude)")
-        if let location = locations.last {
-            
+            let locValue:CLLocationCoordinate2D = self.locationManager.location!.coordinate
+            print("locations = \(locValue.latitude) \(locValue.longitude)")
+            if let location = locations.last {
+                
             let camera = GMSCameraPosition(target: location.coordinate, zoom: 15, bearing: 0, viewingAngle: 0)
-            
-            //self.googleMapsView.animate(to: camera)
+                
+
             self.googleMapsView.camera = camera
             
             locationManager.stopUpdatingLocation()
