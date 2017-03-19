@@ -95,7 +95,6 @@ class RequestRideViewController: UIViewController {
         localDelegate.startTimer();
         localDelegate.status = "offer"
         _ = self.navigationController?.popViewController(animated: true)
-        
     }
     
     /*
