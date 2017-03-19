@@ -23,7 +23,8 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
     var infoWindow = MapMarkerWindow(frame: CGRect(x: 0, y: 0, width: 200, height: 100))
     
     var baseDictionary: NSDictionary = [:]
-    var localCell: cellItem
+    
+    //var localCell = cellItem(start: ["name":"filler", "uid": "filler", "venmoID": "filler", "origin": ["lat": 0.0, "long": 0.0], "destination": ["longitude": 0.0, "latitude": 0.0], "rate": 0, "accepted": 0, "repeats": 0, "duration": "none"])
     
     let locationManager = CLLocationManager()
 
@@ -69,6 +70,11 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
         localDelegate.startRiderMapObservers() //the new function to populate the riders map each time the view loads.
         
     } //end of view did load.
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        localDelegate.startRiderMapObservers()
+    }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -184,7 +190,6 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
     // reset custom infowindow whenever marker is tapped
     func mapView(_ mapView: GMSMapView, didTap marker: GMSMarker) -> Bool {
         baseDictionary = marker.userData as! NSDictionary
-        localCell = marker.userData as cellItem //tap a marker to test this stuff.
         let locationDictionary = baseDictionary.value(forKey: "origin") as! NSDictionary
         
         let location = CLLocationCoordinate2D(latitude: locationDictionary.value(forKey: "lat") as! CLLocationDegrees, longitude: locationDictionary.value(forKey: "long") as! CLLocationDegrees)
@@ -210,13 +215,17 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
         return false
     }
         
-        func ride_accept(item: cellItem) { //all map set ups/marker creations may need to be in their own functions in ride and drive
+        func ride_accept(item: NSDictionary) { //all map set ups/marker creations may need to be in their own functions in ride and drive
         //view controllers so that upon the map being reloaded, it can be repopulated with the correct data given the current user state.
         
         let user = FIRAuth.auth()!.currentUser!
-        let cellInfo: NSDictionary = item.toAnyObject() as! NSDictionary
+        let cellInfo: NSDictionary = item
         let ref = FIRDatabase.database().reference().child("users/\(user.uid)/rider/")
         
+        print("our driver uid \(cellInfo.value(forKey: "uid")!)")
+            
+        print("our cellInfo \(cellInfo.description)")
+            
         ref.child("offers/immediate/\(cellInfo.value(forKey: "uid")!)/accepted").setValue(1); //set the accepted drivers accepted value to 1.
         
         ref.child("offers/accepted/").setValue(cellInfo) //create an accepted branch of the riders table
@@ -245,36 +254,13 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
     // take care of the close event
     func mapView(_ mapView: GMSMapView, didTapAt coordinate: CLLocationCoordinate2D) {
         infoWindow.removeFromSuperview()
-        
-        let ref = FIRDatabase.database().reference().child("users/\(baseDictionary.value(forKey: "uid")!)/rider/offers/immediate/")
-        
-        let user = FIRAuth.auth()!.currentUser!
-        
-        //idk about user.displayName here.
-        
-        //maybe venmo id is a global var in app delegate with a getter/setter for moments like this.
-        ref.child("\(user.uid)").setValue(["name": user.displayName!, "uid": user.uid, "venmoID": localDelegate.getVenmoID(), "origin": baseDictionary.value(forKey: "origin"), "destination": baseDictionary.value(forKey: "destination"), "rate": baseDictionary.value(forKey: "rate"), "accepted" : 0, "repeats": 0, "duration": "none"]) //value set needs to be all of our info for the snapshot.
-        
-        print("ride offered") //this one is if you hit the snooze button
-        
-        self.googleMapsView.clear() //clears the map of all pins so w can show only what w care about.
-        
-        //make the pin with only the riders info.
-        //make tracker observers etc from only the baseDictionaries uid etc?...
-        
-        // If the RIDER accepts, we want to go to riderAcceptsSegue
-        performSegue(withIdentifier: "riderAcceptsSegue", sender: self)
-        infoWindow.removeFromSuperview()
-        
-        // Set Active Trip of Right Drawer to riders name and set it to clickable.
-        
     }
     
     func acceptTapped(button: UIButton) -> Void {
         localDelegate.changeStatus(status: "accepted")
-        print("Accept Tapped but it is really an offer.")
+        print("Accept Tapped.")
         
-        ride_accept(item: localCell) //local cell assignment might be bad/fail here.
+        ride_accept(item: baseDictionary) //local cell assignment might be bad/fail here.
     }
     
     
@@ -284,6 +270,7 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
     }
         
     func fillWithAcceptance(item: cellItem) {
+        let cellInfo = item.toAnyObject() as! NSDictionary
         let locationInfo: NSDictionary = cellInfo["origin"] as! NSDictionary
             
             let ref = FIRDatabase.database().reference().child("users/\(baseDictionary.value(forKey: "uid")!)/rider/offers/immediate/")
@@ -350,3 +337,31 @@ extension FirstViewController: CLLocationManagerDelegate {
         }
     }
 }
+
+/* Code graveyard, should this code be needed again somewhere else.
+ 
+ 
+ let ref = FIRDatabase.database().reference().child("users/\(baseDictionary.value(forKey: "uid")!)/rider/offers/immediate/")
+ 
+ let user = FIRAuth.auth()!.currentUser!
+ 
+ //idk about user.displayName here.
+ 
+ //maybe venmo id is a global var in app delegate with a getter/setter for moments like this.
+ ref.child("\(user.uid)").setValue(["name": user.displayName!, "uid": user.uid, "venmoID": localDelegate.getVenmoID(), "origin": baseDictionary.value(forKey: "origin"), "destination": baseDictionary.value(forKey: "destination"), "rate": baseDictionary.value(forKey: "rate"), "accepted" : 0, "repeats": 0, "duration": "none"]) //value set needs to be all of our info for the snapshot.
+ 
+ print("ride offered") //this one is if you hit the snooze button
+ 
+ self.googleMapsView.clear() //clears the map of all pins so w can show only what w care about.
+ 
+ //make the pin with only the riders info.
+ //make tracker observers etc from only the baseDictionaries uid etc?...
+ 
+ // If the RIDER accepts, we want to go to riderAcceptsSegue
+ performSegue(withIdentifier: "riderAcceptsSegue", sender: self)
+ infoWindow.removeFromSuperview()
+ 
+ // Set Active Trip of Right Drawer to riders name and set it to clickable.
+ 
+ 
+ */

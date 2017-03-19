@@ -63,6 +63,18 @@ struct cellItem {
         duration = snapshotValue["duration"] as! NSString
     }
     
+    init(start: NSDictionary) {
+        uid = start.value(forKey: "uid") as! String
+        name = start.value(forKey: "name") as! String
+        venmoID = start.value(forKey: "venmoID") as! String //needs to be added automatically with FIRAuth.auth().currentUser.email etc.
+        rate = start.value(forKey: "rate") as! NSInteger
+        origin = start.value(forKey: "origin") as! NSDictionary //should be a dictionary of lats and longs
+        destination = start.value(forKey: "destination") as! NSDictionary //should be a dictionary of lats and longs
+        accepted = start.value(forKey: "accepted") as! NSInteger //if its set to 0, its false/no ride acceptance, else it is 1 and ride accepted.
+        repeats = start.value(forKey: "repeats") as! NSInteger
+        duration = start.value(forKey: "duration") as! NSString
+    }
+    
     // removed duplicate key: "rate": rate,
     func toAnyObject() -> Any {
         return [
@@ -86,7 +98,7 @@ struct cellItem {
 //  of changes to their request status could be to see the map change from "all active drivers" to the "offering drivers" to "The accepted driver" etc.
 protocol rider_notifications {
     func ride_offer(item: cellItem) -> Void
-    func ride_accept(item: cellItem) -> Void
+    func ride_accept(item: NSDictionary) -> Void
     func isRider() -> Bool
     func isDriver() -> Bool
 }

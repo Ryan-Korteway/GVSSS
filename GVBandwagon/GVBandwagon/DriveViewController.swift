@@ -54,10 +54,19 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
         localDelegate.DriveViewController_AD = self; //again, hoping this assignment is okay.
         localDelegate.DriveSet = true;
         localDelegate.lastState = "driver"
+        
+        if(localDelegate.isSwitched){
+            print("loaded call to start driver map")
+            localDelegate.startDriverMapObservers()
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        if(localDelegate.isSwitched){
+            print("appearing call to start driver map")
+            localDelegate.startDriverMapObservers()
+        }
         
     }
 
@@ -148,7 +157,7 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
         return true;
     }
     
-    func ride_accept(item: cellItem) { //STILL NEEDS MASSIVE AMOUNTS OF PATH FIXING.
+    func ride_accept(item: cellItem) {
         print("Ride offer accepted (potentially).")
         
         let ref = FIRDatabase.database().reference()
@@ -375,7 +384,7 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
         infoWindow.center = mapView.projection.point(for: location)
         infoWindow.center.y -= 90
         
-        infoWindow.offerButton.addTarget(self, action: #selector(acceptTapped(button:)), for: .touchUpInside)
+        infoWindow.acceptButton.addTarget(self, action: #selector(acceptTapped(button:)), for: .touchUpInside)
         infoWindow.declineButton.addTarget(self, action: #selector(declineTapped(button:)), for: .touchUpInside)
         
         self.view.addSubview(infoWindow)
@@ -437,6 +446,7 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
         if segue.identifier == "driverAcceptsSegue" {
             if let nextVC = segue.destination as? RideSummaryTableViewController {
                 // Set the attributes in the next VC.
+                nextVC.informationDictionary = self.baseDictionary
                 nextVC.paymentText = "Request Payment"
             }
         }
@@ -445,7 +455,7 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
     func fillWithAcceptance(item: cellItem) {
         let cellInfo = item.toAnyObject() as! NSDictionary
         
-        if(cellInfo["uid"]! as NSString == currentUser!.uid) {
+        if((cellInfo["uid"]! as! NSString) as String == userID) {
             print("ignoring marker")
         } else {
             let locationInfo: NSDictionary = cellInfo["origin"] as! NSDictionary
@@ -457,7 +467,7 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
             marker.position = CLLocationCoordinate2D(latitude: lat, longitude: long)
             
             marker.title = "Rider: \(cellInfo["name"])"
-            marker.map = self.googleMapsView
+            marker.map = self.googleMap
             
             let currentUser = FIRAuth.auth()!.currentUser
             self.ref.child("/users/\(cellInfo["uid"]!)/rider/accepted/immediate/\(cellInfo["uid"]!)/origin)").observe( .childChanged, with: { snapshot in

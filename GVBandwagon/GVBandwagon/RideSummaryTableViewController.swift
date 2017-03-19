@@ -20,6 +20,7 @@ class RideSummaryTableViewController: UITableViewController {
     @IBOutlet var paymentButton: UIButton!
 
     var paymentText = "Request Payment"
+    var informationDictionary: NSDictionary = [:]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,7 +39,7 @@ class RideSummaryTableViewController: UITableViewController {
         // name and rating are of Driver
         // button says "Send Payment"
 
-        
+        nameLabel.text = informationDictionary.value(forKey: "name") as! String?
         
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false

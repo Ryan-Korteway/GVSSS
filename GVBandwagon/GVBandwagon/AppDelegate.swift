@@ -74,6 +74,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     let categoryNothing: UNNotificationCategory = UNNotificationCategory(identifier: "nothing_category", actions: [], intentIdentifiers: [], options: [])
     
+    var isSwitched = false
     
     //the arrays of favorite and disfavored riders/drivers for a given user.
     var riderWhiteList: NSArray = []
@@ -157,9 +158,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             
             self.setUpClosedObservers();
             
-            for item in acceptsToWatch {
-                self.closedRideAccept(toWatchUid: item as! String);
-            }
+            self.closedRideAccept(toWatchUid: offeredID);
+            
         }
 
         
@@ -636,16 +636,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 }
             })
         } else if (status == "accepted"){
-            ref.child("/users/\(self.offeredID)/rider/accepted/immediate").observe(of: .childAdded, with: { snapshot in
-                    (DriveViewController_AD as! DriveViewController).fillWithAcceptance(item: cellItem.init(snapshot))
+            ref.child("/users/\(self.offeredID)/rider/accepted/immediate").observe( .childAdded, with: { snapshot in
+                    (self.DriveViewController_AD as! DriveViewController).fillWithAcceptance(item: cellItem.init(snapshot: snapshot))
             })
         } else if (status == "offer"){
             //rides being offered by the driver, need to get the users pin back.
                 //offeredID is usable to reclaim the offered riders id/path.
             
             //watched the offered path for deletions and then call ride accepted in the driver view controller.
-            ref.child("/users/\(self.offeredID)/rider/offers/immediate").observe(of: .childRemoved, with: { snapshot in
-                (DriveViewController_AD as! DriveViewController).ride_accept(item: cellItem.init(snapshot))
+            ref.child("/users/\(self.offeredID)/rider/offers/immediate").observe( .childRemoved, with: { snapshot in
+                (self.DriveViewController_AD as! DriveViewController).ride_accept(item: cellItem.init(snapshot: snapshot))
                 //acceptsToWatch = acceptsToWatch.adding(toWatchUid) as NSArray; //not sure about where this line should go. its purpose is to track which userID needs to be watched when we call the closed observer set up function.
             })
             
@@ -688,7 +688,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             })
         } else if (status == "accepted"){
             ref.child("/users/\(userID)/rider/accepted/immediate").observeSingleEvent(of: .childAdded, with: { snapshot in
-                (firstViewController as! FirstViewController).fillWithAcceptance(item: cellItem.init(snapshot))
+                (self.firstViewController as! FirstViewController).fillWithAcceptance(item: cellItem.init(snapshot: snapshot))
             })
         } //no else for status == request because request is the base which means we dont have any position to advertise or any pins to recreate
     }

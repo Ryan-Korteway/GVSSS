@@ -45,7 +45,7 @@ class GVBNotificationDelegate: NSObject, UNUserNotificationCenterDelegate {
             //here we would offer the rider a ride by populating the proper fields/path in that riders profile.
             
             let ref = FIRDatabase.database().reference().child("users/\(notification.userInfo["uid"]!)/rider/offers/immediate/")
-            localDelegate.offeredID = notification.userInfo["uid"] as! String
+            localDelegate.offeredID = notification.userInfo["uid"]! as! String
             let user = FIRAuth.auth()!.currentUser!
             
             //idk about user.displayName here.
