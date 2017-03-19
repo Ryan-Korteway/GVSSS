@@ -575,9 +575,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             } else if (self.status == "accepted") {
                 
                 if(self.mode == "rider") {
-                    ref.child("users/\(ourID)/rider/offers/accepted/immediate/\(ourID)/origin").setValue(["lat": self.ourlat, "long": self.ourlong]);
+                    ref.child("users/\(ourID)/rider/offers/accepted/immediate/rider/\(ourID)/origin").setValue(["lat": self.ourlat, "long": self.ourlong]);
                 } else {
-                    ref.child("users/\(self.offeredID)/rider/offers/accepted/immediate/\(ourID)/origin").setValue( ["lat": self.ourlat, "long": self.ourlong]);
+                    ref.child("users/\(self.offeredID)/rider/offers/accepted/immediate/driver/\(ourID)/origin").setValue( ["lat": self.ourlat, "long": self.ourlong]);
                 }
             } else {
                 print("something up with timer")
@@ -632,7 +632,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 }
             })
         } else if (status == "accepted"){
-            ref.child("users/\(self.offeredID)/rider/offers/accepted/immediate").observe( .childAdded, with: { snapshot in
+            ref.child("users/\(self.offeredID)/rider/offers/accepted/immediate/rider").observeSingleEvent(of: .childChanged, with: { snapshot in
                     (self.DriveViewController_AD as! DriveViewController).fillWithAcceptance(item: cellItem.init(snapshot: snapshot))
             })
         } else if (status == "offer"){
@@ -688,7 +688,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 }
             })
         } else if (status == "accepted"){
-            ref.child("users/\(userID)/rider/offers/accepted/immediate").observe(.childAdded, with: { snapshot in //child added may be an issue here...
+            ref.child("users/\(userID)/rider/offers/accepted/immediate/driver").observeSingleEvent(of: .childChanged, with: { snapshot in //child added may be an issue here...
                 print(snapshot.key)
                 if(snapshot.key != userID) {
                     (self.firstViewController as! FirstViewController).fillWithAcceptance(item: cellItem.init(snapshot: snapshot))
