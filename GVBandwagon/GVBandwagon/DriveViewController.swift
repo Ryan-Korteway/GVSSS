@@ -10,6 +10,7 @@ import UIKit
 import Firebase
 import GoogleSignIn
 import GoogleMaps
+import UserNotifications
 
 class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifications {
     
@@ -25,6 +26,8 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
     
     var isMessageDisplayed = false
     let locationManager = CLLocationManager()
+    
+    let center = UNUserNotificationCenter.current()
     
     let ref = FIRDatabase.database().reference();
     let userID = FIRAuth.auth()!.currentUser!.uid
@@ -50,21 +53,20 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
         self.createMap()
         localDelegate.DriveViewController_AD = self; //again, hoping this assignment is okay.
         localDelegate.DriveSet = true;
+        localDelegate.lastState = "driver"
         
-        // Test marker
-        let testMarker = GMSMarker()
-        testMarker.position = CLLocationCoordinate2D(latitude: 42.973984, longitude: -85.695527)
-        testMarker.icon = GMSMarker.markerImage(with: .green)
-        testMarker.map = self.googleMap
-        let origin = ["lat": 42.973984, "long":-85.695527]
-        
-        let info: NSDictionary = ["name": "Nick", "origin": origin, "destination": "Downtown", "rate": "$5"]
-        
-        testMarker.userData = info
+        if(localDelegate.isSwitched){
+            print("loaded call to start driver map")
+            localDelegate.startDriverMapObservers()
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        if(localDelegate.isSwitched){
+            print("appearing call to start driver map")
+            localDelegate.startDriverMapObservers()
+        }
         
     }
 
@@ -156,12 +158,110 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
     }
     
     func ride_accept(item: cellItem) {
-        print("Ride offer accepted.")
+        print("Ride offer accepted (potentially).")
+        
+        let ref = FIRDatabase.database().reference()
+        let cellInfo: NSDictionary = item.toAnyObject() as! NSDictionary
+        
+        if((cellInfo["accepted"] as! NSInteger) == 1 ) {
+                localDelegate.status = "accepted"
+                let locationInfo: NSDictionary = cellInfo["origin"] as! NSDictionary
+                
+                ref.child("/users/\(cellInfo["uid"]!)/rider/offers/immediate").removeAllObservers()
+                
+                self.googleMap.clear()
+                
+                let marker = GMSMarker()
+                let lat = locationInfo.value(forKey: "lat") as! CLLocationDegrees
+                let long = locationInfo.value(forKey: "long") as! CLLocationDegrees
+                marker.position = CLLocationCoordinate2D(latitude: lat, longitude: long)
+                
+                ref.child("/users/\(cellInfo["uid"]!)/rider/accepted/immediate/\(cellInfo["uid"]!)/origin/").observe(.childChanged, with: { snapshot in
+                    print("marker moving!!! \(snapshot.key)")
+                    if(snapshot.key == "lat") {
+                        marker.position.latitude = snapshot.value as! CLLocationDegrees
+                    } else {
+                        marker.position.longitude = snapshot.value as! CLLocationDegrees
+                    }
+                })
+                //do any of these matter thanks to the custom display window?...
+                marker.title = "Your Rider: \(cellInfo["name"])"
+                marker.snippet = "Close enough to Grand Valley."
+                marker.icon = GMSMarker.markerImage(with: .green)
+                marker.userData = cellInfo //giving each marker a dictionary of the info that set them up for future use.
+                marker.map = self.googleMap
+                
+                
+                ref.child("/users/\(cellInfo["uid"]!)/rider/accepted/immediate/").observeSingleEvent(of: .childRemoved, with:{ snapshot in
+                    print("PIN BEING DELETED")
+                    marker.map = nil;
+                    self.ref.child("/users/\(cellInfo["uid"]!)/rider/accepted/immediate/\(cellInfo["uid"]!)/origin/").removeAllObservers()
+                    
+                        //if deleted here, make sure it wasnt an early cancellation.
+                    
+                    let content = UNMutableNotificationContent()
+                    content.title = "Ride Event"
+                    
+                    let baseDictionary = snapshot.value as! NSDictionary
+                    
+                    if(baseDictionary.value(forKey: "accepted") as! NSInteger != 1) {
+                        content.body = "The ride request has been removed. You do not need to pick up this individual"
+                    } else {
+                        content.body = "Thank you for giving this user a ride."
+                    }
+                    content.sound = UNNotificationSound.default()
+                    content.categoryIdentifier = "nothing_category"
+                    
+                    let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
+                    
+                    let identifier = "ride acceptance"
+                    let request = UNNotificationRequest(identifier: identifier,
+                                                        content: content, trigger: trigger)
+                    self.center.add(request, withCompletionHandler: { (error) in
+                        
+                        if let error = error {
+                            
+                            print(error.localizedDescription)
+                        }
+                    })
+                    
+                    self.localDelegate.status = "request"
+                })
+            
+        } else {
+            
+            print("offer declined")
+            
+            //an alert about the response. and a resetting of app delegates various states.
+            let content = UNMutableNotificationContent()
+            content.title = "Ride Offer Response"
+            content.body = "We are sorry but your ride offer was declined" //need wording help here.
+            
+            content.sound = UNNotificationSound.default()
+            content.categoryIdentifier = "nothing_category"
+            
+            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
+            
+            let identifier = "ride acceptance"
+            let request = UNNotificationRequest(identifier: identifier,
+                                                content: content, trigger: trigger)
+            self.center.add(request, withCompletionHandler: { (error) in
+                
+                if let error = error {
+                    
+                    print(error.localizedDescription)
+                }
+            })
+            
+            
+            localDelegate.status = "request"
+            
+        }
         
         return //placeholder
     }
     
-    func ride_request(item: cellItem) {
+    func ride_request(item: cellItem) { //someone has made a request through requests/immediate.
         //make a rider icon on the drivers map
         
         //make a pin and an observer that watches for changes to that pin to specifically watch? for updates?...
@@ -202,16 +302,8 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
         ref.child("requests/immediate/\(cellInfo["uid"]!)").observeSingleEvent(of: .childRemoved, with:{ snapshot in
                 print("PIN BEING DELETED")
                 marker.map = nil;
-                self.ref.child("requests/immediate/\(cellInfo["uid"])/origin/").removeAllObservers()
+                self.ref.child("requests/immediate/\(cellInfo["uid"]!)/origin/").removeAllObservers()
         })
-        
-//        let marker2 = GMSMarker()
-//        marker2.position = CLLocationCoordinate2D(latitude: destinationInfo.value(forKey: "latitude") as! CLLocationDegrees, longitude: destinationInfo.value(forKey: "longitude") as! CLLocationDegrees)
-//        marker2.userData = cellInfo
-//        marker2.title = "Potential Rider Destination"
-//        marker2.snippet = "Close enough to Grand Valley."
-//        
-//        marker2.map = self.googleMap
 
     }
     
@@ -223,24 +315,48 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
         
         // cant seem to make the marker a different color to make it stand out more...
         
+        //make a rider icon on the drivers map
+        
+        //make a pin and an observer that watches for changes to that pin to specifically watch? for updates?...
+        
+        print("ride request being made")
+        
         let cellInfo: NSDictionary = item.toAnyObject() as! NSDictionary
         let locationInfo: NSDictionary = cellInfo["origin"] as! NSDictionary
-        let destinationInfo: NSDictionary = cellInfo["destination"] as! NSDictionary
+        //let destinationInfo: NSDictionary = cellInfo["destination"] as! NSDictionary
+        
+        print("our start lat and long are \(locationInfo["lat"]) and \(locationInfo["long"])")
+        
+        print("our start lat and long are \(locationInfo.value(forKey: "lat") as! CLLocationDegrees) \(locationInfo.value(forKey: "long") as! CLLocationDegrees)")
+        
+        print("our id \(cellInfo["uid"]!)")
         
         let marker = GMSMarker()
-        marker.position = CLLocationCoordinate2D(latitude: locationInfo.value(forKey: "lat") as! CLLocationDegrees, longitude: locationInfo.value(forKey: "long") as! CLLocationDegrees)
-        marker.title = "White Listed Rider: \(cellInfo["name"])"
-        marker.snippet = "Close enough to Grand Valley."
-        marker.icon = GMSMarker.markerImage(with: .blue)
+        let lat = locationInfo.value(forKey: "lat") as! CLLocationDegrees
+        let long = locationInfo.value(forKey: "long") as! CLLocationDegrees
+        marker.position = CLLocationCoordinate2D(latitude: lat, longitude: long)
+        
+        ref.child("requests/immediate/\(cellInfo["uid"]!)/origin/").observe(.childChanged, with: { snapshot in
+            print("marker moving!!! \(snapshot.key)")
+            if(snapshot.key == "lat") {
+                marker.position.latitude = snapshot.value as! CLLocationDegrees
+            } else {
+                marker.position.longitude = snapshot.value as! CLLocationDegrees
+            }
+        })
+        
+        marker.title = "Potential Rider: \(cellInfo["name"])"
+        marker.snippet = "Wants a ride to: (ADDRESS HERE) for $(money here)."
+        marker.icon = GMSMarker.markerImage(with: .red)
+        marker.userData = cellInfo //giving each marker a dictionary of the info that set them up for future use.
         marker.map = self.googleMap
         
-        let marker2 = GMSMarker()
-        marker2.position = CLLocationCoordinate2D(latitude: destinationInfo.value(forKey: "latitude") as! CLLocationDegrees, longitude: destinationInfo.value(forKey: "longitude") as! CLLocationDegrees)
-        marker2.title = "Potential Rider Destination"
-        marker2.snippet = "Close enough to Grand Valley."
         
-        marker2.map = self.googleMap
-
+        ref.child("requests/immediate/\(cellInfo["uid"]!)").observeSingleEvent(of: .childRemoved, with:{ snapshot in
+            print("PIN BEING DELETED")
+            marker.map = nil;
+            self.ref.child("requests/immediate/\(cellInfo["uid"]!)/origin/").removeAllObservers()
+        })
     }
     
     // Google Maps functions
@@ -295,6 +411,7 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
     
     func acceptTapped(button: UIButton) -> Void {
         localDelegate.changeStatus(status: "offer")
+        localDelegate.offeredID = baseDictionary.value(forKey: "uid")! as! String
         print("Accept Tapped but it is really an offer.")
         
         let ref = FIRDatabase.database().reference().child("users/\(baseDictionary.value(forKey: "uid")!)/rider/offers/immediate/")
@@ -329,8 +446,44 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
         if segue.identifier == "driverAcceptsSegue" {
             if let nextVC = segue.destination as? RideSummaryTableViewController {
                 // Set the attributes in the next VC.
+                nextVC.informationDictionary = self.baseDictionary
                 nextVC.paymentText = "Request Payment"
             }
+        }
+    }
+    
+    func fillWithAcceptance(item: cellItem) {
+        let cellInfo = item.toAnyObject() as! NSDictionary
+        
+        if((cellInfo["uid"]! as! NSString) as String == userID) {
+            print("ignoring marker")
+        } else {
+            let locationInfo: NSDictionary = cellInfo["origin"] as! NSDictionary
+            
+            let marker = GMSMarker()
+            let lat = locationInfo.value(forKey: "lat") as! CLLocationDegrees
+            let long = locationInfo.value(forKey: "long") as! CLLocationDegrees
+            
+            marker.position = CLLocationCoordinate2D(latitude: lat, longitude: long)
+            
+            marker.title = "Rider: \(cellInfo["name"])"
+            marker.map = self.googleMap
+            
+            let currentUser = FIRAuth.auth()!.currentUser
+            self.ref.child("/users/\(cellInfo["uid"]!)/rider/accepted/immediate/\(cellInfo["uid"]!)/origin)").observe( .childChanged, with: { snapshot in
+                if(snapshot.key == "lat") {
+                    marker.position.latitude = snapshot.value as! CLLocationDegrees
+                } else {
+                    marker.position.longitude = snapshot.value as! CLLocationDegrees
+                }
+            }) //hopefully this makes the pins update their locations and then its needed in the driver stuff to set up the driver to update these fields.
+            //once we accept the offer, we will need a .value to get each key to remove each observer before we delete the whole section.
+            
+            ref.child("/users/\(cellInfo["uid"]!)/rider/accepted/immediate/\(cellInfo["uid"]!)").observeSingleEvent(of: .childRemoved, with:{ snapshot in
+                print("PIN BEING DELETED")
+                marker.map = nil;
+                self.ref.child("/users/\(cellInfo["uid"]!)/rider/accepted/immediate/\(cellInfo["uid"]!)/origin/").removeAllObservers()
+            })
         }
     }
 }

@@ -20,6 +20,7 @@ class RideSummaryTableViewController: UITableViewController {
     @IBOutlet var paymentButton: UIButton!
 
     var paymentText = "Request Payment"
+    var informationDictionary: NSDictionary = [:]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,7 +39,7 @@ class RideSummaryTableViewController: UITableViewController {
         // name and rating are of Driver
         // button says "Send Payment"
 
-        
+        nameLabel.text = informationDictionary.value(forKey: "name") as! String?
         
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -122,5 +123,12 @@ class RideSummaryTableViewController: UITableViewController {
         // Pass the selected object to the new view controller.
     }
     */
+    
+    func payDriver() {
+        
+        //TO DO PASS IN THE MARKERS USER DATA WHATEVER SO THAT THE VENMO ID AND RATE CAN BE PULLED OUT TO BE USED TO PAY THE DRIVER.
+        
+        //UIApplication.shared.open(NSURL(string:"https://venmo.com/?txn=pay&audience=private&recipients=@\(venmoID)&amount=\(rate)&note=GVB") as! URL, options: [:], completionHandler: nil)
+    }
 
 }

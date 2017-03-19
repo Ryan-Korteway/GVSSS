@@ -83,8 +83,7 @@ class RequestRideViewController: UIViewController {
         // Do something
         //all this to be moved into new view controller logic at some point.
         
-        //SELF GOING TO AND STARTING FROM NEED REPLACING WITH THE SEARCHING OF A DESTINATION FROM THE PAGE.
-        
+        //SELF GOING TO NEED REPLACING WITH THE SEARCHING OF A DESTINATION FROM THE PAGE.
         
         let currentLat = self.localDelegate.locationManager.location!.coordinate.latitude 
         let currentLong = self.localDelegate.locationManager.location!.coordinate.longitude
@@ -94,6 +93,7 @@ class RequestRideViewController: UIViewController {
         ref.child("requests/immediate/\(currentUser!.uid)/").setValue(["name": currentUser!.displayName!, "uid": currentUser!.uid, "venmoID": "none", "origin": ["lat": currentLat, "long": currentLong], "destination": self.goingTo, "rate" : 15, "accepted": 0, "repeats": 0, "duration": "none"]) //locations being sent here.
         
         localDelegate.startTimer();
+        localDelegate.status = "offer"
         _ = self.navigationController?.popViewController(animated: true)
     }
     

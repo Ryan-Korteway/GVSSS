@@ -74,13 +74,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     let categoryNothing: UNNotificationCategory = UNNotificationCategory(identifier: "nothing_category", actions: [], intentIdentifiers: [], options: [])
     
+    var isSwitched = false
     
     //the arrays of favorite and disfavored riders/drivers for a given user.
     var riderWhiteList: NSArray = []
     var riderBlackList: NSArray = []
     var driverWhiteList: NSArray = []
     var driverBlackList: NSArray = []
-    var acceptsToWatch: NSArray = []
     var lastState = "rider"
     
     var driverVenmoID = "none" //the drivers venmo ID to be updated etc.
@@ -104,9 +104,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         super.init()
         
-        print("configuring FIRApp")
         FIRApp.configure()
-        // not really needed unless you really need it FIRDatabase.database().persistenceEnabled = true
+        // not really needed unless you really need it 
+        FIRDatabase.database().persistenceEnabled = true
         
         // Moved to didFinish... below
         //GIDSignIn.sharedInstance().clientID = FIRApp.defaultApp()?.options.clientID
@@ -134,8 +134,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         window?.makeKeyAndVisible()
     
-        print("finished launching with options")
-        
         return true
     }
 
@@ -143,19 +141,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
         // Use this method to pause ongoing tasks, disable timers, and invalidate graphics rendering callbacks. Games should use this method to pause the game.
         
-        let lastView = self._centerViewController //neeeds to be moved to
-        //custom coding class and use KG's floating drawers and references instead of this whole floating drawers things.
-        
-        switch(lastView) { //bad switch statement?
-        case is FirstViewController:
-            lastState = "rider"
-        case is DriveViewController:
-            lastState = "driver"
-            //make case for each view controller that could be on each screen and make each of the view controllers follow each of the protocols.
-        default:
-            print("something went wrong in lastView set up switch.")
-        }
-
         
     }
 
@@ -173,9 +158,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             
             self.setUpClosedObservers();
             
-            for item in acceptsToWatch {
-                self.closedRideAccept(toWatchUid: item as! String);
-            }
+            self.closedRideAccept(toWatchUid: offeredID);
+            
         }
 
         
@@ -183,9 +167,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationWillEnterForeground(_ application: UIApplication) {
         // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
-        
         if(FIRAuth.auth()!.currentUser != nil) {
-            self.setUpOpenObservers();
+            setUpOpenObservers();
         }
     }
 
@@ -206,14 +189,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             
             ref.child("users/\(userID)/rider/offers/immediate").removeAllObservers(); //might need to add an extra observer remover for the path of offers/immediate/buffer
             
+            ref.child("users/\(self.offeredID)/rider/accepted/immediate").removeAllObservers();
+            
             ref.child("requests/immediate").removeAllObservers();
             
-            ref.child("userStates").child("\(userID)").observeSingleEvent(of: .value, with: { (snapshot) in
+            ref.child("activedrivers").child("\(userID)").observeSingleEvent(of: .value, with: { (snapshot) in
                 
-                if(snapshot.value! as! Bool) {
+                if(snapshot.value != nil) {
                     let tempRef = ref.child("activedrivers/\(userID)/")
-                    tempRef.child("jointime").removeValue()
-                    tempRef.child("location").removeValue()
+                    tempRef.removeValue()
                 }
                 
             })
@@ -445,28 +429,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         })
         
-        //watching for ride offers, and whitelist ride requests. BIG NOTE HERE ride acceptances will have to be watched for elsewhere/later when we know the uid that we will need to watch.
-        ref.child("users/\(userID)/rider/offers/immediate").observe( .childAdded, with: { snapshot in
-            //if we are in a riders portion of the app, currentViewController has rider offers function, call it, there we load the view however we want.
-            
-            //and again need switch for casting etc.
-            
-            if(snapshot.value is NSNull) {
-                print("snapshot null, doing nothing");
-            } else {
-                // is lastView stupid/irrelephant?
-                
-                if(!self.firstSet) {
-                    print("first view controller not set up yet")
-                    
-                } else {
-                    print("calling ride offer")
-                    (self.firstViewController as! FirstViewController).ride_offer(item: cellItem.init(snapshot: snapshot))
-                }
-            
-            }
-        })
-        
     }
     
     // entering background should make observers that make local notifications, versus calling the appropriate notification/data updating methods in the currently open view controller.
@@ -540,30 +502,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
     
-    func openRideAccept(toWatchUid: String) {
-        //give rider/offers/immediate a /buffer/ so the buffer can be removed and thus the snapshot is returned with the accepted driver value updated the rests false with turn downs.
-        
-        let ref = FIRDatabase.database().reference();
-        
-        ref.child("users/\(toWatchUid)/rider/offers/immediate").observeSingleEvent(of: .childRemoved, with: { snapshot in
-            //if we are in a riders portion of the app, currentViewController has rider offers function, call it, there we load the view however we want.
-            
-            if(!self.DriveSet) {
-                print("driver class not set")
-            } else {
-                    (self.DriveViewController_AD as! DriveViewController).ride_accept(item: cellItem.init(snapshot: snapshot as FIRDataSnapshot));
-            }
-            
-        })
-        
-        acceptsToWatch = acceptsToWatch.adding(toWatchUid) as NSArray;
-    }
-    
     func closedRideAccept(toWatchUid: String) {
         
         let ref = FIRDatabase.database().reference();
         
-        ref.child("users/\(toWatchUid)/rider/offers/immediate").observeSingleEvent(of: .childRemoved, with: { snapshot in
+        ref.child("users/\(self.offeredID)/rider/offers/immediate").observeSingleEvent(of: .childRemoved, with: { snapshot in
             let localCell = cellItem.init(snapshot: snapshot)
             
             let content = UNMutableNotificationContent()
@@ -571,6 +514,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             
             if(localCell.accepted == 1) {
                 content.body = "Your ride offer has been accepted."
+                self.status = "accepted"
             } else {
                 content.body = "We are sorry but your ride offer was declined" //need wording help here.
             }
@@ -624,16 +568,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             } else if (self.status == "offer") {
                 
                 if(self.mode == "rider") {
-                    ref.child("users/\(ourID)/rider/requests/immediate/\(ourID)/origin").setValue(["lat": self.ourlat, "long": self.ourlong]);
+                    ref.child("users/\(ourID)/rider/offers/immediate/\(ourID)/origin").setValue(["lat": self.ourlat, "long": self.ourlong]);
                 } else {
-                    ref.child("users/\(self.offeredID)/rider/requests/immediate/\(ourID)/origin").setValue(["lat": self.ourlat, "long": self.ourlong]);
+                    ref.child("users/\(self.offeredID)/rider/offers/immediate/\(ourID)/origin").setValue(["lat": self.ourlat, "long": self.ourlong]);
                 }
             } else if (self.status == "accepted") {
                 
                 if(self.mode == "rider") {
-                    ref.child("users/\(ourID)/rider/requests/accepted/\(ourID)/origin").setValue(["lat": self.ourlat, "long": self.ourlong]);
+                    ref.child("users/\(ourID)/rider/accepted/immediate/\(ourID)/origin").setValue(["lat": self.ourlat, "long": self.ourlong]);
                 } else {
-                    ref.child("users/\(self.offeredID)/rider/requests/accepted/\(ourID)/origin").setValue( ["lat": self.ourlat, "long": self.ourlong]);
+                    ref.child("users/\(self.offeredID)/rider/accepted/immediate/\(ourID)/origin").setValue( ["lat": self.ourlat, "long": self.ourlong]);
                 }
             } else {
                 print("something up with timer")
@@ -656,35 +600,97 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return self.driverVenmoID;
     }
     
-    func startRiderObservers() {
+    
+    /*
+     
+     The method called to repopulate the DRIVER MAP depending on what is going on with the statuses
+     
+     */
+    func startDriverMapObservers() {
+        
         let ref = FIRDatabase.database().reference()
-        ref.child("requests/immediate").observe( .childAdded, with: { snapshot in //.value allows us to see adds, removes, and lat/long updates.
-            //if we are in a riders portion of the app, currentViewController has rider offers function, call it, there we load the view however we want.
-            //let current = self.window?.rootViewController?.presentedViewController //not sure if this is the view controller we want.
+        let userID = FIRAuth.auth()!.currentUser!.uid
+        
+        if(status == "request") { // THIS IS GOOD.
+            //this isnt even the right code/observer to calling if in request status....
             
-            
-            print("\n\n REQUEST OBSERVED!! \n\n")
-            
-            //MIGHT NEED TO ITERATE THROUGH THE SNAPSHOT SINCE ITS PULLING EVERYTHING DOWN EACH TIME WE OPEN/CLOSE THE APP.
-            
-            //let lastView = self._centerViewController //neeeds to be moved to
-            //custom coding class and use KG's floating drawers and references instead of this whole floating drawers things.
-            
-            if(snapshot.value is NSNull) {
-                print("snapshot null, doing nothing");
-            } else {
+            ref.child("requests/immediate").observe( .childAdded, with: { snapshot in //.value allows us to see adds, removes, and lat/long updates.
+                //if we are in a riders portion of the app, currentViewController has rider offers function, call it, there we load the view however we want.
+                //let current = self.window?.rootViewController?.presentedViewController //not sure if this is the view controller we want.
                 
-                //and again need switch for casting etc.
-                if( self._centerViewController is UITabBarController) {
+                
+                print("\n\n REQUEST OBSERVED!! \n\n")
+                
+                if(snapshot.value is NSNull) {
+                    print("snapshot null, doing nothing");
+                } else {
                     
-                    let vc = self.centerViewController as! UITabBarController
-                    (vc.childViewControllers[0].childViewControllers[0] as! DriveViewController).ride_request(item: cellItem.init(snapshot: snapshot as FIRDataSnapshot))
-                } else{
-                    print("default")
+                    //and again need switch for casting etc.
+                    if( !self.DriveSet) {
+                        print("driver view controller not ready yet.")
+                        
+                    } else{
+                        (self.DriveViewController_AD as! DriveViewController).ride_request(item: cellItem.init(snapshot: snapshot))
+                    }
+                    
                 }
+            })
+        } else if (status == "accepted"){
+            ref.child("/users/\(self.offeredID)/rider/accepted/immediate").observe( .childAdded, with: { snapshot in
+                    (self.DriveViewController_AD as! DriveViewController).fillWithAcceptance(item: cellItem.init(snapshot: snapshot))
+            })
+        } else if (status == "offer"){
+            //rides being offered by the driver, need to get the users pin back.
+                //offeredID is usable to reclaim the offered riders id/path.
+            
+            //watched the offered path for deletions and then call ride accepted in the driver view controller.
+            ref.child("/users/\(self.offeredID)/rider/offers/immediate").observe( .childRemoved, with: { snapshot in
+                (self.DriveViewController_AD as! DriveViewController).ride_accept(item: cellItem.init(snapshot: snapshot))
+                //acceptsToWatch = acceptsToWatch.adding(toWatchUid) as NSArray; //not sure about where this line should go. its purpose is to track which userID needs to be watched when we call the closed observer set up function.
+            })
+            
+        }
+    }
+    
+    
+    /* 
+     
+     The method called to repopulate the RIDER MAP depending on what is going on with the statuses
+     
+     */
+    func startRiderMapObservers() {
+        let ref = FIRDatabase.database().reference()
+        let userID = FIRAuth.auth()!.currentUser!.uid
+        
+        if(status == "offer") {
+            //this isnt even the right code/observer to calling if in request status....
+            
+            ref.child("users/\(userID)/rider/offers/immediate").observe( .childAdded, with: { snapshot in //.value allows us to see adds, removes, and lat/long updates.
+                //if we are in a riders portion of the app, currentViewController has rider offers function, call it, there we load the view however we want.
+                //let current = self.window?.rootViewController?.presentedViewController //not sure if this is the view controller we want.
                 
-            }
-        })
+                
+                print("\n\n offer OBSERVED!! \n\n")
+                
+                if(snapshot.value is NSNull) {
+                    print("snapshot null, doing nothing");
+                } else {
+                    
+                    //and again need switch for casting etc.
+                    if( !self.DriveSet) {
+                        print("rider view controller not ready yet.")
+                        
+                    } else{
+                        (self.firstViewController as! FirstViewController).ride_offer(item: cellItem.init(snapshot: snapshot))
+                    }
+                    
+                }
+            })
+        } else if (status == "accepted"){
+            ref.child("/users/\(userID)/rider/accepted/immediate").observeSingleEvent(of: .childAdded, with: { snapshot in
+                (self.firstViewController as! FirstViewController).fillWithAcceptance(item: cellItem.init(snapshot: snapshot))
+            })
+        } //no else for status == request because request is the base which means we dont have any position to advertise or any pins to recreate
     }
 }
 

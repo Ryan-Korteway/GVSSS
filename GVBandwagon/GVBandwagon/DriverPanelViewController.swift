@@ -52,12 +52,14 @@ class DriverPanelViewController: UIViewController {
                                                            "rate" : 0, "accepted": 0, "repeats": 0, "duration": "none"]) //need protections of if destination is none, dont make a pin.
         
             localDelegate.changeMode(mode: "driver")
+            localDelegate.isSwitched = true
             localDelegate.startTimer()
-            localDelegate.startRiderObservers()
+            localDelegate.startDriverMapObservers()
         } else {
             // Remove driver from active driver list
             ref.child("/activedrivers/\(ourid)").removeValue();
             localDelegate.changeMode(mode: "rider")
+            localDelegate.isSwitched = false
             localDelegate.timer.invalidate() //stop the timer.
         }
     }
@@ -72,8 +74,10 @@ class DriverPanelViewController: UIViewController {
         
         // If there is an active trip, load the summary.
         //self.performSegue(withIdentifier: "driverAcceptsRide", sender: self)
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        var appDelegate = UIApplication.shared.delegate as! AppDelegate
         let centerVC = appDelegate.centerViewController
+        
+        //EITHER WAY THE SEGUE SHOULD PROVIDE THE RECIEVING VIEW CONTROLLER A CELL ITEM OF DATA TO PULL FROM
         
         if (self.mode == "Ride") {
             let rideVC = centerVC.childViewControllers[0]

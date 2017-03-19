@@ -24,6 +24,8 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
     
     var baseDictionary: NSDictionary = [:]
     
+    //var localCell = cellItem(start: ["name":"filler", "uid": "filler", "venmoID": "filler", "origin": ["lat": 0.0, "long": 0.0], "destination": ["longitude": 0.0, "latitude": 0.0], "rate": 0, "accepted": 0, "repeats": 0, "duration": "none"])
+    
     let locationManager = CLLocationManager()
 
     let ref = FIRDatabase.database().reference()
@@ -63,8 +65,16 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
         print("delegate being set")
         localDelegate.firstViewController = self; //hopefully this cast is okay.
         localDelegate.firstSet = true;
+        localDelegate.lastState = "rider"
+        
+        localDelegate.startRiderMapObservers() //the new function to populate the riders map each time the view loads.
         
     } //end of view did load.
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        localDelegate.startRiderMapObservers()
+    }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -151,10 +161,10 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
         }) //hopefully this makes the pins update their locations and then its needed in the driver stuff to set up the driver to update these fields.
         //once we accept the offer, we will need a .value to get each key to remove each observer before we delete the whole section.
         
-        ref.child("/users/\(currentUser!.uid)/rider/offers/immediate/\(cellInfo["uid"])").observeSingleEvent(of: .childRemoved, with:{ snapshot in
+        ref.child("/users/\(currentUser!.uid)/rider/offers/immediate/\(cellInfo["uid"]!)").observeSingleEvent(of: .childRemoved, with:{ snapshot in
             print("PIN BEING DELETED")
             marker.map = nil;
-            self.ref.child("requests/immediate/\(cellInfo["uid"])/origin/").removeAllObservers()
+            self.ref.child("users/\(currentUser!.uid)/rider/offers/immediate/\(cellInfo["uid"]!)/origin").removeAllObservers()
         })
 
         
@@ -165,6 +175,7 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
             if let nextVC = segue.destination as? RideSummaryTableViewController {
                 // Set the attributes in the next VC.
                 nextVC.paymentText = "Submit Payment"
+                //here i could grab a global accepts dictionary and send it over to the other view controller..
             }
         }
     }
@@ -190,19 +201,45 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
         infoWindow.nameLabel.text = (baseDictionary.value(forKey: "name") as! NSString) as String
         infoWindow.destLabel.text = baseDictionary.value(forKey: "destination").debugDescription
         infoWindow.rateLabel.text = "\(baseDictionary.value(forKey: "rate"))"
-        
+            
         infoWindow.center = mapView.projection.point(for: location)
         infoWindow.center.y -= 90
-        
+            
         infoWindow.acceptButton.addTarget(self, action: #selector(acceptTapped(button:)), for: .touchUpInside)
         infoWindow.declineButton.addTarget(self, action: #selector(declineTapped(button:)), for: .touchUpInside)
-        
+            
         self.view.addSubview(infoWindow)
-        
-        
+            
         // Remember to return false
         // so marker event is still handled by delegate
         return false
+    }
+        
+        func ride_accept(item: NSDictionary) { //all map set ups/marker creations may need to be in their own functions in ride and drive
+        //view controllers so that upon the map being reloaded, it can be repopulated with the correct data given the current user state.
+        
+        let user = FIRAuth.auth()!.currentUser!
+        let cellInfo: NSDictionary = item
+        let ref = FIRDatabase.database().reference().child("users/\(user.uid)/rider/")
+        
+        print("our driver uid \(cellInfo.value(forKey: "uid")!)")
+            
+        print("our cellInfo \(cellInfo.description)")
+            
+        ref.child("offers/immediate/\(cellInfo.value(forKey: "uid")!)/accepted").setValue(1); //set the accepted drivers accepted value to 1.
+        
+        ref.child("offers/accepted/").setValue(cellInfo) //create an accepted branch of the riders table
+        
+        ref.child("offers/immediate/").removeValue() //remove the offers immediate branch from the riders account so that the drivers are able to observe the destruction and if they were selected or not.
+        
+        let localDelegate = UIApplication.shared.delegate as! AppDelegate
+        localDelegate.status = "accepted"
+        
+        self.googleMapsView.clear()
+        
+        //call make pins function.
+        localDelegate.startRiderMapObservers()
+        
     }
     
     // let the custom infowindow follows the camera
@@ -219,40 +256,54 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
         infoWindow.removeFromSuperview()
     }
     
-    // TODO: This is configured with Firebase from the DRIVERS point of view.
-    // We need to change it to from the RIDERS point of view.
     func acceptTapped(button: UIButton) -> Void {
-        localDelegate.changeStatus(status: "offer")
-        print("Accept Tapped but it is really an offer.")
+        localDelegate.changeStatus(status: "accepted")
+        print("Accept Tapped.")
         
-        let ref = FIRDatabase.database().reference().child("users/\(baseDictionary.value(forKey: "uid")!)/rider/offers/immediate/")
-        
-        let user = FIRAuth.auth()!.currentUser!
-        
-        //idk about user.displayName here.
-        
-        //maybe venmo id is a global var in app delegate with a getter/setter for moments like this.
-        ref.child("\(user.uid)").setValue(["name": user.displayName!, "uid": user.uid, "venmoID": localDelegate.getVenmoID(), "origin": baseDictionary.value(forKey: "origin"), "destination": baseDictionary.value(forKey: "destination"), "rate": baseDictionary.value(forKey: "rate"), "accepted" : 0, "repeats": 0, "duration": "none"]) //value set needs to be all of our info for the snapshot.
-        
-        print("ride offered") //this one is if you hit the snooze button
-        
-        self.googleMapsView.clear() //clears the map of all pins so w can show only what w care about.
-        
-        //make the pin with only the riders info.
-        //make tracker observers etc from only the baseDictionaries uid etc?...
-        
-        // If the RIDER accepts, we want to go to riderAcceptsSegue
-        performSegue(withIdentifier: "riderAcceptsSegue", sender: self)
-        infoWindow.removeFromSuperview()
-        
-        // Set Active Trip of Right Drawer to riders name and set it to clickable.
-        
+        ride_accept(item: baseDictionary) //local cell assignment might be bad/fail here.
     }
+    
     
     func declineTapped(button: UIButton) -> Void {
         print("Decline Tapped")
         infoWindow.removeFromSuperview()
     }
+        
+    func fillWithAcceptance(item: cellItem) {
+        let cellInfo = item.toAnyObject() as! NSDictionary
+        let locationInfo: NSDictionary = cellInfo["origin"] as! NSDictionary
+            
+            let ref = FIRDatabase.database().reference().child("users/\(baseDictionary.value(forKey: "uid")!)/rider/offers/immediate/")
+            let marker = GMSMarker()
+            let lat = locationInfo.value(forKey: "lat") as! CLLocationDegrees
+            let long = locationInfo.value(forKey: "long") as! CLLocationDegrees
+            
+            let locValue:CLLocationCoordinate2D = self.locationManager.location!.coordinate
+            print("locations = \(locValue.latitude) \(locValue.longitude)")
+            
+            let user = FIRAuth.auth()!.currentUser!
+        
+            marker.position = CLLocationCoordinate2D(latitude: lat, longitude: long)
+            marker.title = "Driver: \(cellInfo["name"])"
+            marker.map = self.googleMapsView
+            
+            //self.googleMapsView.animate(to: camera)
+            let currentUser = FIRAuth.auth()!.currentUser
+            self.ref.child("/users/\(currentUser!.uid)/rider/accepted/immediate/\(cellInfo["uid"]!)/origin)").observe( .childChanged, with: { snapshot in
+                if(snapshot.key == "lat") {
+                    marker.position.latitude = snapshot.value as! CLLocationDegrees
+                } else {
+                    marker.position.longitude = snapshot.value as! CLLocationDegrees
+                }
+            }) //hopefully this makes the pins update their locations and then its needed in the driver stuff to set up the driver to update these fields.
+            
+            ref.child("/users/\(currentUser!.uid)/rider/accepted/immediate/\(cellInfo["uid"]!)").observeSingleEvent(of: .childRemoved, with:{ snapshot in
+                print("PIN BEING DELETED")
+                marker.map = nil;
+                self.ref.child("/users/\(currentUser!.uid)/rider/accepted/immediate/\(cellInfo["uid"]!)/origin/").removeAllObservers()
+            })
+        
+        }
 }
 
 extension FirstViewController: CLLocationManagerDelegate {
@@ -271,13 +322,13 @@ extension FirstViewController: CLLocationManagerDelegate {
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        let locValue:CLLocationCoordinate2D = self.locationManager.location!.coordinate
-        print("locations = \(locValue.latitude) \(locValue.longitude)")
-        if let location = locations.last {
-            
+            let locValue:CLLocationCoordinate2D = self.locationManager.location!.coordinate
+            print("locations = \(locValue.latitude) \(locValue.longitude)")
+            if let location = locations.last {
+                
             let camera = GMSCameraPosition(target: location.coordinate, zoom: 15, bearing: 0, viewingAngle: 0)
-            
-            //self.googleMapsView.animate(to: camera)
+                
+
             self.googleMapsView.camera = camera
             
             locationManager.stopUpdatingLocation()
@@ -286,3 +337,31 @@ extension FirstViewController: CLLocationManagerDelegate {
         }
     }
 }
+
+/* Code graveyard, should this code be needed again somewhere else.
+ 
+ 
+ let ref = FIRDatabase.database().reference().child("users/\(baseDictionary.value(forKey: "uid")!)/rider/offers/immediate/")
+ 
+ let user = FIRAuth.auth()!.currentUser!
+ 
+ //idk about user.displayName here.
+ 
+ //maybe venmo id is a global var in app delegate with a getter/setter for moments like this.
+ ref.child("\(user.uid)").setValue(["name": user.displayName!, "uid": user.uid, "venmoID": localDelegate.getVenmoID(), "origin": baseDictionary.value(forKey: "origin"), "destination": baseDictionary.value(forKey: "destination"), "rate": baseDictionary.value(forKey: "rate"), "accepted" : 0, "repeats": 0, "duration": "none"]) //value set needs to be all of our info for the snapshot.
+ 
+ print("ride offered") //this one is if you hit the snooze button
+ 
+ self.googleMapsView.clear() //clears the map of all pins so w can show only what w care about.
+ 
+ //make the pin with only the riders info.
+ //make tracker observers etc from only the baseDictionaries uid etc?...
+ 
+ // If the RIDER accepts, we want to go to riderAcceptsSegue
+ performSegue(withIdentifier: "riderAcceptsSegue", sender: self)
+ infoWindow.removeFromSuperview()
+ 
+ // Set Active Trip of Right Drawer to riders name and set it to clickable.
+ 
+ 
+ */
