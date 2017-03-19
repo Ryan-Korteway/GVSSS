@@ -298,7 +298,7 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
             
             //self.googleMapsView.animate(to: camera)
             let currentUser = FIRAuth.auth()!.currentUser
-            self.ref.child("/users/\(currentUser!.uid)/rider/accepted/immediate/\(cellInfo["uid"]!)/origin)").observe( .childChanged, with: { snapshot in
+            self.ref.child("users/\(currentUser!.uid)/rider/accepted/immediate/\(cellInfo["uid"]!)/origin/").observe( .childChanged, with: { snapshot in
                 if(snapshot.key == "lat") {
                     marker.position.latitude = snapshot.value as! CLLocationDegrees
                 } else {
@@ -306,10 +306,10 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
                 }
             }) //hopefully this makes the pins update their locations and then its needed in the driver stuff to set up the driver to update these fields.
             
-            ref.child("/users/\(currentUser!.uid)/rider/accepted/immediate/\(cellInfo["uid"]!)").observeSingleEvent(of: .childRemoved, with:{ snapshot in
+            ref.child("users/\(currentUser!.uid)/rider/accepted/immediate/\(cellInfo["uid"]!)").observeSingleEvent(of: .childRemoved, with:{ snapshot in
                 print("PIN BEING DELETED")
                 marker.map = nil;
-                self.ref.child("/users/\(currentUser!.uid)/rider/accepted/immediate/\(cellInfo["uid"]!)/origin/").removeAllObservers()
+                self.ref.child("users/\(currentUser!.uid)/rider/accepted/immediate/\(cellInfo["uid"]!)/origin/").removeAllObservers()
             })
         
         }

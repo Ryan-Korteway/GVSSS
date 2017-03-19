@@ -184,8 +184,10 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
                 let lat = locationInfo.value(forKey: "lat") as! CLLocationDegrees
                 let long = locationInfo.value(forKey: "long") as! CLLocationDegrees
                 marker.position = CLLocationCoordinate2D(latitude: lat, longitude: long)
-                
-                ref.child("/users/\(cellInfo["uid"]!)/rider/offers/accepted/immediate/\(cellInfo["uid"]!)/origin").observe(.childChanged, with: { snapshot in
+            
+                print("\(cellInfo["uid"]!)")
+            
+                ref.child("users/\(cellInfo["uid"]!)/rider/offers/accepted/immediate/\(cellInfo["uid"]!)/origin").observe(.childChanged, with: { snapshot in
                     print("marker moving!!! \(snapshot.key)")
                     if(snapshot.key == "lat") {
                         marker.position.latitude = snapshot.value as! CLLocationDegrees
@@ -201,10 +203,10 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
                 marker.map = self.googleMap
                 
                 
-                ref.child("/users/\(cellInfo["uid"]!)/rider/accepted/immediate/").observeSingleEvent(of: .childRemoved, with:{ snapshot in
+                ref.child("users/\(cellInfo["uid"]!)/rider/accepted/immediate/").observeSingleEvent(of: .childRemoved, with:{ snapshot in
                     print("PIN BEING DELETED")
                     marker.map = nil;
-                    self.ref.child("/users/\(cellInfo["uid"]!)/rider/accepted/immediate/\(cellInfo["uid"]!)/origin").removeAllObservers()
+                    self.ref.child("users/\(cellInfo["uid"]!)/rider/accepted/immediate/\(cellInfo["uid"]!)/origin").removeAllObservers()
                     
                         //if deleted here, make sure it wasnt an early cancellation.
                     
@@ -478,8 +480,7 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
             marker.title = "Rider: \(cellInfo["name"])"
             marker.map = self.googleMap
             
-            let currentUser = FIRAuth.auth()!.currentUser
-            self.ref.child("/users/\(cellInfo["uid"]!)/rider/accepted/immediate/\(cellInfo["uid"]!)/origin)").observe( .childChanged, with: { snapshot in
+            self.ref.child("users/\(cellInfo["uid"]!)/rider/accepted/immediate/\(cellInfo["uid"]!)/origin/").observe( .childChanged, with: { snapshot in
                 if(snapshot.key == "lat") {
                     marker.position.latitude = snapshot.value as! CLLocationDegrees
                 } else {
@@ -488,10 +489,10 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
             }) //hopefully this makes the pins update their locations and then its needed in the driver stuff to set up the driver to update these fields.
             //once we accept the offer, we will need a .value to get each key to remove each observer before we delete the whole section.
             
-            ref.child("/users/\(cellInfo["uid"]!)/rider/accepted/immediate/\(cellInfo["uid"]!)").observeSingleEvent(of: .childRemoved, with:{ snapshot in
+            ref.child("users/\(cellInfo["uid"]!)/rider/accepted/immediate/\(cellInfo["uid"]!)").observeSingleEvent(of: .childRemoved, with:{ snapshot in
                 print("PIN BEING DELETED")
                 marker.map = nil;
-                self.ref.child("/users/\(cellInfo["uid"]!)/rider/accepted/immediate/\(cellInfo["uid"]!)/origin/").removeAllObservers()
+                self.ref.child("users/\(cellInfo["uid"]!)/rider/accepted/immediate/\(cellInfo["uid"]!)/origin/").removeAllObservers()
             })
         }
     }
