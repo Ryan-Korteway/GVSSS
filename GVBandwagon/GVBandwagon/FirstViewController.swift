@@ -281,24 +281,21 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
     func fillWithAcceptance(item: cellItem) {
         let cellInfo = item.toAnyObject() as! NSDictionary
         let locationInfo: NSDictionary = cellInfo["origin"] as! NSDictionary
-            
-            let ref = FIRDatabase.database().reference().child("users/\(baseDictionary.value(forKey: "uid")!)/rider/offers/immediate/")
-            let marker = GMSMarker()
-            let lat = locationInfo.value(forKey: "lat") as! CLLocationDegrees
-            let long = locationInfo.value(forKey: "long") as! CLLocationDegrees
-            
-            let locValue:CLLocationCoordinate2D = self.locationManager.location!.coordinate
-            print("locations = \(locValue.latitude) \(locValue.longitude)")
-            
-            let user = FIRAuth.auth()!.currentUser!
         
-            marker.position = CLLocationCoordinate2D(latitude: lat, longitude: long)
-            marker.title = "Driver: \(cellInfo["name"])"
-            marker.map = self.googleMapsView
+        let marker = GMSMarker()
+        let lat = locationInfo.value(forKey: "lat") as! CLLocationDegrees
+        let long = locationInfo.value(forKey: "long") as! CLLocationDegrees
+            
+        let locValue:CLLocationCoordinate2D = self.locationManager.location!.coordinate
+        print("locations = \(locValue.latitude) \(locValue.longitude)")
+        
+        marker.position = CLLocationCoordinate2D(latitude: lat, longitude: long)
+        marker.title = "Driver: \(cellInfo["name"])"
+        marker.map = self.googleMapsView
             
             //self.googleMapsView.animate(to: camera)
             let currentUser = FIRAuth.auth()!.currentUser
-            self.ref.child("users/\(currentUser!.uid)/rider/accepted/immediate/\(cellInfo["uid"]!)/origin/").observe( .childChanged, with: { snapshot in
+            self.ref.child("users/\(currentUser!.uid)/rider/accepted/immediate/\(cellInfo["uid"]!)/origin").observe( .childChanged, with: { snapshot in
                 if(snapshot.key == "lat") {
                     marker.position.latitude = snapshot.value as! CLLocationDegrees
                 } else {
@@ -306,10 +303,10 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
                 }
             }) //hopefully this makes the pins update their locations and then its needed in the driver stuff to set up the driver to update these fields.
             
-            ref.child("users/\(currentUser!.uid)/rider/accepted/immediate/\(cellInfo["uid"]!)").observeSingleEvent(of: .childRemoved, with:{ snapshot in
+            self.ref.child("users/\(currentUser!.uid)/rider/accepted/immediate/\(cellInfo["uid"]!)").observeSingleEvent(of: .childRemoved, with:{ snapshot in
                 print("PIN BEING DELETED")
                 marker.map = nil;
-                self.ref.child("users/\(currentUser!.uid)/rider/accepted/immediate/\(cellInfo["uid"]!)/origin/").removeAllObservers()
+                self.ref.child("users/\(currentUser!.uid)/rider/accepted/immediate/\(cellInfo["uid"]!)/origin").removeAllObservers()
             })
         
         }

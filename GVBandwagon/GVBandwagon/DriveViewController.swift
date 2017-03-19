@@ -175,8 +175,10 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
             
                 localDelegate.status = "accepted"
                 let locationInfo: NSDictionary = cellInfo["origin"] as! NSDictionary
-                
-                ref.child("/users/\(cellInfo["uid"]!)/rider/offers/immediate").removeAllObservers()
+            
+                print("we offered a ride to: \(self.localDelegate.offeredID)")
+            
+                ref.child("/users/\(localDelegate.offeredID)/rider/offers/immediate").removeAllObservers()
                 
                 self.googleMap.clear()
                 
@@ -185,9 +187,7 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
                 let long = locationInfo.value(forKey: "long") as! CLLocationDegrees
                 marker.position = CLLocationCoordinate2D(latitude: lat, longitude: long)
             
-                print("\(cellInfo["uid"]!)")
-            
-                ref.child("users/\(cellInfo["uid"]!)/rider/offers/accepted/immediate/\(cellInfo["uid"]!)/origin").observe(.childChanged, with: { snapshot in
+                ref.child("users/\(self.localDelegate.offeredID)/rider/offers/accepted/immediate/\(localDelegate.offeredID)/origin").observe(.childChanged, with: { snapshot in
                     print("marker moving!!! \(snapshot.key)")
                     if(snapshot.key == "lat") {
                         marker.position.latitude = snapshot.value as! CLLocationDegrees
@@ -203,10 +203,10 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
                 marker.map = self.googleMap
                 
                 
-                ref.child("users/\(cellInfo["uid"]!)/rider/accepted/immediate/").observeSingleEvent(of: .childRemoved, with:{ snapshot in
+                ref.child("users/\(self.localDelegate.offeredID)/rider/accepted/immediate/").observeSingleEvent(of: .childRemoved, with:{ snapshot in
                     print("PIN BEING DELETED")
                     marker.map = nil;
-                    self.ref.child("users/\(cellInfo["uid"]!)/rider/accepted/immediate/\(cellInfo["uid"]!)/origin").removeAllObservers()
+                    self.ref.child("users/\(self.localDelegate.offeredID)/rider/accepted/immediate/\(self.localDelegate.offeredID)/origin").removeAllObservers()
                     
                         //if deleted here, make sure it wasnt an early cancellation.
                     
@@ -480,7 +480,7 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
             marker.title = "Rider: \(cellInfo["name"])"
             marker.map = self.googleMap
             
-            self.ref.child("users/\(cellInfo["uid"]!)/rider/accepted/immediate/\(cellInfo["uid"]!)/origin/").observe( .childChanged, with: { snapshot in
+            self.ref.child("users/\(cellInfo["uid"]!)/rider/accepted/immediate/\(cellInfo["uid"]!)/origin").observe( .childChanged, with: { snapshot in
                 if(snapshot.key == "lat") {
                     marker.position.latitude = snapshot.value as! CLLocationDegrees
                 } else {
@@ -492,7 +492,7 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
             ref.child("users/\(cellInfo["uid"]!)/rider/accepted/immediate/\(cellInfo["uid"]!)").observeSingleEvent(of: .childRemoved, with:{ snapshot in
                 print("PIN BEING DELETED")
                 marker.map = nil;
-                self.ref.child("users/\(cellInfo["uid"]!)/rider/accepted/immediate/\(cellInfo["uid"]!)/origin/").removeAllObservers()
+                self.ref.child("users/\(cellInfo["uid"]!)/rider/accepted/immediate/\(cellInfo["uid"]!)/origin").removeAllObservers()
             })
         }
     }
