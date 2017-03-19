@@ -20,6 +20,10 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
     @IBOutlet var onlineMessageView: UIView!
     @IBOutlet var googleMap: GMSMapView!
     
+    // initialize and keep a marker and a custom infowindow
+    var tappedMarker = GMSMarker()
+    var infoWindow = MapMarkerWindow(frame: CGRect(x: 0, y: 0, width: 200, height: 100))
+    
     var isMessageDisplayed = false
     let locationManager = CLLocationManager()
     
@@ -279,8 +283,8 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
                 }
             })
         
-        marker.title = "Potential Rider: \(cellInfo["name"])"
-        marker.snippet = "Close enough to Grand Valley."
+        //marker.title = "Potential Rider: \(cellInfo["name"])"
+        //marker.snippet = "Close enough to Grand Valley."
         marker.icon = GMSMarker.markerImage(with: .green)
         marker.userData = cellInfo //giving each marker a dictionary of the info that set them up for future use.
         marker.map = self.googleMap
@@ -347,10 +351,6 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
     }
     
     // Google Maps functions
-    
-    // initialize and keep a marker and a custom infowindow
-    var tappedMarker = GMSMarker()
-    var infoWindow = MapMarkerWindow(frame: CGRect(x: 0, y: 0, width: 200, height: 100))
     
     //empty the default infowindow
     func mapView(_ mapView: GMSMapView, markerInfoWindow marker: GMSMarker) -> UIView? {

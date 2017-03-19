@@ -10,11 +10,19 @@ import UIKit
 import Firebase
 import GoogleMaps
 
-class FirstViewController: UIViewController, rider_notifications {
+class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notifications {
+    
+    var localDelegate: AppDelegate!
 
     @IBOutlet var rideNowButton: UIButton!
     @IBOutlet var superViewTapGesture: UITapGestureRecognizer!
     @IBOutlet var googleMapsView: GMSMapView!
+    
+    // initialize and keep a marker and a custom infowindow
+    var tappedMarker = GMSMarker()
+    var infoWindow = MapMarkerWindow(frame: CGRect(x: 0, y: 0, width: 200, height: 100))
+    
+    var baseDictionary: NSDictionary = [:]
     
     let locationManager = CLLocationManager()
 
@@ -51,7 +59,7 @@ class FirstViewController: UIViewController, rider_notifications {
         
         self.createMap()
         
-        let localDelegate = UIApplication.shared.delegate as! AppDelegate
+        localDelegate = UIApplication.shared.delegate as! AppDelegate
         print("delegate being set")
         localDelegate.firstViewController = self; //hopefully this cast is okay.
         localDelegate.firstSet = true;
@@ -90,6 +98,7 @@ class FirstViewController: UIViewController, rider_notifications {
         
         self.googleMapsView.isMyLocationEnabled = true
         self.googleMapsView.settings.myLocationButton = true
+        self.googleMapsView.delegate = self
         
 //        let marker = GMSMarker()
 //        marker.position = CLLocationCoordinate2D(latitude: 51.507351, longitude: -0.127758)
@@ -106,8 +115,6 @@ class FirstViewController: UIViewController, rider_notifications {
             locationManager.startUpdatingLocation()
             
         }
-        
-        
     }
     
     func isRider() -> Bool {
@@ -128,11 +135,14 @@ class FirstViewController: UIViewController, rider_notifications {
         let marker = GMSMarker()
         let lat = locationInfo.value(forKey: "lat") as! CLLocationDegrees
         let long = locationInfo.value(forKey: "long") as! CLLocationDegrees
+        
+        print("Lat and Long: \(lat) : \(long)")
 
         marker.position = CLLocationCoordinate2D(latitude: lat, longitude: long)
-        marker.title = "Driver: \(cellInfo["name"])"
-        marker.snippet = "Close enough to Grand Valley."
+        //marker.title = "Driver: \(cellInfo["name"])"
+        //marker.snippet = "Close enough to Grand Valley."
         marker.map = self.googleMapsView
+        marker.userData = cellInfo
         
         let currentUser = FIRAuth.auth()!.currentUser
         self.ref.child("/users/\(currentUser!.uid)/rider/offers/immediate/\(cellInfo["uid"]!)/origin)").observe( .childChanged, with: { snapshot in

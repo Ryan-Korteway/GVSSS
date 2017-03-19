@@ -188,31 +188,41 @@ UINavigationControllerDelegate {
         
         // Capture the image path for uploading to Firebase:
         //let url: NSURL = info.value(forKey: "UIImagePickerControllerReferenceURL") as! NSURL
-        let url = info["UIImagePickerControllerReferenceURL"] as! NSURL
+        let url = info["UIImagePickerControllerReferenceURL"] as! URL
         //print("Image path: \(url.absoluteString)")
         
-        self.updateProfilePic(localFile: url)
+        self.updateProfilePic(info: info)
     }
     
-    func updateProfilePic(localFile: NSURL) {
+    func updateProfilePic(info: [String : Any]) {
+        
+        let imageUrl          = info[UIImagePickerControllerReferenceURL] as! NSURL
+        let imageName         = imageUrl.lastPathComponent
+        let documentDirectory = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first!
+        let photoURL          = NSURL(fileURLWithPath: documentDirectory)
+        let localPath         = photoURL.appendingPathComponent(imageName!)
+        let image             = info[UIImagePickerControllerOriginalImage]as! UIImage
+        let data              = UIImageJPEGRepresentation(image, 0.0)
+        
+        //let localFile = URL(string: localPath)!
+
         
         let storage = FIRStorage.storage()
         let storageRef = storage.reference()
         
         // Create a reference to 'images/profilepic.jpg'
-        let profileImageRef = storageRef.child("images/\(self.userID)/profilepic.jpg")
+        let profileImageRef = storageRef.child("images/\(self.userID!)/profilepic.jpg")
 
-        print("Path from update: \(localFile.absoluteString)")
+        print("Path from update: \(localPath?.absoluteString)")
             
         // Upload the file to the path "images/rivers.jpg"
-        let uploadTask = profileImageRef.putFile(localFile as URL, metadata: nil) { metadata, error in
-            if let error = error {
+        let uploadTask = profileImageRef.put(data!, metadata: nil) { (metadata, error) in
+            guard let metadata = metadata else {
                 // Uh-oh, an error occurred!
-                print(error.localizedDescription)
-            } else {
-                // Metadata contains file metadata such as size, content-type, and download URL.
-                let downloadURL = metadata!.downloadURL()
+                return
             }
+            // Metadata contains file metadata such as size, content-type, and download URL.
+            let downloadURL = metadata.downloadURL
         }
     }
 }

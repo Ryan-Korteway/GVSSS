@@ -11,10 +11,19 @@ import UIKit
 class MenuTableViewController: UITableViewController {
 
     @IBOutlet var modeLabel: UILabel!
-
+    @IBOutlet var profilePicImageView: UIImageView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        /*
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        
+        
+        if let drawerVC = appDelegate.drawerViewController as? CustomKGDrawerViewController {
+            self.profilePicImageView.image = drawerVC.profileImage
+        }
+         */
 
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
