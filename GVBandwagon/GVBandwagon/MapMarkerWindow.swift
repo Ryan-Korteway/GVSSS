@@ -35,7 +35,7 @@ class MapMarkerWindow: UIView {
     
     override func draw(_ rect: CGRect) {
         
-        self.addSubview(nameLabel)
+        self.addSubview(nameLabel) //didn't put offer button into the subview which is why it didn't appear.
         self.addSubview(destLabel)
         self.addSubview(rateLabel)
         self.addSubview(acceptButton)
@@ -94,6 +94,7 @@ class MapMarkerWindow: UIView {
         declineButton.titleLabel?.textAlignment = .center
         declineButton.setTitle("Decline", for: .normal)
         
+        offerButton.center = CGPoint(x: 50, y: 75)
         offerButton.setTitleColor(UIColor.white, for: .normal)
         offerButton.setTitle("Offer", for: .normal)
         offerButton.titleLabel?.textAlignment = .center

@@ -567,7 +567,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 
             } else if (self.status == "offer") {
                 
-                if(self.mode == "rider") {
+                if(self.mode == "rider") { //updating location to the wrong place, or request is changing status too soon.
                     ref.child("users/\(ourID)/rider/offers/immediate/\(ourID)/origin").setValue(["lat": self.ourlat, "long": self.ourlong]);
                 } else {
                     ref.child("users/\(self.offeredID)/rider/offers/immediate/\(ourID)/origin").setValue(["lat": self.ourlat, "long": self.ourlong]);
@@ -575,9 +575,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             } else if (self.status == "accepted") {
                 
                 if(self.mode == "rider") {
-                    ref.child("users/\(ourID)/rider/accepted/immediate/\(ourID)/origin").setValue(["lat": self.ourlat, "long": self.ourlong]);
+                    ref.child("users/\(ourID)/rider/offers/accepted/immediate/\(ourID)/origin").setValue(["lat": self.ourlat, "long": self.ourlong]);
                 } else {
-                    ref.child("users/\(self.offeredID)/rider/accepted/immediate/\(ourID)/origin").setValue( ["lat": self.ourlat, "long": self.ourlong]);
+                    ref.child("users/\(self.offeredID)/rider/offers/accepted/immediate/\(ourID)/origin").setValue( ["lat": self.ourlat, "long": self.ourlong]);
                 }
             } else {
                 print("something up with timer")
@@ -609,19 +609,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func startDriverMapObservers() {
         
         let ref = FIRDatabase.database().reference()
-        let userID = FIRAuth.auth()!.currentUser!.uid
         
-        if(status == "request") { // THIS IS GOOD.
-            //this isnt even the right code/observer to calling if in request status....
+        if(status == "request") {
             
             ref.child("requests/immediate").observe( .childAdded, with: { snapshot in //.value allows us to see adds, removes, and lat/long updates.
                 //if we are in a riders portion of the app, currentViewController has rider offers function, call it, there we load the view however we want.
-                //let current = self.window?.rootViewController?.presentedViewController //not sure if this is the view controller we want.
-                
                 
                 print("\n\n REQUEST OBSERVED!! \n\n")
                 
-                if(snapshot.value is NSNull) {
+                if(snapshot.value == nil) {
                     print("snapshot null, doing nothing");
                 } else {
                     
@@ -645,6 +641,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             
             //watched the offered path for deletions and then call ride accepted in the driver view controller.
             ref.child("/users/\(self.offeredID)/rider/offers/immediate").observe( .childRemoved, with: { snapshot in
+                
+                //need a check potentially to make sure that 
+                
                 (self.DriveViewController_AD as! DriveViewController).ride_accept(item: cellItem.init(snapshot: snapshot))
                 //acceptsToWatch = acceptsToWatch.adding(toWatchUid) as NSArray; //not sure about where this line should go. its purpose is to track which userID needs to be watched when we call the closed observer set up function.
             })
@@ -662,7 +661,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let ref = FIRDatabase.database().reference()
         let userID = FIRAuth.auth()!.currentUser!.uid
         
-        if(status == "offer") {
+        print("our status: \(status)")
+        
+        if(status == "request") {
             //this isnt even the right code/observer to calling if in request status....
             
             ref.child("users/\(userID)/rider/offers/immediate").observe( .childAdded, with: { snapshot in //.value allows us to see adds, removes, and lat/long updates.
@@ -672,16 +673,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 
                 print("\n\n offer OBSERVED!! \n\n")
                 
-                if(snapshot.value is NSNull) {
+                if(snapshot.value == nil) {
                     print("snapshot null, doing nothing");
                 } else {
                     
                     //and again need switch for casting etc.
-                    if( !self.DriveSet) {
+                    if( !self.firstSet) {
                         print("rider view controller not ready yet.")
                         
-                    } else{
-                        (self.firstViewController as! FirstViewController).ride_offer(item: cellItem.init(snapshot: snapshot))
+                    } else {
+                            (self.firstViewController as! FirstViewController).ride_offer(item: cellItem.init(snapshot: snapshot))
                     }
                     
                 }

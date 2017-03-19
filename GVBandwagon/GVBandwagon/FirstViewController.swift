@@ -151,8 +151,12 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
         marker.map = self.googleMapsView
         marker.userData = cellInfo
         
+        print("our driver uid \(cellInfo["uid"]!)")
+        
         let currentUser = FIRAuth.auth()!.currentUser
-        self.ref.child("/users/\(currentUser!.uid)/rider/offers/immediate/\(cellInfo["uid"]!)/origin)").observe( .childChanged, with: { snapshot in
+        self.ref.child("users/\(currentUser!.uid)/rider/offers/immediate/\(cellInfo["uid"]!)/origin").observe( .childChanged, with: { snapshot in
+            
+                print("\(snapshot.key)")
             if(snapshot.key == "lat") {
                 marker.position.latitude = snapshot.value as! CLLocationDegrees
             } else {
@@ -161,7 +165,7 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
         }) //hopefully this makes the pins update their locations and then its needed in the driver stuff to set up the driver to update these fields.
         //once we accept the offer, we will need a .value to get each key to remove each observer before we delete the whole section.
         
-        ref.child("/users/\(currentUser!.uid)/rider/offers/immediate/\(cellInfo["uid"]!)").observeSingleEvent(of: .childRemoved, with:{ snapshot in
+        ref.child("users/\(currentUser!.uid)/rider/offers/immediate/\(cellInfo["uid"]!)").observeSingleEvent(of: .childRemoved, with:{ snapshot in
             print("PIN BEING DELETED")
             marker.map = nil;
             self.ref.child("users/\(currentUser!.uid)/rider/offers/immediate/\(cellInfo["uid"]!)/origin").removeAllObservers()
@@ -221,19 +225,26 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
         let user = FIRAuth.auth()!.currentUser!
         let cellInfo: NSDictionary = item
         let ref = FIRDatabase.database().reference().child("users/\(user.uid)/rider/")
+        let topRef = FIRDatabase.database().reference()
+        
+        topRef.child("requests/immediate/\(user.uid)").removeValue()
         
         print("our driver uid \(cellInfo.value(forKey: "uid")!)")
-            
+        
         print("our cellInfo \(cellInfo.description)")
             
         ref.child("offers/immediate/\(cellInfo.value(forKey: "uid")!)/accepted").setValue(1); //set the accepted drivers accepted value to 1.
         
-        ref.child("offers/accepted/").setValue(cellInfo) //create an accepted branch of the riders table
+        cellInfo.setValue(1, forKeyPath: "accepted")
         
-        ref.child("offers/immediate/").removeValue() //remove the offers immediate branch from the riders account so that the drivers are able to observe the destruction and if they were selected or not.
+        print("our cellInfo now \(cellInfo.description)")
+        
+        ref.child("offers/accepted/immediate/").setValue(cellInfo) //create an accepted branch of the riders table
         
         let localDelegate = UIApplication.shared.delegate as! AppDelegate
         localDelegate.status = "accepted"
+            
+        ref.child("offers/immediate/").removeValue() //remove the offers immediate branch from the riders account so that the drivers are able to observe the destruction and if they were selected or not.
         
         self.googleMapsView.clear()
         
