@@ -358,7 +358,7 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
         
         marker.title = "Potential Rider: \(cellInfo["name"])"
         marker.snippet = "Wants a ride to: (ADDRESS HERE) for $(money here)."
-        marker.icon = GMSMarker.markerImage(with: .red)
+        marker.icon = GMSMarker.markerImage(with: .blue)
         marker.userData = cellInfo //giving each marker a dictionary of the info that set them up for future use.
         marker.map = self.googleMap
         
