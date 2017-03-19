@@ -53,7 +53,7 @@ class DriverPanelViewController: UIViewController {
         
             localDelegate.changeMode(mode: "driver")
             localDelegate.startTimer()
-            localDelegate.startRiderObservers()
+            localDelegate.startDriverMapObservers()
         } else {
             // Remove driver from active driver list
             ref.child("/activedrivers/\(ourid)").removeValue();
@@ -74,6 +74,8 @@ class DriverPanelViewController: UIViewController {
         //self.performSegue(withIdentifier: "driverAcceptsRide", sender: self)
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         let centerVC = appDelegate.centerViewController
+        
+        //EITHER WAY THE SEGUE SHOULD PROVIDE THE RECIEVING VIEW CONTROLLER A CELL ITEM OF DATA TO PULL FROM
         
         if (self.mode == "Ride") {
             let rideVC = centerVC.childViewControllers[0]

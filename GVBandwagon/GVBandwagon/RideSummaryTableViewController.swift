@@ -122,5 +122,12 @@ class RideSummaryTableViewController: UITableViewController {
         // Pass the selected object to the new view controller.
     }
     */
+    
+    func payDriver() {
+        
+        //TO DO PASS IN THE MARKERS USER DATA WHATEVER SO THAT THE VENMO ID AND RATE CAN BE PULLED OUT TO BE USED TO PAY THE DRIVER.
+        
+        //UIApplication.shared.open(NSURL(string:"https://venmo.com/?txn=pay&audience=private&recipients=@\(venmoID)&amount=\(rate)&note=GVB") as! URL, options: [:], completionHandler: nil)
+    }
 
 }

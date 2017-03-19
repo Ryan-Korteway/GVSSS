@@ -9,6 +9,7 @@
 import UIKit
 import KGFloatingDrawer
 import Firebase
+import FirebaseStorage
 
 class CustomKGDrawerViewController: KGDrawerViewController {
     

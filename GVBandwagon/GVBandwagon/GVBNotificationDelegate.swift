@@ -45,13 +45,13 @@ class GVBNotificationDelegate: NSObject, UNUserNotificationCenterDelegate {
             //here we would offer the rider a ride by populating the proper fields/path in that riders profile.
             
             let ref = FIRDatabase.database().reference().child("users/\(notification.userInfo["uid"]!)/rider/offers/immediate/")
-            
+            localDelegate.offeredID = notification.userInfo["uid"] as! String
             let user = FIRAuth.auth()!.currentUser!
             
             //idk about user.displayName here.
             
             //maybe venmo id is a global var in app delegate with a getter/setter for moments like this.
-            ref.child("\(user.uid)").setValue(["name": user.displayName!, "uid": user.uid, "venmoID": "idk where/how to get this", "origin": notification.userInfo["origin"], "destination": notification.userInfo["destination"], "rate": notification.userInfo["rate"], "accepted" : 0, "repeats": 0, "duration": "none"]) //value set needs to be all of our info for the snapshot.
+            ref.child("\(user.uid)").setValue(["name": user.displayName!, "uid": user.uid, "venmoID": localDelegate.getVenmoID(), "origin": notification.userInfo["origin"], "destination": notification.userInfo["destination"], "rate": notification.userInfo["rate"], "accepted" : 0, "repeats": 0, "duration": "none"]) //value set needs to be all of our info for the snapshot.
             
             localDelegate.changeStatus(status: "offer")
             
@@ -63,13 +63,13 @@ class GVBNotificationDelegate: NSObject, UNUserNotificationCenterDelegate {
             
             let user = FIRAuth.auth()!.currentUser!
             
-            let ref = FIRDatabase.database().reference().child("users/\(user.uid)/rider/offers/")
+            let ref = FIRDatabase.database().reference().child("users/\(user.uid)/rider/")
             
-            ref.child("immediate/\(notification.userInfo["uid"]!)/accepted").setValue(1); //set the accepted drivers accepted value to 1.
+            ref.child("offers/immediate/\(notification.userInfo["uid"]!)/accepted").setValue(1); //set the accepted drivers accepted value to 1.
 
-            ref.child("/accepted/").setValue(notification.userInfo) //create an accepted branch of the riders table
+            ref.child("/accepted/immediate/").setValue(notification.userInfo) //create an accepted branch of the riders table
             
-            ref.child("/immediate/").removeValue() //remove the offers immediate branch from the riders account so that the drivers are able to observe the destruction and if they were selected or not.
+            ref.child("offers/immediate/").removeValue() //remove the offers immediate branch from the riders account so that the drivers are able to observe the destruction and if they were selected or not.
             
             localDelegate.changeStatus(status: "accepted")
             

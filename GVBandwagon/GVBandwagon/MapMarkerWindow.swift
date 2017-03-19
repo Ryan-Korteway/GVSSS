@@ -15,6 +15,7 @@ class MapMarkerWindow: UIView {
     let rateLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 100, height: 20))
     let acceptButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 20))
     let declineButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 20))
+    let offerButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 20))
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -92,6 +93,10 @@ class MapMarkerWindow: UIView {
         declineButton.setTitleColor(UIColor.white, for: .normal)
         declineButton.titleLabel?.textAlignment = .center
         declineButton.setTitle("Decline", for: .normal)
+        
+        offerButton.setTitleColor(UIColor.white, for: .normal)
+        offerButton.setTitle("Offer", for: .normal)
+        offerButton.titleLabel?.textAlignment = .center
     }
     
     override func updateConstraints() {

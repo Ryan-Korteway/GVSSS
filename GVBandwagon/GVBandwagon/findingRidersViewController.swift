@@ -11,6 +11,9 @@ import Firebase
 
 class findingRidersViewController: UIViewController {
     
+    
+    //do we use this class at all anymore? its totally unnecessary looking...
+    
     let currentUser = FIRAuth.auth()!.currentUser
     
     let ref = FIRDatabase.database().reference()

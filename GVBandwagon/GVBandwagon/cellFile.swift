@@ -86,6 +86,7 @@ struct cellItem {
 //  of changes to their request status could be to see the map change from "all active drivers" to the "offering drivers" to "The accepted driver" etc.
 protocol rider_notifications {
     func ride_offer(item: cellItem) -> Void
+    func ride_accept(item: cellItem) -> Void
     func isRider() -> Bool
     func isDriver() -> Bool
 }
