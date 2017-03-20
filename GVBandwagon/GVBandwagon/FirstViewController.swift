@@ -253,6 +253,7 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
             
             //call make pins function.
             localDelegate.startRiderMapObservers()
+            
         })
         
     }
