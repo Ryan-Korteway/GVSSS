@@ -10,6 +10,7 @@ import UIKit
 import Firebase
 import GoogleMaps
 
+//TODO: Each viewDidLoad, check didLoadMapsYet and set googleMapsView = persisted map.  
 class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notifications {
     
     var localDelegate: AppDelegate!
@@ -103,25 +104,24 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
     }
     
     func createMap() {
-        
+// TODO: Need to do these every time?
         self.googleMapsView.isMyLocationEnabled = true
         self.googleMapsView.settings.myLocationButton = true
         self.googleMapsView.delegate = self
-        
+            
 //        let marker = GMSMarker()
 //        marker.position = CLLocationCoordinate2D(latitude: 51.507351, longitude: -0.127758)
 //        marker.title = "Driver"
 //        marker.snippet = "Close enough to Grand Valley."
 //        marker.icon = GMSMarker.markerImage(with: .blue) //custom icon color code here.
         // can also do marker.icon = UIImage(named: "house") and then our app would just have to have a house.png file in it to use that marker. better to use a constant to hold that UIImage and to set the icon off of that instead of doing lots of redeclarations/assignments fresh each time.
-        //marker.map = self.googleMapsView
+            //marker.map = self.googleMapsView
         if CLLocationManager.locationServicesEnabled() {
             locationManager.requestAlwaysAuthorization()
             locationManager.requestWhenInUseAuthorization()
             locationManager.delegate = self
             locationManager.desiredAccuracy = kCLLocationAccuracyBest
             locationManager.startUpdatingLocation()
-            
         }
     }
     
@@ -317,7 +317,7 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
                 self.ref.child("users/\(currentUser!.uid)/rider/offers/accepted/immediate/driver/\(cellInfo["uid"]!)/origin").removeAllObservers()
             })
         
-        }
+    }
 }
 
 extension FirstViewController: CLLocationManagerDelegate {
