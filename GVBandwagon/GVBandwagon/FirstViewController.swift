@@ -316,7 +316,6 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
                 marker.map = nil;
                 self.ref.child("users/\(currentUser!.uid)/rider/offers/accepted/immediate/driver/\(cellInfo["uid"]!)/origin").removeAllObservers()
             })
-        
     }
 }
 

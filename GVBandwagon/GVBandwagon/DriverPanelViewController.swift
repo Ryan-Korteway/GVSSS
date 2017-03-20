@@ -74,7 +74,7 @@ class DriverPanelViewController: UIViewController {
         
         // If there is an active trip, load the summary.
         //self.performSegue(withIdentifier: "driverAcceptsRide", sender: self)
-        var appDelegate = UIApplication.shared.delegate as! AppDelegate
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         let centerVC = appDelegate.centerViewController
         
         //EITHER WAY THE SEGUE SHOULD PROVIDE THE RECIEVING VIEW CONTROLLER A CELL ITEM OF DATA TO PULL FROM
