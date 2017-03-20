@@ -84,7 +84,7 @@ class MapMarkerWindow: UIView {
         //self.addConstraint(y)
         
         acceptButton.setTitleColor(UIColor.white, for: .normal)
-        acceptButton.setTitle("Accept", for: .normal)
+        acceptButton.setTitle("Offer", for: .normal)
         acceptButton.titleLabel?.textAlignment = .center
         
         declineButton.center = CGPoint(x: 150, y: 75)
@@ -94,9 +94,11 @@ class MapMarkerWindow: UIView {
         declineButton.titleLabel?.textAlignment = .center
         declineButton.setTitle("Decline", for: .normal)
         
+        /* Don't need another button, just change text of the one we have above.
         offerButton.setTitleColor(UIColor.white, for: .normal)
         offerButton.setTitle("Offer", for: .normal)
         offerButton.titleLabel?.textAlignment = .center
+        */
     }
     
     override func updateConstraints() {

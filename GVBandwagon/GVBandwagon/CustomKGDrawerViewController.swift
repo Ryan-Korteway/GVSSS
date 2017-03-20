@@ -8,9 +8,10 @@
 
 import UIKit
 import KGFloatingDrawer
+import GoogleMaps
 
 class CustomKGDrawerViewController: KGDrawerViewController {
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
