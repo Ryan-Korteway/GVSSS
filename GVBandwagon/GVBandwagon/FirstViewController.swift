@@ -274,6 +274,7 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
         print("Accept Tapped.")
         
         ride_accept(item: baseDictionary) //local cell assignment might be bad/fail here.
+        infoWindow.removeFromSuperview()
     }
     
     

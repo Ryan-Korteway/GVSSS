@@ -27,9 +27,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var timer = Timer()
     
+    //--- THE KEY VARIABLES WE WOULD HAVE TO STORE IN FIREBASE AND RETRIEVE BETWEEN LAUNCHES TO RESUME WHERE WE LEFT OFF.
     var status = "request";
     var mode = "rider";
     var offeredID = "none"; //the id of the offered rider, to be set when we offer a ride to someone.
+    //---------------------------
     
     var locationManager = CLLocationManager()
     
@@ -66,7 +68,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                                              title: "dismiss notification", options: [.destructive])
     
     let acceptAction = UNNotificationAction(identifier: "accept", title: "Accept offer", options: []) //open the app to the ride details page or leave it be?
-    
     
     var categoryOffer: UNNotificationCategory
     
@@ -612,8 +613,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         if(status == "request") {
             
-            ref.child("requests/immediate").observe( .childAdded, with: { snapshot in //.value allows us to see adds, removes, and lat/long updates.
-                //if we are in a riders portion of the app, currentViewController has rider offers function, call it, there we load the view however we want.
+            ref.child("requests/immediate").observe( .childAdded, with: { snapshot in //observe single event of .value which allows us to loop through each pin/request to properly recreate the map.
                 
                 print("\n\n REQUEST OBSERVED!! \n\n")
                 
