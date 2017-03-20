@@ -93,12 +93,6 @@ class MapMarkerWindow: UIView {
         declineButton.setTitleColor(UIColor.white, for: .normal)
         declineButton.titleLabel?.textAlignment = .center
         declineButton.setTitle("Decline", for: .normal)
-        
-        /* Don't need another button, just change text of the one we have above.
-        offerButton.setTitleColor(UIColor.white, for: .normal)
-        offerButton.setTitle("Offer", for: .normal)
-        offerButton.titleLabel?.textAlignment = .center
-        */
     }
     
     override func updateConstraints() {
