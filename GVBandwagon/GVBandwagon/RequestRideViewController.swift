@@ -93,7 +93,7 @@ class RequestRideViewController: UIViewController {
         ref.child("requests/immediate/\(currentUser!.uid)/").setValue(["name": currentUser!.displayName!, "uid": currentUser!.uid, "venmoID": "none", "origin": ["lat": currentLat, "long": currentLong], "destination": self.goingTo, "rate" : 15, "accepted": 0, "repeats": 0, "duration": "none"]) //locations being sent here.
         
         localDelegate.startTimer();
-        localDelegate.status = "offer"
+        //localDelegate.status = "offer"
         _ = self.navigationController?.popViewController(animated: true)
     }
     

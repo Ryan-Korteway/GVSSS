@@ -35,7 +35,7 @@ class MapMarkerWindow: UIView {
     
     override func draw(_ rect: CGRect) {
         
-        self.addSubview(nameLabel)
+        self.addSubview(nameLabel) //didn't put offer button into the subview which is why it didn't appear.
         self.addSubview(destLabel)
         self.addSubview(rateLabel)
         self.addSubview(acceptButton)
