@@ -24,8 +24,6 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
     
     var baseDictionary: NSDictionary = [:]
     
-    //var localCell = cellItem(start: ["name":"filler", "uid": "filler", "venmoID": "filler", "origin": ["lat": 0.0, "long": 0.0], "destination": ["longitude": 0.0, "latitude": 0.0], "rate": 0, "accepted": 0, "repeats": 0, "duration": "none"])
-    
     let locationManager = CLLocationManager()
 
     let ref = FIRDatabase.database().reference()
