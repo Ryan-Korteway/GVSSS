@@ -7,21 +7,30 @@
 //
 
 import UIKit
+import Firebase
 
 class MenuTableViewController: UITableViewController {
 
+    @IBOutlet var firstNameLabel: UILabel!
     @IBOutlet var modeLabel: UILabel!
     @IBOutlet var profilePicImageView: UIImageView!
+    
+    var appDelegate: AppDelegate!
+    
+    // Get a reference to the storage service using the default Firebase App
+    let storage = FIRStorage.storage()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        /*
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        self.getProfilePicFromFB()
         
+        /*
+        appDelegate = UIApplication.shared.delegate as! AppDelegate
         
         if let drawerVC = appDelegate.drawerViewController as? CustomKGDrawerViewController {
-            self.profilePicImageView.image = drawerVC.profileImage
+            self.profilePicImageView.image = drawerVC.profileImageArray[0]
+            print("Created drawerVC correctly.")
         }
          */
 
@@ -62,6 +71,12 @@ class MenuTableViewController: UITableViewController {
         }
     }
     
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let headerView = UIView()
+        headerView.backgroundColor = UIColor.clear
+        return headerView
+    }
+    
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         
@@ -88,7 +103,7 @@ class MenuTableViewController: UITableViewController {
         } else if (indexPath.section == 5) {
             // enter help
             appDelegate.centerViewController = appDelegate.helpViewController()
-        } else {
+        } else if (indexPath.section == 6) {
             //sign out
             appDelegate.firebaseSignOut()
         }
@@ -148,4 +163,41 @@ class MenuTableViewController: UITableViewController {
         // Pass the selected object to the new view controller.
     }
     */
+    
+    func getProfilePicFromFB() {
+        
+        // Image references
+        let storageRef = storage.reference()
+        let userID = FIRAuth.auth()!.currentUser!.uid
+        
+        // Create a reference to 'images/profilepic.jpg'
+        let profileImageRef = storageRef.child("images/\(userID)/profilepic.jpg")
+        
+        // TODO: Compress Images before UPLOAD!
+        // Download in memory with a maximum allowed size of 1MB (1 * 1024 * 1024 bytes)
+        profileImageRef.data(withMaxSize: 1 * 1024 * 1024) { data, error in
+            if let error = error {
+                print("Error occurred: \(error.localizedDescription)")
+            } else {
+                // Data for "images/profilepic.jpg" is returned
+                let image = UIImage(data: data!)
+                self.profilePicImageView.image = image
+
+            }
+        }
+        
+        // Get the user's name:
+        let ref = FIRDatabase.database().reference();
+        
+        ref.child("users/\(userID)").observeSingleEvent(of: .value, with: { (snapshot) in
+            // Get user value
+            let value = snapshot.value as? NSDictionary
+            let name = value?["name"] as? String ?? ""
+            self.firstNameLabel.text = name
+            
+            // ...
+        }) { (error) in
+            print(error.localizedDescription)
+        }
+    }
 }

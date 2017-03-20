@@ -180,6 +180,7 @@ UINavigationControllerDelegate {
         
         if let image = info[UIImagePickerControllerEditedImage] as? UIImage {
             self.profilePicView.image = image
+            self.setMenuProfilePic(image: image)
         } else if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
             self.profilePicView.image = image
         } else {
@@ -196,6 +197,9 @@ UINavigationControllerDelegate {
     
     func updateProfilePic(info: [String : Any]) {
         
+        let storage = FIRStorage.storage()
+        let storageRef = storage.reference()
+        
         let imageUrl          = info[UIImagePickerControllerReferenceURL] as! NSURL
         let imageName         = imageUrl.lastPathComponent
         let documentDirectory = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first!
@@ -203,12 +207,6 @@ UINavigationControllerDelegate {
         let localPath         = photoURL.appendingPathComponent(imageName!)
         let image             = info[UIImagePickerControllerOriginalImage]as! UIImage
         let data              = UIImageJPEGRepresentation(image, 0.0)
-        
-        //let localFile = URL(string: localPath)!
-
-        
-        let storage = FIRStorage.storage()
-        let storageRef = storage.reference()
         
         // Create a reference to 'images/profilepic.jpg'
         let profileImageRef = storageRef.child("images/\(self.userID!)/profilepic.jpg")
@@ -223,6 +221,13 @@ UINavigationControllerDelegate {
             }
             // Metadata contains file metadata such as size, content-type, and download URL.
             let downloadURL = metadata.downloadURL
+        }
+    }
+    
+    func setMenuProfilePic(image: UIImage) {
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        if let leftVC = appDelegate.drawerViewController.leftViewController as? MenuTableViewController {
+            leftVC.profilePicImageView.image = image
         }
     }
 }
