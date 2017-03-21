@@ -38,9 +38,8 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
-        self.navigationController?.navigationBar.shadowImage = UIImage()
-        self.navigationController?.navigationBar.isTranslucent = true
+        
+        self.navigationController?.navigationBar.isHidden = true
     
         // Custom button design. We should put this in its own clas later.
         if shadowLayer == nil {
@@ -96,10 +95,14 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
     }
     
     @IBAction func onUserPanelTapped(_ sender: Any) {
+        
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         appDelegate.toggleRightDrawer(sender: sender as AnyObject, animated: false)
+        
         if let panelVC = appDelegate.drawerViewController.rightViewController as? DriverPanelViewController {
             panelVC.mode = "Ride"
+            panelVC.goOnlineSwitch.isHidden = true
+            panelVC.goOnlineLabel.isHidden = true
         }
     }
     

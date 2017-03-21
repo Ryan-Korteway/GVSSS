@@ -10,6 +10,14 @@ import UIKit
 import Firebase
 
 class RequestRideViewController: UIViewController {
+    
+    @IBOutlet var monSwitch: UISwitch!
+    @IBOutlet var tuesSwitch: UISwitch!
+    @IBOutlet var wedSwitch: UISwitch!
+    @IBOutlet var thurSwitch: UISwitch!
+    @IBOutlet var friSwitch: UISwitch!
+    @IBOutlet var satSwitch: UISwitch!
+    @IBOutlet var sunSwitch: UISwitch!
 
     @IBOutlet var cancelButton: UIBarButtonItem!
     @IBOutlet var submitButton: UIBarButtonItem!
@@ -23,11 +31,15 @@ class RequestRideViewController: UIViewController {
     let currentUser = FIRAuth.auth()!.currentUser
     let localDelegate = UIApplication.shared.delegate as! AppDelegate
     
+    var freqArray = [String]()
+    
     var startingFrom: NSDictionary = ["lat": 43.013570, "long": -85.775875 ]
     var goingTo: NSDictionary = ["latitude": 42.013570, "longitude": -85.775875]
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.configSwitches()
         
         //self.freqView.frame = CGRect(x: self.freqView.frame.origin.x, y: self.freqView.frame.origin.y, width: self.freqView.frame.width, height: 0)
         
@@ -42,6 +54,7 @@ class RequestRideViewController: UIViewController {
         } else {
             self.animateElements(isOn: false)
         }
+       
     }
 
     override func didReceiveMemoryWarning() {
@@ -52,12 +65,12 @@ class RequestRideViewController: UIViewController {
     func animateElements(isOn: Bool) -> Void {
         
         var newHeight: CGFloat = 0
-        var newY: CGFloat = -200
+        var newY: CGFloat = -300
         var newAlpha: CGFloat = 0
         
         if (isOn) {
-            newHeight = 200
-            newY = 200
+            newHeight = 300
+            newY = 300
             newAlpha = 1
         }
         
@@ -80,7 +93,9 @@ class RequestRideViewController: UIViewController {
     }
     
     @IBAction func submitTapped(_ sender: UIButton) {
-        // Do something
+        
+        self.getSwitchInfo()
+        
         //all this to be moved into new view controller logic at some point.
         
         //SELF GOING TO NEED REPLACING WITH THE SEARCHING OF A DESTINATION FROM THE PAGE.
@@ -95,6 +110,10 @@ class RequestRideViewController: UIViewController {
         localDelegate.startTimer();
         //localDelegate.status = "offer"
         _ = self.navigationController?.popViewController(animated: true)
+        
+        for day in freqArray {
+            print(day)
+        }
     }
     
     /*
@@ -106,5 +125,47 @@ class RequestRideViewController: UIViewController {
         // Pass the selected object to the new view controller.
     }
     */
+    
+    func configSwitches() {
+        self.monSwitch.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
+        self.tuesSwitch.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
+        self.wedSwitch.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
+        self.thurSwitch.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
+        self.friSwitch.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
+        self.satSwitch.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
+        self.sunSwitch.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
+        
+        self.monSwitch.setOn(false, animated: false)
+        self.tuesSwitch.setOn(false, animated: false)
+        self.wedSwitch.setOn(false, animated: false)
+        self.thurSwitch.setOn(false, animated: false)
+        self.friSwitch.setOn(false, animated: false)
+        self.satSwitch.setOn(false, animated: false)
+        self.sunSwitch.setOn(false, animated: false)
+    }
+    
+    func getSwitchInfo() {
+        if monSwitch.isOn {
+            freqArray.append("Monday")
+        }
+        if tuesSwitch.isOn {
+            freqArray.append("Tuesday")
+        }
+        if wedSwitch.isOn {
+            freqArray.append("Wednesday")
+        }
+        if thurSwitch.isOn {
+            freqArray.append("Thursday")
+        }
+        if friSwitch.isOn {
+            freqArray.append("Friday")
+        }
+        if satSwitch.isOn {
+            freqArray.append("Saturday")
+        }
+        if sunSwitch.isOn {
+            freqArray.append("Sunday")
+        }
+    }
 
 }

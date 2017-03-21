@@ -13,6 +13,7 @@ import GoogleMaps
 
 class DriverPanelViewController: UIViewController {
 
+    @IBOutlet var goOnlineLabel: UILabel!
     @IBOutlet var goOnlineSwitch: UISwitch!
     @IBOutlet var activeTripLabel: UILabel!
     @IBOutlet var activeTripView: UIView!
