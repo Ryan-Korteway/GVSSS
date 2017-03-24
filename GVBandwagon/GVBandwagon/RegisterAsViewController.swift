@@ -33,4 +33,16 @@ class RegisterAsViewController: UIViewController {
         super.didReceiveMemoryWarning()
     }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if (segue.identifier == "registerAsRider") {
+            if let registerVC = segue.destination as? RegistrationViewController {
+                registerVC.registeringAs = "Rider"
+            }
+        } else if (segue.identifier == "registerAsDriver") {
+            if let registerVC = segue.destination as? RegistrationViewController {
+                registerVC.registeringAs = "Driver"
+            }
+        }
+    }
+    
 }

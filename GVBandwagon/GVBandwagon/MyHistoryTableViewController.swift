@@ -95,8 +95,7 @@ class MyHistoryTableViewController: UITableViewController {
     */
     
     @IBAction func onDoneTapped(_ sender: Any) {
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        appDelegate.centerViewController = appDelegate.rideViewController()
+        self.navigationController?.dismiss(animated: true, completion: nil)
     }
     
     // Not sure where the pay now and request payment buttons will go, but we can still add the code here. When we decide on placement of the elements, we will copy this into the IBAction function for those buttons.

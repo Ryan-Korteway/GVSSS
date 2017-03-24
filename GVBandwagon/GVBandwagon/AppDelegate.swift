@@ -17,6 +17,7 @@ import Google
 import GoogleMaps
 import KGFloatingDrawer
 import UserNotifications
+import GooglePlaces
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -49,9 +50,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     let settingsNavControllerStoryboardId = "settingsNavigationController"
     let driveTabBarControllerStoryboardId = "driveTabBarController"
     let driverPanelViewControllerStoryboardId = "driverPanelViewController"
-    let helpViewControllerStoryboardId = "helpViewController"
-    let myHistoryNavigationControllerStoryboardId = "myHistoryNavigationController"
-    let scheduledRidesNavigationControllerStoryboardId = "scheduledRidesNavigationController"
+    let helpNavControllerStoryboardId = "helpNavControllerStoryboardId"
+    let profileNavigationControllerStoryboardId = "profileNavigationControllerStoryboardId"
+    let historyNavigationControllerStoryboardId = "historyNavigationControllerStoryboardId"
     
     let kKGDrawerSettingsViewControllerStoryboardId = "KGDrawerSettingsViewControllerStoryboardId"
     let kKGDrawerWebViewViewControllerStoryboardId = "KGDrawerWebViewControllerStoryboardId"
@@ -119,8 +120,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
+        // For Google Maps and Places:
         GMSServices.provideAPIKey("AIzaSyCGT0W7GBgr5dWY0E60RvwZatwKmTDT7u8")
-        //For google places: GMSPlacesClient.provideAPIKey("AIzaSyCGT0W7GBgr5dWY0E60RvwZatwKmTDT7u8")
+        GMSPlacesClient.provideAPIKey("AIzaSyCGT0W7GBgr5dWY0E60RvwZatwKmTDT7u8")
         
         // Make sign in the root view controller UNLESS they are already signed in.
         window = UIWindow(frame: UIScreen.main.bounds)
@@ -272,10 +274,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return viewController
     }
     
+    // We do not have one of these in our storyboard, so this could crash:
     // -------------------
     func drawerSettingsViewController() -> UIViewController {
         let viewController = viewControllerForStoryboardId(storyboardId: kKGDrawerSettingsViewControllerStoryboardId)
         return viewController
+    }
+    
+    func profileNavigationController() -> UINavigationController {
+        let viewController = viewControllerForStoryboardId(storyboardId: profileNavigationControllerStoryboardId)
+        return viewController as! UINavigationController
     }
     
     func rideViewController() -> UINavigationController {
@@ -308,19 +316,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return viewController
     }
     
-    func scheduledRidesTableViewController() -> UINavigationController {
-        let viewController = viewControllerForStoryboardId(storyboardId: scheduledRidesNavigationControllerStoryboardId)
+    func historyNavigationController() -> UINavigationController {
+        let viewController = viewControllerForStoryboardId(storyboardId: historyNavigationControllerStoryboardId)
         return viewController as! UINavigationController
     }
     
-    func myHistoryTableViewController() -> UINavigationController {
-        let viewController = viewControllerForStoryboardId(storyboardId: myHistoryNavigationControllerStoryboardId)
+    func helpNavController() -> UINavigationController {
+        let viewController = viewControllerForStoryboardId(storyboardId: helpNavControllerStoryboardId)
         return viewController as! UINavigationController
-    }
-    
-    func helpViewController() -> UIViewController {
-        let viewController = viewControllerForStoryboardId(storyboardId: helpViewControllerStoryboardId)
-        return viewController
     }
     
     

@@ -37,12 +37,9 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
     var shadowLayer: CAShapeLayer!
     
     override func viewDidLoad() {
-        super.viewDidLoad()
-        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
-        self.navigationController?.navigationBar.shadowImage = UIImage()
-        self.navigationController?.navigationBar.isTranslucent = true
-    
-        // Custom button design. We should put this in its own clas later.
+        super.viewDidLoad()       
+        
+        // Custom button design. We should put this in its own class later.
         if shadowLayer == nil {
             shadowLayer = CAShapeLayer()
             shadowLayer.path = UIBezierPath(roundedRect: self.rideNowButton.bounds, cornerRadius: 12).cgPath
@@ -84,6 +81,11 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
         
     } //end of view did load.
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.navigationBar.isHidden = true
+    }
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         localDelegate.startRiderMapObservers()
@@ -118,10 +120,14 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
     }
     
     @IBAction func onUserPanelTapped(_ sender: Any) {
+        
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         appDelegate.toggleRightDrawer(sender: sender as AnyObject, animated: false)
+        
         if let panelVC = appDelegate.drawerViewController.rightViewController as? DriverPanelViewController {
             panelVC.mode = "Ride"
+            panelVC.goOnlineSwitch.isHidden = true
+            panelVC.goOnlineLabel.isHidden = true
         }
     }
     
@@ -194,7 +200,6 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
             self.ref.child("users/\(currentUser!.uid)/rider/offers/immediate/\(cellInfo["uid"]!)/origin").removeAllObservers()
         })
 
-        
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -203,6 +208,11 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
                 // Set the attributes in the next VC.
                 nextVC.paymentText = "Submit Payment"
                 //here i could grab a global accepts dictionary and send it over to the other view controller..
+            }
+        } else if segue.identifier == "toRequestRideSegue" {
+            if let nextVC = segue.destination as? RequestRideViewController {
+                nextVC.visibleRegion = self.googleMapsView.projection.visibleRegion()
+                nextVC.coordLocation = self.locationManager.location?.coordinate
             }
         }
     }
@@ -231,7 +241,8 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
             
         infoWindow.center = mapView.projection.point(for: location)
         infoWindow.center.y -= 90
-            
+        
+        infoWindow.acceptButton.setTitle("Accept", for: .normal) // Not working...
         infoWindow.acceptButton.addTarget(self, action: #selector(acceptTapped(button:)), for: .touchUpInside)
         infoWindow.declineButton.addTarget(self, action: #selector(declineTapped(button:)), for: .touchUpInside)
             
@@ -298,6 +309,8 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
         
         ride_accept(item: baseDictionary) //local cell assignment might be bad/fail here.
         infoWindow.removeFromSuperview()
+        
+        // TODO: Disable infoWindow now, or just show the info, not the buttons.
     }
     
     
@@ -339,8 +352,8 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
                 marker.map = nil;
                 self.ref.child("users/\(currentUser!.uid)/rider/offers/accepted/immediate/driver/\(cellInfo["uid"]!)/origin").removeAllObservers()
             })
-        
     }
+    
 }
 
 extension FirstViewController: CLLocationManagerDelegate {

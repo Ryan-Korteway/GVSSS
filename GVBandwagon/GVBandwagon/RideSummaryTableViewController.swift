@@ -12,6 +12,7 @@ class RideSummaryTableViewController: UITableViewController {
 
     @IBOutlet var nameLabel: UILabel!
     @IBOutlet var ratingLabel: UILabel!
+    @IBOutlet var phoneLabel: UILabel!
     @IBOutlet var originStreetLabel: UILabel!
     @IBOutlet var originCityLabel: UILabel!
     @IBOutlet var destStreetLabel: UILabel!
@@ -24,6 +25,7 @@ class RideSummaryTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.navigationController?.navigationBar.isHidden = false
         
         self.paymentButton.setTitle(paymentText, for: .normal)
         //UIApplication.shared.open(NSURL(string:"https://venmo.com/?txn=pay&audience=private&recipients=@michael-christensen-20&amount=3&note=GVB") as! URL, options: [:], completionHandler: nil)
@@ -39,7 +41,10 @@ class RideSummaryTableViewController: UITableViewController {
         // name and rating are of Driver
         // button says "Send Payment"
 
+        // Need to pull and fill all information from firebase. Use self.paymentText for check if here from Ride or Drive.
+        // We can use UID of driver/rider in the users profile to pull the appropriate information for this view controller.
         nameLabel.text = informationDictionary.value(forKey: "name") as! String?
+        
         
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false

@@ -16,13 +16,13 @@ class MenuTableViewController: UITableViewController {
     @IBOutlet var modeLabel: UILabel!
     @IBOutlet var profilePicImageView: UIImageView!
     
-    var appDelegate: AppDelegate!
-    
     // Get a reference to the storage service using the default Firebase App
     let storage = FIRStorage.storage()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.navigationController?.navigationBar.isHidden = false
         
         self.getProfilePicFromFB()
         
@@ -56,7 +56,7 @@ class MenuTableViewController: UITableViewController {
         // #warning Incomplete implementation, return the number of sections
         
         // Number and type of menu options changes depending on if in Ride or Drive mode...
-        return 7
+        return 6
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -83,8 +83,14 @@ class MenuTableViewController: UITableViewController {
         
         if (indexPath.section == 1) {
             //enter profile
-            //appDelegate.toggleLeftDrawer(sender: self.modeLabel, animated: false)
-            appDelegate.centerViewController = appDelegate.settingsNavController()
+            
+            appDelegate.toggleLeftDrawer(sender: self, animated: true)
+            let profileNav = appDelegate.profileNavigationController()
+            if let profileVC = profileNav.childViewControllers[0] as? userInfoTableViewController {
+                profileVC.profileImage = self.profilePicImageView.image
+            }
+            self.present(profileNav, animated: true, completion: nil)
+            
         } else if (indexPath.section == 2) {
             // Change name of this cell label to "ride mode" if it's "drive mode", and vice versa
             if (self.modeLabel.text == "Drive") {
@@ -96,15 +102,20 @@ class MenuTableViewController: UITableViewController {
                 self.modeLabel.text = "Drive"
             }
         } else if (indexPath.section == 3) {
-            //enter scheduled rides
-            appDelegate.centerViewController = appDelegate.scheduledRidesTableViewController()
-        } else if (indexPath.section == 4) {
             //enter my trips
-            appDelegate.centerViewController = appDelegate.myHistoryTableViewController()
-        } else if (indexPath.section == 5) {
+            //appDelegate.centerViewController = appDelegate.myHistoryTableViewController()
+            
+            appDelegate.toggleLeftDrawer(sender: self, animated: true)
+            let historyNav = appDelegate.historyNavigationController()
+            self.present(historyNav, animated: true, completion: nil)
+            
+        } else if (indexPath.section == 4) {
             // enter help
-            appDelegate.centerViewController = appDelegate.helpViewController()
-        } else if (indexPath.section == 6) {
+            appDelegate.toggleLeftDrawer(sender: self, animated: true)
+            let helpNav = appDelegate.helpNavController()
+            self.present(helpNav, animated: true, completion: nil)
+            
+        } else if (indexPath.section == 5) {
             //sign out
             appDelegate.firebaseSignOut()
         }

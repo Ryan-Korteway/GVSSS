@@ -20,6 +20,7 @@ class SignInViewController: UIViewController, GIDSignInDelegate, GIDSignInUIDele
     override func viewDidLoad() {
         super.viewDidLoad()
         print("\nSIGNIN viewDidLoad called.\n")
+        self.googleSignInButton.isEnabled = true
         
         // Sign in
         // Initialize sign-in
@@ -107,7 +108,6 @@ class SignInViewController: UIViewController, GIDSignInDelegate, GIDSignInUIDele
             return
         }
         
-        
         guard let authentication = user.authentication else { return }
         let credential = FIRGoogleAuthProvider.credential(withIDToken: authentication.idToken,
                                                           accessToken: authentication.accessToken)
@@ -178,4 +178,12 @@ class SignInViewController: UIViewController, GIDSignInDelegate, GIDSignInUIDele
     
         }
     }
+    
+    @IBAction func onSignInTapped(_ sender: Any) {
+        
+        // Disable so multiple taps are not allowed.
+        //self.googleSignInButton.isEnabled = false
+        print("Sign In Button Clicked.")
+    }
+    
 }

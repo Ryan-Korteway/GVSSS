@@ -22,6 +22,9 @@ UINavigationControllerDelegate {
     @IBOutlet var colorField: UITextField!
     @IBOutlet var modelField: UITextField!
     @IBOutlet var profilePicView: UIImageView!
+    @IBOutlet var vehiclePhotoImageView: UIImageView!
+    
+    var profileImage:UIImage? = nil
     
     var currentUser : FIRUser?
     var userID: String?
@@ -30,6 +33,11 @@ UINavigationControllerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.tableView.delegate = self
+        self.navigationController?.navigationBar.isHidden = false
+        
+        if let image = self.profileImage {
+            self.profilePicView.image = image
+        }
 
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -68,7 +76,7 @@ UINavigationControllerDelegate {
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 7
+        return 8
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -77,7 +85,7 @@ UINavigationControllerDelegate {
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if (indexPath.section == 0 || indexPath.section == 6) {
+        if (indexPath.section == 0 || indexPath.section == 7) {
             return 100
         } else {
             return 44
@@ -95,6 +103,7 @@ UINavigationControllerDelegate {
     /*
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
+        
 
         // Configure the cell...
         return cell
@@ -229,4 +238,10 @@ UINavigationControllerDelegate {
             leftVC.profilePicImageView.image = image
         }
     }
+    
+    @IBAction func onDoneTapped(_ sender: Any) {
+        //dismiss(animated: true, completion: nil)
+        self.navigationController?.dismiss(animated: true, completion: nil)
+    }
+    
 }

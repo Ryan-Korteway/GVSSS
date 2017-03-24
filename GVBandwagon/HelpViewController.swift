@@ -35,9 +35,8 @@ class HelpViewController: UIViewController {
     */
     
     @IBAction func onDoneTapped(_ sender: Any) {
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        appDelegate.centerViewController = appDelegate.rideViewController()
+        self.navigationController?.dismiss(animated: true, completion: nil)
     }
-    
+
 
 }

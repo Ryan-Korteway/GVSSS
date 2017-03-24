@@ -38,10 +38,6 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
-        self.navigationController?.navigationBar.shadowImage = UIImage()
-        self.navigationController?.navigationBar.isTranslucent = true
 
         //user location stuff
         locationManager.delegate = self
@@ -88,6 +84,11 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
             return
         })
         
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.navigationBar.isHidden = true
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -175,6 +176,8 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
         appDelegate.toggleRightDrawer(sender: sender as AnyObject, animated: false)
         if let panelVC = appDelegate.drawerViewController.rightViewController as? DriverPanelViewController {
             panelVC.mode = "Drive"
+            panelVC.goOnlineLabel.isHidden = false
+            panelVC.goOnlineSwitch.isHidden = false
         }
     }
     
@@ -481,7 +484,12 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
         //maybe venmo id is a global var in app delegate with a getter/setter for moments like this.
         
         
-        // Set Active Trip of Right Drawer to riders name and set it to clickable.
+        //self.googleMap.clear() //clears the map of all pins so w can show only what we care about.
+        
+        //make the pin with only the riders info.
+        //make tracker observers etc from only the baseDictionaries uid etc?...
+        
+        self.performSegue(withIdentifier: "driverAcceptsSegue", sender: self)
         infoWindow.removeFromSuperview()
     }
     

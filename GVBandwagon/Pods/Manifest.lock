@@ -47,6 +47,11 @@ PODS:
     - GoogleMaps/Base
   - GoogleNetworkingUtilities (1.2.1):
     - GoogleSymbolUtilities (~> 1.0)
+  - GooglePlacePicker (2.2.0):
+    - GoogleMaps (= 2.2.0)
+    - GooglePlaces (= 2.2.0)
+  - GooglePlaces (2.2.0):
+    - GoogleMaps/Base (= 2.2.0)
   - GoogleSignIn (4.0.0):
     - GoogleAppUtilities (~> 1.1)
     - GoogleAuthUtilities (~> 2.0)
@@ -65,6 +70,8 @@ DEPENDENCIES:
   - Firebase/Storage
   - Google
   - GoogleMaps
+  - GooglePlacePicker
+  - GooglePlaces
   - GoogleSignIn
   - KGFloatingDrawer (~> 0.2.0)
 
@@ -81,11 +88,13 @@ SPEC CHECKSUMS:
   GoogleInterchangeUtilities: def8415a862effc67d549d5b5b0b9c7a2f97d4de
   GoogleMaps: 104c418d61ab8a05dff06ed0784c25ea9d37da45
   GoogleNetworkingUtilities: 3e83269048cfb498dc7ec83ab36813360965c74f
+  GooglePlacePicker: 345b1aabd42c9d6d9bf2369c1bae1234d903e764
+  GooglePlaces: bca867d5e9da15384c794b945e4226848bc6e9d9
   GoogleSignIn: 09036ed61f8e75f1424100d63f7719480b2428c3
   GoogleSymbolUtilities: 33117db1b5f290c6fbf259585e4885b4c84b98d7
   GoogleUtilities: 56c5ac05b7aa5dc417a1bb85221a9516e04d7032
   KGFloatingDrawer: b0c2810954bfb61f4d4dd01b8891d5c23933e368
 
-PODFILE CHECKSUM: 18957d15a17aba8a898e3e1f425318bd4915b978
+PODFILE CHECKSUM: 715e9f7aa0668531764f236b87648de928abff30
 
 COCOAPODS: 1.2.0
