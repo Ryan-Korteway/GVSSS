@@ -30,6 +30,7 @@ UINavigationControllerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.tableView.delegate = self
+        self.navigationController?.navigationBar.isHidden = false
 
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -95,6 +96,7 @@ UINavigationControllerDelegate {
     /*
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
+        
 
         // Configure the cell...
         return cell

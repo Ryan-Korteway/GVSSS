@@ -8,9 +8,23 @@
 
 import UIKit
 import Firebase
+import GooglePlaces
+import GoogleMaps
+import GooglePlacePicker
 
-class RequestRideViewController: UIViewController {
+class RequestRideViewController: UIViewController, UISearchBarDelegate {
     
+    var placesClient: GMSPlacesClient!
+    
+    // Passed from previous (Ride) view controller:
+    var visibleRegion: GMSVisibleRegion!
+    var coordLocation: CLLocationCoordinate2D!
+    
+    var resultsViewController: GMSAutocompleteResultsViewController?
+    var searchController: UISearchController?
+    var resultView: UITextView?
+    
+    @IBOutlet var searchView: UIView!
     @IBOutlet var monSwitch: UISwitch!
     @IBOutlet var tuesSwitch: UISwitch!
     @IBOutlet var wedSwitch: UISwitch!
@@ -38,6 +52,32 @@ class RequestRideViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.navigationController?.navigationBar.isHidden = false
+        
+        placesClient = GMSPlacesClient.shared()
+        
+        // Google Places
+        
+        resultsViewController = GMSAutocompleteResultsViewController()
+        resultsViewController?.delegate = self
+        
+        searchController = UISearchController(searchResultsController: resultsViewController)
+        searchController?.searchBar.delegate = self
+        searchController?.searchResultsUpdater = resultsViewController
+        
+        //let subView = UIView(frame: CGRect(x: 0, y: 250, width: 350.0, height: 45.0)) // Remove?
+        
+        searchView.addSubview((searchController?.searchBar)!)
+        //subView.addSubview((searchController?.searchBar)!) // Remove?
+        //view.addSubview(subView) // Remove?
+        searchController?.searchBar.sizeToFit()
+        searchController?.hidesNavigationBarDuringPresentation = false
+        
+        // When UISearchController presents the results view, present it in
+        // this view controller, not one further up the chain.
+        definesPresentationContext = true
+        
+        // Google Places End
         
         self.configSwitches()
         
@@ -45,6 +85,11 @@ class RequestRideViewController: UIViewController {
         
         self.freqSwitch.setOn(false, animated: false)
         self.freqSwitch.addTarget(self, action: #selector(switchIsChanged(mySwitch:)), for: .valueChanged)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.navigationBar.isHidden = false
     }
     
     func switchIsChanged(mySwitch: UISwitch) {
@@ -167,5 +212,81 @@ class RequestRideViewController: UIViewController {
             freqArray.append("Sunday")
         }
     }
+    
+    @IBAction func placesPicker(_ sender: Any) {
+        if let center = self.coordLocation {
+            
+            let northEast = CLLocationCoordinate2D(latitude: center.latitude + 0.001, longitude: center.longitude + 0.001)
+            let southWest = CLLocationCoordinate2D(latitude: center.latitude - 0.001, longitude: center.longitude - 0.001)
+            let viewport = GMSCoordinateBounds(coordinate: northEast, coordinate: southWest)
+            let config = GMSPlacePickerConfig(viewport: viewport)
+            let placePicker = GMSPlacePicker(config: config)
+            
+            placePicker.pickPlace(callback: {(place, error) -> Void in
+                if let error = error {
+                    print("Pick Place error: \(error.localizedDescription)")
+                    return
+                }
+                
+                if let place = place {
+                    //self.namelabel.text = place.name
+                    //self.addrlabel.text = place.formattedAddress?.components(separatedBy: ", ")
+                    //.joined(separator: "\n")
+                } else {
+                    //self.namelabel.text = "No place selected"
+                    //self.addrlabel.text = ""
+                }
+            })
+        } else {
+            print("self.coordLocation was not passed from the previous view controller!")
+        }
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String){
+        //let visibleRegion = rideVC.googleMapsView.projection.visibleRegion()
+        let bounds = GMSCoordinateBounds(coordinate: self.visibleRegion.farLeft, coordinate: self.visibleRegion.nearRight)
+        
+        self.resultsViewController?.autocompleteBounds = bounds
+        
+        let filter = GMSAutocompleteFilter()
+        filter.type = .establishment
+        placesClient.autocompleteQuery(searchText, bounds: bounds, filter: filter, callback: {
+            (results, error) -> Void in
+            guard error == nil else {
+                print("Autocomplete error \(error)")
+                return
+            }
+            if let results = results {
+                for result in results {
+                    print("Result \(result.attributedFullText) with placeID \(result.placeID)")
+                }
+            }
+        })
+    }
+}
 
+extension RequestRideViewController: GMSAutocompleteResultsViewControllerDelegate {
+    func resultsController(_ resultsController: GMSAutocompleteResultsViewController,
+                           didAutocompleteWith place: GMSPlace) {
+        searchController?.isActive = false
+        // Do something with the selected place.
+        print("Place name: \(place.name)")
+        print("Place address: \(place.formattedAddress)")
+        print("Place attributions: \(place.attributions)")
+    }
+    
+    func resultsController(_ resultsController: GMSAutocompleteResultsViewController,
+                           didFailAutocompleteWithError error: Error){
+        // TODO: handle the error.
+        print("Error: ", error.localizedDescription)
+    }
+    
+    // Turn the network activity indicator on and off again.
+    func didRequestAutocompletePredictions(forResultsController resultsController: GMSAutocompleteResultsViewController) {
+        UIApplication.shared.isNetworkActivityIndicatorVisible = true
+    }
+    
+    func didUpdateAutocompletePredictions(forResultsController resultsController: GMSAutocompleteResultsViewController) {
+        UIApplication.shared.isNetworkActivityIndicatorVisible = false
+    }
 }

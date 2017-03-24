@@ -37,11 +37,9 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
     var shadowLayer: CAShapeLayer!
     
     override func viewDidLoad() {
-        super.viewDidLoad()
+        super.viewDidLoad()       
         
-        self.navigationController?.navigationBar.isHidden = true
-    
-        // Custom button design. We should put this in its own clas later.
+        // Custom button design. We should put this in its own class later.
         if shadowLayer == nil {
             shadowLayer = CAShapeLayer()
             shadowLayer.path = UIBezierPath(roundedRect: self.rideNowButton.bounds, cornerRadius: 12).cgPath
@@ -71,6 +69,11 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
         localDelegate.startRiderMapObservers() //the new function to populate the riders map each time the view loads.
         
     } //end of view did load.
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.navigationBar.isHidden = true
+    }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -128,6 +131,12 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
         }
     }
     
+    @IBAction func testPresent(_ sender: Any) {
+        //let viewController: UIViewController = drawerStoryboard().instantiateViewController(withIdentifier: storyboardId)
+        let profileVC = localDelegate.userAccountViewController()
+        self.present(profileVC, animated: true, completion: nil)
+    }
+    
     func isRider() -> Bool {
         return true;
     }
@@ -175,7 +184,6 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
             self.ref.child("users/\(currentUser!.uid)/rider/offers/immediate/\(cellInfo["uid"]!)/origin").removeAllObservers()
         })
 
-        
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -184,6 +192,11 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
                 // Set the attributes in the next VC.
                 nextVC.paymentText = "Submit Payment"
                 //here i could grab a global accepts dictionary and send it over to the other view controller..
+            }
+        } else if segue.identifier == "toRequestRideSegue" {
+            if let nextVC = segue.destination as? RequestRideViewController {
+                nextVC.visibleRegion = self.googleMapsView.projection.visibleRegion()
+                nextVC.coordLocation = self.locationManager.location?.coordinate
             }
         }
     }
@@ -321,6 +334,7 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
                 self.ref.child("users/\(currentUser!.uid)/rider/offers/accepted/immediate/driver/\(cellInfo["uid"]!)/origin").removeAllObservers()
             })
     }
+    
 }
 
 extension FirstViewController: CLLocationManagerDelegate {

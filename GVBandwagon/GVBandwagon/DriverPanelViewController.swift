@@ -76,18 +76,18 @@ class DriverPanelViewController: UIViewController {
         // If there is an active trip, load the summary.
         //self.performSegue(withIdentifier: "driverAcceptsRide", sender: self)
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        let centerVC = appDelegate.centerViewController
+        let centerVC = appDelegate.drawerViewController.centerViewController
         
         //EITHER WAY THE SEGUE SHOULD PROVIDE THE RECIEVING VIEW CONTROLLER A CELL ITEM OF DATA TO PULL FROM
         
         if (self.mode == "Ride") {
-            let rideVC = centerVC.childViewControllers[0]
+            let rideVC = centerVC?.childViewControllers[0]
             appDelegate.toggleRightDrawer(sender: self, animated: true)
-            rideVC.performSegue(withIdentifier: "riderAcceptsSegue", sender: rideVC)
+            rideVC?.performSegue(withIdentifier: "riderAcceptsSegue", sender: rideVC)
         } else {
-            let driveVC = centerVC.childViewControllers[0].childViewControllers[0]
+            let driveVC = centerVC?.childViewControllers[0].childViewControllers[0]
             appDelegate.toggleRightDrawer(sender: self, animated: true)
-            driveVC.performSegue(withIdentifier: "driverAcceptsSegue", sender: driveVC)
+            driveVC?.performSegue(withIdentifier: "driverAcceptsSegue", sender: driveVC)
         }
     }
 

@@ -17,6 +17,7 @@ import Google
 import GoogleMaps
 import KGFloatingDrawer
 import UserNotifications
+import GooglePlaces
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -48,7 +49,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     let driverPanelViewControllerStoryboardId = "driverPanelViewController"
     let helpViewControllerStoryboardId = "helpViewController"
     let myHistoryNavigationControllerStoryboardId = "myHistoryNavigationController"
-    let scheduledRidesNavigationControllerStoryboardId = "scheduledRidesNavigationController"
+    let userAccountViewControllerStoryboardId = "userAccountViewControllerStoryboardId"
     
     let kKGDrawerSettingsViewControllerStoryboardId = "KGDrawerSettingsViewControllerStoryboardId"
     let kKGDrawerWebViewViewControllerStoryboardId = "KGDrawerWebViewControllerStoryboardId"
@@ -117,8 +118,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
+        // For Google Maps and Places:
         GMSServices.provideAPIKey("AIzaSyCGT0W7GBgr5dWY0E60RvwZatwKmTDT7u8")
-        //For google places: GMSPlacesClient.provideAPIKey("AIzaSyCGT0W7GBgr5dWY0E60RvwZatwKmTDT7u8")
+        GMSPlacesClient.provideAPIKey("AIzaSyCGT0W7GBgr5dWY0E60RvwZatwKmTDT7u8")
         
         // Make sign in the root view controller UNLESS they are already signed in.
         window = UIWindow(frame: UIScreen.main.bounds)
@@ -264,9 +266,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return viewController
     }
     
+    // We do not have one of these in our storyboard, so this could crash:
     // -------------------
     func drawerSettingsViewController() -> UIViewController {
         let viewController = viewControllerForStoryboardId(storyboardId: kKGDrawerSettingsViewControllerStoryboardId)
+        return viewController
+    }
+    
+    func userAccountViewController() -> UIViewController {
+        let viewController = viewControllerForStoryboardId(storyboardId: userAccountViewControllerStoryboardId)
         return viewController
     }
     
@@ -298,11 +306,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func signInViewController() -> UIViewController {
         let viewController = viewControllerForStoryboardId(storyboardId: signInViewControllerStoryboardId)
         return viewController
-    }
-    
-    func scheduledRidesTableViewController() -> UINavigationController {
-        let viewController = viewControllerForStoryboardId(storyboardId: scheduledRidesNavigationControllerStoryboardId)
-        return viewController as! UINavigationController
     }
     
     func myHistoryTableViewController() -> UINavigationController {
