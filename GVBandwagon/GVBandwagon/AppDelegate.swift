@@ -107,7 +107,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         FIRApp.configure()
         // not really needed unless you really need it 
-        //FIRDatabase.database().persistenceEnabled = true
+        FIRDatabase.database().persistenceEnabled = true
         
         // Moved to didFinish... below
         //GIDSignIn.sharedInstance().clientID = FIRApp.defaultApp()?.options.clientID

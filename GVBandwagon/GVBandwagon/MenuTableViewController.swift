@@ -86,6 +86,9 @@ class MenuTableViewController: UITableViewController {
             
             appDelegate.toggleLeftDrawer(sender: self, animated: true)
             let profileNav = appDelegate.profileNavigationController()
+            if let profileVC = profileNav.childViewControllers[0] as? userInfoTableViewController {
+                profileVC.profileImage = self.profilePicImageView.image
+            }
             self.present(profileNav, animated: true, completion: nil)
             
         } else if (indexPath.section == 2) {

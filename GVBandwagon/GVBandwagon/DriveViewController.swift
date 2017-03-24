@@ -444,7 +444,7 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
         //make the pin with only the riders info.
         //make tracker observers etc from only the baseDictionaries uid etc?...
         
-        performSegue(withIdentifier: "driverAcceptsSegue", sender: self)
+        self.performSegue(withIdentifier: "driverAcceptsSegue", sender: self)
         infoWindow.removeFromSuperview()
         
         // Set Active Trip of Right Drawer to riders name and set it to clickable.

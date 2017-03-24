@@ -133,19 +133,18 @@ class RequestRideViewController: UIViewController, UISearchBarDelegate {
         })
     }
     
-    @IBAction func cancelTapped(_ sender: UIButton) {
+    @IBAction func onCancelTapped(_ sender: Any) {
         _ = self.navigationController?.popViewController(animated: true)
     }
-    
-    @IBAction func submitTapped(_ sender: UIButton) {
-        
+
+    @IBAction func onSubmitTapped(_ sender: Any) {
         self.getSwitchInfo()
         
         //all this to be moved into new view controller logic at some point.
         
         //SELF GOING TO NEED REPLACING WITH THE SEARCHING OF A DESTINATION FROM THE PAGE.
         
-        let currentLat = self.localDelegate.locationManager.location!.coordinate.latitude 
+        let currentLat = self.localDelegate.locationManager.location!.coordinate.latitude
         let currentLong = self.localDelegate.locationManager.location!.coordinate.longitude
         
         print("Current lat and long: \(currentLat) \(currentLong)")

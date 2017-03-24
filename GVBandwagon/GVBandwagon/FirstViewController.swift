@@ -219,7 +219,8 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
             
         infoWindow.center = mapView.projection.point(for: location)
         infoWindow.center.y -= 90
-            
+        
+        infoWindow.acceptButton.setTitle("Accept", for: .normal) // Not working...
         infoWindow.acceptButton.addTarget(self, action: #selector(acceptTapped(button:)), for: .touchUpInside)
         infoWindow.declineButton.addTarget(self, action: #selector(declineTapped(button:)), for: .touchUpInside)
             
@@ -286,6 +287,8 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
         
         ride_accept(item: baseDictionary) //local cell assignment might be bad/fail here.
         infoWindow.removeFromSuperview()
+        
+        // TODO: Disable infoWindow now, or just show the info, not the buttons.
     }
     
     
