@@ -28,9 +28,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var timer = Timer()
     
-    var status = "request";
+    //--- THE KEY VARIABLES WE WOULD HAVE TO STORE IN FIREBASE AND RETRIEVE BETWEEN LAUNCHES TO RESUME WHERE WE LEFT OFF.
+    var riderStatus = "request";
+    var driverStatus = "request";
     var mode = "rider";
     var offeredID = "none"; //the id of the offered rider, to be set when we offer a ride to someone.
+    //---------------------------
     
     var locationManager = CLLocationManager()
     
@@ -67,7 +70,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                                              title: "dismiss notification", options: [.destructive])
     
     let acceptAction = UNNotificationAction(identifier: "accept", title: "Accept offer", options: []) //open the app to the ride details page or leave it be?
-    
     
     var categoryOffer: UNNotificationCategory
     
@@ -107,7 +109,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         FIRApp.configure()
         // not really needed unless you really need it 
-        FIRDatabase.database().persistenceEnabled = true
+        //FIRDatabase.database().persistenceEnabled = true
         
         // Moved to didFinish... below
         //GIDSignIn.sharedInstance().clientID = FIRApp.defaultApp()?.options.clientID
@@ -162,7 +164,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             
             self.closedRideAccept(toWatchUid: offeredID);
             
+            ref.child("users/\(userID)/stateVars").setValue(["riderStatus" : riderStatus, "driverStatus" : driverStatus, "offeredID" : offeredID])
+            
         }
+        
+        
 
         
     }
@@ -194,6 +200,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             ref.child("users/\(self.offeredID)/rider/accepted/immediate").removeAllObservers();
             
             ref.child("requests/immediate").removeAllObservers();
+            
+            ref.child("users/\(userID)/stateVars").setValue(["riderStatus" : riderStatus, "driverStatus" : driverStatus, "offeredID" : offeredID])
             
             ref.child("activedrivers").child("\(userID)").observeSingleEvent(of: .value, with: { (snapshot) in
                 
@@ -517,7 +525,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             
             if(localCell.accepted == 1) {
                 content.body = "Your ride offer has been accepted."
-                self.status = "accepted"
+                self.driverStatus = "accepted"
             } else {
                 content.body = "We are sorry but your ride offer was declined" //need wording help here.
             }
@@ -557,42 +565,57 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         timer = Timer.scheduledTimer(withTimeInterval: 30, repeats: true, block: {_ in
         
-        //still need working lat long.
+        
             print("timer firing");
             
-            if(self.status == "request") {
-                
-                if(self.mode == "rider") {
-                    ref.child("requests/immediate/\(ourID)/origin").setValue(["lat": self.ourlat, "long": self.ourlong]);
+            if(self.mode == "rider") {
+            
+                if(self.riderStatus == "request") {
+                    
+                        ref.child("requests/immediate/\(ourID)/origin").setValue(["lat": self.ourlat, "long": self.ourlong]);
+                    
+                } else if (self.riderStatus == "offer") {
+                    
+                        ref.child("users/\(ourID)/rider/offers/immediate/\(ourID)/origin").setValue(["lat": self.ourlat, "long": self.ourlong]);
+            
+                } else if (self.riderStatus == "accepted") {
+                    
+                        ref.child("users/\(ourID)/rider/offers/accepted/immediate/rider/\(ourID)/origin").setValue(["lat": self.ourlat, "long": self.ourlong]);
+                   
                 } else {
-                    ref.child("activedrivers/\(ourID)/origin").setValue(["lat": self.ourlat, "long": self.ourlong]);
+                    print("something up with timer")
                 }
                 
-            } else if (self.status == "offer") {
-                
-                if(self.mode == "rider") { //updating location to the wrong place, or request is changing status too soon.
-                    ref.child("users/\(ourID)/rider/offers/immediate/\(ourID)/origin").setValue(["lat": self.ourlat, "long": self.ourlong]);
+            } else { // mode == driver
+             
+                if(self.driverStatus == "request") {
+                    
+                        ref.child("activedrivers/\(ourID)/origin").setValue(["lat": self.ourlat, "long": self.ourlong]);
+                    
+                } else if (self.driverStatus == "offer") {
+                    
+                        ref.child("users/\(self.offeredID)/rider/offers/immediate/\(ourID)/origin").setValue(["lat": self.ourlat, "long": self.ourlong]);
+                    
+                } else if (self.driverStatus == "accepted") {
+                    
+                        ref.child("users/\(self.offeredID)/rider/offers/accepted/immediate/driver/\(ourID)/origin").setValue( ["lat": self.ourlat, "long": self.ourlong]);
+                    
                 } else {
-                    ref.child("users/\(self.offeredID)/rider/offers/immediate/\(ourID)/origin").setValue(["lat": self.ourlat, "long": self.ourlong]);
+                    print("something up with timer")
                 }
-            } else if (self.status == "accepted") {
                 
-                if(self.mode == "rider") {
-                    ref.child("users/\(ourID)/rider/offers/accepted/immediate/rider/\(ourID)/origin").setValue(["lat": self.ourlat, "long": self.ourlong]);
-                } else {
-                    ref.child("users/\(self.offeredID)/rider/offers/accepted/immediate/driver/\(ourID)/origin").setValue( ["lat": self.ourlat, "long": self.ourlong]);
-                }
-            } else {
-                print("something up with timer")
             }
+            
         })
         
     }
     
-    func changeStatus(status: String) {
-        
-        self.status = status;
-        
+    func changeRiderStatus(status: String) {
+        self.riderStatus = status;
+    }
+    
+    func changeDriverStatus(status: String) {
+        self.driverStatus = status;
     }
     
     func changeMode(mode: String) {
@@ -613,10 +636,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         let ref = FIRDatabase.database().reference()
         
-        if(status == "request") {
+        if(self.driverStatus == "request") {
             
-            ref.child("requests/immediate").observe( .childAdded, with: { snapshot in //.value allows us to see adds, removes, and lat/long updates.
-                //if we are in a riders portion of the app, currentViewController has rider offers function, call it, there we load the view however we want.
+            ref.child("requests/immediate").observe( .childAdded, with: { snapshot in //observe single event of .value which allows us to loop through each pin/request to properly recreate the map.
                 
                 print("\n\n REQUEST OBSERVED!! \n\n")
                 
@@ -634,15 +656,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     
                 }
             })
-        } else if (status == "accepted"){
+        } else if (self.driverStatus == "accepted"){
+            ref.child("requests/immediate").removeAllObservers();
             ref.child("users/\(self.offeredID)/rider/offers/accepted/immediate/rider").observeSingleEvent(of: .childChanged, with: { snapshot in
                     (self.DriveViewController_AD as! DriveViewController).fillWithAcceptance(item: cellItem.init(snapshot: snapshot))
             })
-        } else if (status == "offer"){
+        } else if (self.driverStatus == "offer"){
             //rides being offered by the driver, need to get the users pin back.
                 //offeredID is usable to reclaim the offered riders id/path.
             
             //watched the offered path for deletions and then call ride accepted in the driver view controller.
+            ref.child("requests/immediate").removeAllObservers();
             ref.child("users/\(self.offeredID)/rider/offers/immediate").observe( .childRemoved, with: { snapshot in
                 
                 //need a check potentially to make sure that 
@@ -664,9 +688,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let ref = FIRDatabase.database().reference()
         let userID = FIRAuth.auth()!.currentUser!.uid
         
-        print("our status: \(status)")
+        print("our status: \(riderStatus)")
         
-        if(status == "request") {
+        if(self.riderStatus == "request") {
             //this isnt even the right code/observer to calling if in request status....
             
             ref.child("users/\(userID)/rider/offers/immediate").observe( .childAdded, with: { snapshot in //.value allows us to see adds, removes, and lat/long updates.
@@ -690,7 +714,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     
                 }
             })
-        } else if (status == "accepted"){
+        } else if (self.riderStatus == "accepted"){
             ref.child("users/\(userID)/rider/offers/accepted/immediate/driver").observeSingleEvent(of: .childChanged, with: { snapshot in //child added may be an issue here...
                 print(snapshot.key)
                 if(snapshot.key != userID) {

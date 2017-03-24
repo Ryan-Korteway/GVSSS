@@ -28,7 +28,7 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
     let locationManager = CLLocationManager()
 
     let ref = FIRDatabase.database().reference()
-    var uid_forDriver = "wait";
+    var uid_forDriver = "wait"; //might need to save and repull this later...
     
     var ourLat = 0.0
     var ourLong = 0.0
@@ -66,7 +66,18 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
         localDelegate.firstSet = true;
         localDelegate.lastState = "rider"
         
-        localDelegate.startRiderMapObservers() //the new function to populate the riders map each time the view loads.
+        //NEED TO PULL DOWN/RESET RIDER STATUS here.
+        
+        self.ref.child("users/\(FIRAuth.auth()!.currentUser!.uid)/stateVars/riderStatus").observeSingleEvent(of: .value, with: { snapshot in
+            guard snapshot.value! is String else {
+                    self.localDelegate.riderStatus = "request"
+                    self.localDelegate.startRiderMapObservers()//the new function to populate the riders map each time the view loads.
+                    return
+            }
+                self.localDelegate.riderStatus = snapshot.value! as! String
+                self.localDelegate.startRiderMapObservers() //the new function to populate the riders map each time the view loads.
+                return
+        })
         
     } //end of view did load.
     
@@ -78,6 +89,17 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         localDelegate.startRiderMapObservers()
+        
+        self.ref.child("users/\(FIRAuth.auth()!.currentUser!.uid)/stateVars/riderStatus").observeSingleEvent(of: .value, with: { snapshot in
+            guard snapshot.value! is String else {
+                self.localDelegate.riderStatus = "request"
+                self.localDelegate.startRiderMapObservers()//the new function to populate the riders map each time the view loads.
+                return
+            }
+            self.localDelegate.riderStatus = snapshot.value! as! String
+            self.localDelegate.startRiderMapObservers() //the new function to populate the riders map each time the view loads.
+            return
+        })
     }
     
     override func didReceiveMemoryWarning() {
@@ -254,7 +276,7 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
             ref.child("offers/accepted/immediate/rider/\(user.uid)").setValue(["name": user.displayName!, "uid": user.uid, "venmoID": "none", "origin": ["lat": self.ourLat, "long": self.ourLong], "destination": dictionary.value(forKey: "destination"), "rate" : dictionary.value(forKey: "rate"), "accepted": 0, "repeats": 0, "duration": dictionary.value(forKey: "duration")])
             
             let localDelegate = UIApplication.shared.delegate as! AppDelegate
-            localDelegate.status = "accepted"
+            localDelegate.riderStatus = "accepted"
                 
             ref.child("offers/immediate/").removeValue() //remove the offers immediate branch from the riders account so that the drivers are able to observe the destruction and if they were selected or not.
             
@@ -282,7 +304,7 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
     }
     
     func acceptTapped(button: UIButton) -> Void {
-        localDelegate.changeStatus(status: "accepted")
+        localDelegate.changeRiderStatus(status: "accepted")
         print("Accept Tapped.")
         
         ride_accept(item: baseDictionary) //local cell assignment might be bad/fail here.

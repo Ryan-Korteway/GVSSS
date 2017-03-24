@@ -116,6 +116,13 @@ class SignInViewController: UIViewController, GIDSignInDelegate, GIDSignInUIDele
             // ...
             if let error = error {
                 print("sign in error: \(error.localizedDescription)")
+                
+                let alert = UIAlertController(title: "Sign In error", message: "Grand Valley Email Addresses Only.", preferredStyle: .alert)
+                
+                alert.addAction(UIAlertAction(title: "Dismiss", style: .default, handler: {
+                    (action) in print("No offer")
+                }))
+                
                 return
             }
             self.directUserToCorrectView()

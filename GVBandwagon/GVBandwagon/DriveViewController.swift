@@ -57,6 +57,33 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
         } else {
             self.googleMap.clear()
         }
+        
+        
+        self.ref.child("users/\(FIRAuth.auth()!.currentUser!.uid)/stateVars/driverStatus").observeSingleEvent(of: .value, with: { snapshot in
+            
+            guard snapshot.value! is String else {
+                self.localDelegate.driverStatus = "request"
+                self.localDelegate.startDriverMapObservers()//the new function to populate the riders map each time the view loads.
+                return
+            }
+            self.localDelegate.driverStatus = snapshot.value! as! String
+            self.localDelegate.startDriverMapObservers() //the new function to populate the riders map each time the view loads.
+            return
+        })
+        
+        
+        self.ref.child("users/\(FIRAuth.auth()!.currentUser!.uid)/stateVars/offeredID").observeSingleEvent(of: .value, with: { snapshot in
+            
+            guard snapshot.value! is String else {
+                self.localDelegate.offeredID = "none"
+                self.localDelegate.startDriverMapObservers()//the new function to populate the riders map each time the view loads.
+                return
+            }
+            self.localDelegate.offeredID = snapshot.value! as! String
+            self.localDelegate.startDriverMapObservers() //the new function to populate the riders map each time the view loads.
+            return
+        })
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -176,7 +203,7 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
             
                 print("we have been accepted")
             
-                localDelegate.status = "accepted"
+                localDelegate.driverStatus = "accepted"
                 let locationInfo: NSDictionary = cellInfo["origin"] as! NSDictionary
             
                 print("we offered a ride to: \(self.localDelegate.offeredID)")
@@ -239,7 +266,7 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
                         }
                     })
                     
-                    self.localDelegate.status = "request"
+                    self.localDelegate.driverStatus = "request"
                 })
             
         } else {
@@ -268,7 +295,7 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
             })
             
             
-            localDelegate.status = "request"
+            localDelegate.driverStatus = "request"
             
         }
         
@@ -424,7 +451,7 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
     }
     
     func acceptTapped(button: UIButton) -> Void {
-        localDelegate.changeStatus(status: "offer")
+        localDelegate.changeDriverStatus(status: "offer")
         localDelegate.offeredID = baseDictionary.value(forKey: "uid")! as! String
         print("Accept Tapped but it is really an offer.")
         
@@ -432,10 +459,29 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
         
         let user = FIRAuth.auth()!.currentUser!
         
-        //TODO need to check that the offer is still there before we can make the tap!!!
+        ref.observeSingleEvent(of: .value, with: { snapshot in
+            if(snapshot.value != nil) {
+                ref.child("\(user.uid)").setValue(["name": user.displayName!, "uid": user.uid, "venmoID": self.localDelegate.getVenmoID(), "origin": self.baseDictionary.value(forKey: "origin"), "destination": self.baseDictionary.value(forKey: "destination"), "rate": self.baseDictionary.value(forKey: "rate"), "accepted" : 0, "repeats": 0, "duration": "none"]) //value set needs to be all of our info for the snapshot.
+            
+                print("ride offered") //this one is if you hit the snooze button
+            
+            //self.googleMap.clear() //clears the map of all pins so w can show only what we care about.
+            
+            //make the pin with only the riders info.
+            //make tracker observers etc from only the baseDictionaries uid etc?...
+            
+                self.performSegue(withIdentifier: "driverAcceptsSegue", sender: self)
+            } else {
+                //make an alert saying no offer there?
+                
+                let alert = UIAlertController(title: "Apologies", message: "But this rider is no longer looking for offers.", preferredStyle: .alert)
+                
+                alert.addAction(UIAlertAction(title: "Dismiss", style: .default, handler: {
+                    (action) in print("No offer")}))
+            }
+        })
         
         //maybe venmo id is a global var in app delegate with a getter/setter for moments like this.
-        ref.child("\(user.uid)").setValue(["name": user.displayName!, "uid": user.uid, "venmoID": localDelegate.getVenmoID(), "origin": baseDictionary.value(forKey: "origin"), "destination": baseDictionary.value(forKey: "destination"), "rate": baseDictionary.value(forKey: "rate"), "accepted" : 0, "repeats": 0, "duration": "none"]) //value set needs to be all of our info for the snapshot.
         
         print("ride offered") //this one is if you hit the snooze button
         
@@ -448,7 +494,7 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
         infoWindow.removeFromSuperview()
         
         // Set Active Trip of Right Drawer to riders name and set it to clickable.
-        
+        infoWindow.removeFromSuperview()
     }
     
     func declineTapped(button: UIButton) -> Void {
