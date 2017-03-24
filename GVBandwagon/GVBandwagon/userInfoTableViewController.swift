@@ -188,7 +188,6 @@ UINavigationControllerDelegate {
         }
         
         // Capture the image path for uploading to Firebase:
-        //let url: NSURL = info.value(forKey: "UIImagePickerControllerReferenceURL") as! NSURL
         let url = info["UIImagePickerControllerReferenceURL"] as! URL
         //print("Image path: \(url.absoluteString)")
         
