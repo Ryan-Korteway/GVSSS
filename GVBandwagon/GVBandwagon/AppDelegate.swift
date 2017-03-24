@@ -565,7 +565,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
             print("timer firing");
             
-            if(self.mode == rider) {
+            if(self.mode == "rider") {
             
                 if(self.riderStatus == "request") {
                     
