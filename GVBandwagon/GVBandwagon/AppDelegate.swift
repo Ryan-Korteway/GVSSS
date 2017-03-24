@@ -711,7 +711,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     
                 }
             })
-        } else if (self.riderStatus == "accepted"){
+        } else if (self.riderStatus == "accepted"){ //path needs to go deeper....
             ref.child("users/\(userID)/rider/offers/accepted/immediate/driver").observeSingleEvent(of: .childChanged, with: { snapshot in //child added may be an issue here...
                 print(snapshot.key)
                 if(snapshot.key != userID) {
