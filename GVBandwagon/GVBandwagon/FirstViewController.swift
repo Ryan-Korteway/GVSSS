@@ -72,12 +72,15 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
         //NEED TO PULL DOWN/RESET RIDER STATUS here.
         
         self.ref.child("users/\(FIRAuth.auth()!.currentUser!.uid)/stateVars/riderStatus").observeSingleEvent(of: .value, with: { snapshot in
-            print("reloaded value \(snapshot.value! as String)")
-            localDelegate.riderStatus = snapshot.value! as String
+            guard snapshot.value! is String else {
+                    self.localDelegate.riderStatus = "request"
+                    self.localDelegate.startRiderMapObservers()//the new function to populate the riders map each time the view loads.
+                    return
+            }
+                self.localDelegate.riderStatus = snapshot.value! as! String
+                self.localDelegate.startRiderMapObservers() //the new function to populate the riders map each time the view loads.
+                return
         })
-        
-        
-        localDelegate.startRiderMapObservers() //the new function to populate the riders map each time the view loads.
         
     } //end of view did load.
     
@@ -86,8 +89,14 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
         localDelegate.startRiderMapObservers()
         
         self.ref.child("users/\(FIRAuth.auth()!.currentUser!.uid)/stateVars/riderStatus").observeSingleEvent(of: .value, with: { snapshot in
-            print("reloaded value \(snapshot.value! as String)")
-            localDelegate.riderStatus = snapshot.value! as String
+            guard snapshot.value! is String else {
+                self.localDelegate.riderStatus = "request"
+                self.localDelegate.startRiderMapObservers()//the new function to populate the riders map each time the view loads.
+                return
+            }
+            self.localDelegate.riderStatus = snapshot.value! as! String
+            self.localDelegate.startRiderMapObservers() //the new function to populate the riders map each time the view loads.
+            return
         })
     }
     

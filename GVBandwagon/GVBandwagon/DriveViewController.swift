@@ -64,14 +64,28 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
         
         
         self.ref.child("users/\(FIRAuth.auth()!.currentUser!.uid)/stateVars/driverStatus").observeSingleEvent(of: .value, with: { snapshot in
-            print("reloaded value \(snapshot.value! as String)")
-            localDelegate.driverStatus = snapshot.value! as String
+            
+            guard snapshot.value! is String else {
+                self.localDelegate.driverStatus = "request"
+                self.localDelegate.startDriverMapObservers()//the new function to populate the riders map each time the view loads.
+                return
+            }
+            self.localDelegate.driverStatus = snapshot.value! as! String
+            self.localDelegate.startDriverMapObservers() //the new function to populate the riders map each time the view loads.
+            return
         })
         
         
         self.ref.child("users/\(FIRAuth.auth()!.currentUser!.uid)/stateVars/offeredID").observeSingleEvent(of: .value, with: { snapshot in
-            print("reloaded value \(snapshot.value! as String)")
-            localDelegate.offeredID = snapshot.value! as String
+            
+            guard snapshot.value! is String else {
+                self.localDelegate.offeredID = "none"
+                self.localDelegate.startDriverMapObservers()//the new function to populate the riders map each time the view loads.
+                return
+            }
+            self.localDelegate.offeredID = snapshot.value! as! String
+            self.localDelegate.startDriverMapObservers() //the new function to populate the riders map each time the view loads.
+            return
         })
         
     }
@@ -444,7 +458,7 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
         
         ref.observeSingleEvent(of: .value, with: { snapshot in
             if(snapshot.value != nil) {
-                ref.child("\(user.uid)").setValue(["name": user.displayName!, "uid": user.uid, "venmoID": localDelegate.getVenmoID(), "origin": baseDictionary.value(forKey: "origin"), "destination": baseDictionary.value(forKey: "destination"), "rate": baseDictionary.value(forKey: "rate"), "accepted" : 0, "repeats": 0, "duration": "none"]) //value set needs to be all of our info for the snapshot.
+                ref.child("\(user.uid)").setValue(["name": user.displayName!, "uid": user.uid, "venmoID": self.localDelegate.getVenmoID(), "origin": self.baseDictionary.value(forKey: "origin"), "destination": self.baseDictionary.value(forKey: "destination"), "rate": self.baseDictionary.value(forKey: "rate"), "accepted" : 0, "repeats": 0, "duration": "none"]) //value set needs to be all of our info for the snapshot.
             
                 print("ride offered") //this one is if you hit the snooze button
             
@@ -453,13 +467,14 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
             //make the pin with only the riders info.
             //make tracker observers etc from only the baseDictionaries uid etc?...
             
-                performSegue(withIdentifier: "driverAcceptsSegue", sender: self)
+                self.performSegue(withIdentifier: "driverAcceptsSegue", sender: self)
             } else {
                 //make an alert saying no offer there?
                 
                 let alert = UIAlertController(title: "Apologies", message: "But this rider is no longer looking for offers.", preferredStyle: .alert)
                 
-                alert.addAction(UIAlertAction(title: "Dismiss", style: .default, handler: {print("No offer")}))
+                alert.addAction(UIAlertAction(title: "Dismiss", style: .default, handler: {
+                    (action) in print("No offer")}))
             }
         })
         
