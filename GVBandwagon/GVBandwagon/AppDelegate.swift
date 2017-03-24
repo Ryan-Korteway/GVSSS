@@ -47,9 +47,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     let settingsNavControllerStoryboardId = "settingsNavigationController"
     let driveTabBarControllerStoryboardId = "driveTabBarController"
     let driverPanelViewControllerStoryboardId = "driverPanelViewController"
-    let helpViewControllerStoryboardId = "helpViewController"
-    let myHistoryNavigationControllerStoryboardId = "myHistoryNavigationController"
-    let userAccountViewControllerStoryboardId = "userAccountViewControllerStoryboardId"
+    let helpNavControllerStoryboardId = "helpNavControllerStoryboardId"
+    let profileNavigationControllerStoryboardId = "profileNavigationControllerStoryboardId"
+    let historyNavigationControllerStoryboardId = "historyNavigationControllerStoryboardId"
     
     let kKGDrawerSettingsViewControllerStoryboardId = "KGDrawerSettingsViewControllerStoryboardId"
     let kKGDrawerWebViewViewControllerStoryboardId = "KGDrawerWebViewControllerStoryboardId"
@@ -107,7 +107,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         FIRApp.configure()
         // not really needed unless you really need it 
-        FIRDatabase.database().persistenceEnabled = true
+        //FIRDatabase.database().persistenceEnabled = true
         
         // Moved to didFinish... below
         //GIDSignIn.sharedInstance().clientID = FIRApp.defaultApp()?.options.clientID
@@ -273,9 +273,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return viewController
     }
     
-    func userAccountViewController() -> UIViewController {
-        let viewController = viewControllerForStoryboardId(storyboardId: userAccountViewControllerStoryboardId)
-        return viewController
+    func profileNavigationController() -> UINavigationController {
+        let viewController = viewControllerForStoryboardId(storyboardId: profileNavigationControllerStoryboardId)
+        return viewController as! UINavigationController
     }
     
     func rideViewController() -> UINavigationController {
@@ -308,14 +308,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return viewController
     }
     
-    func myHistoryTableViewController() -> UINavigationController {
-        let viewController = viewControllerForStoryboardId(storyboardId: myHistoryNavigationControllerStoryboardId)
+    func historyNavigationController() -> UINavigationController {
+        let viewController = viewControllerForStoryboardId(storyboardId: historyNavigationControllerStoryboardId)
         return viewController as! UINavigationController
     }
     
-    func helpViewController() -> UIViewController {
-        let viewController = viewControllerForStoryboardId(storyboardId: helpViewControllerStoryboardId)
-        return viewController
+    func helpNavController() -> UINavigationController {
+        let viewController = viewControllerForStoryboardId(storyboardId: helpNavControllerStoryboardId)
+        return viewController as! UINavigationController
     }
     
     

@@ -131,12 +131,6 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
         }
     }
     
-    @IBAction func testPresent(_ sender: Any) {
-        //let viewController: UIViewController = drawerStoryboard().instantiateViewController(withIdentifier: storyboardId)
-        let profileVC = localDelegate.userAccountViewController()
-        self.present(profileVC, animated: true, completion: nil)
-    }
-    
     func isRider() -> Bool {
         return true;
     }

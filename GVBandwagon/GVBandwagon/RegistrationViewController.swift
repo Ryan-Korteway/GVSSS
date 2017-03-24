@@ -11,6 +11,7 @@ import Firebase
 
 class RegistrationViewController: UIViewController {
 
+    // Rider fields
     @IBOutlet var fullNameLabel: UIView!
     @IBOutlet var phoneLabel: UIView!
     @IBOutlet var emailLabel: UILabel!
@@ -19,6 +20,18 @@ class RegistrationViewController: UIViewController {
     @IBOutlet var phoneField: UITextField!
     @IBOutlet var emailField: UITextField!
     @IBOutlet var registerButton: UIButton!
+    
+    // Driver fields
+    @IBOutlet var venmoLabel: UILabel!
+    @IBOutlet var makeLabel: UILabel!
+    @IBOutlet var modelLabel: UILabel!
+    @IBOutlet var photoLabel: UILabel!
+    @IBOutlet var venmoField: UITextField!
+    @IBOutlet var makeField: UITextField!
+    @IBOutlet var modelField: UITextField!
+    @IBOutlet var vehicleImageView: UIImageView!
+    
+    var registeringAs = "Rider"
    
     var currentUser : FIRUser?
     var ref: FIRDatabaseReference = FIRDatabase.database().reference()
@@ -29,6 +42,17 @@ class RegistrationViewController: UIViewController {
         currentUser = FIRAuth.auth()?.currentUser
         
         self.emailField.text = currentUser?.email
+        
+        if (self.registeringAs == "Rider") {
+            self.venmoLabel.isHidden = true
+            self.makeLabel.isHidden = true
+            self.modelLabel.isHidden = true
+            self.photoLabel.isHidden = true
+            self.venmoField.isHidden = true
+            self.makeField.isHidden = true
+            self.modelField.isHidden = true
+            self.vehicleImageView.isHidden = true
+        }
         
     }
 

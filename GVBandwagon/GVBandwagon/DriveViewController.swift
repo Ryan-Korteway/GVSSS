@@ -38,8 +38,6 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        self.navigationController?.navigationBar.isHidden = true
 
         //user location stuff
         locationManager.delegate = self
@@ -59,6 +57,11 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
         } else {
             self.googleMap.clear()
         }
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.navigationBar.isHidden = true
     }
     
     override func viewDidAppear(_ animated: Bool) {

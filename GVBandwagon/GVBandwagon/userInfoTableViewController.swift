@@ -232,4 +232,10 @@ UINavigationControllerDelegate {
             leftVC.profilePicImageView.image = image
         }
     }
+    
+    @IBAction func onDoneTapped(_ sender: Any) {
+        //dismiss(animated: true, completion: nil)
+        self.navigationController?.dismiss(animated: true, completion: nil)
+    }
+    
 }

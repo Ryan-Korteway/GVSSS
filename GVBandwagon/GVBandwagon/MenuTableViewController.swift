@@ -83,22 +83,10 @@ class MenuTableViewController: UITableViewController {
         
         if (indexPath.section == 1) {
             //enter profile
-            //appDelegate.toggleLeftDrawer(sender: self.modeLabel, animated: false)
-            //appDelegate.centerViewController = appDelegate.settingsNavController()
             
-            let drawerVC = appDelegate.drawerViewController as? CustomKGDrawerViewController
-            
-            if let navVC = drawerVC?.centerViewController as? UINavigationController {
-                if let rideVC = navVC.childViewControllers[0] as? FirstViewController {
-                    rideVC.performSegue(withIdentifier: "toProfileSegue", sender: navVC)
-                }
-            } else if let tabVC = drawerVC?.centerViewController as? UITabBarController {
-                if let driveVC = tabVC.childViewControllers[0].childViewControllers[0] as? DriveViewController {
-                    driveVC.performSegue(withIdentifier: "toProfileSegue", sender: driveVC)
-                }
-            }
-            
-            appDelegate.toggleLeftDrawer(sender: self, animated: false)
+            appDelegate.toggleLeftDrawer(sender: self, animated: true)
+            let profileNav = appDelegate.profileNavigationController()
+            self.present(profileNav, animated: true, completion: nil)
             
         } else if (indexPath.section == 2) {
             // Change name of this cell label to "ride mode" if it's "drive mode", and vice versa
@@ -112,10 +100,18 @@ class MenuTableViewController: UITableViewController {
             }
         } else if (indexPath.section == 3) {
             //enter my trips
-            appDelegate.centerViewController = appDelegate.myHistoryTableViewController()
+            //appDelegate.centerViewController = appDelegate.myHistoryTableViewController()
+            
+            appDelegate.toggleLeftDrawer(sender: self, animated: true)
+            let historyNav = appDelegate.historyNavigationController()
+            self.present(historyNav, animated: true, completion: nil)
+            
         } else if (indexPath.section == 4) {
             // enter help
-            appDelegate.centerViewController = appDelegate.helpViewController()
+            appDelegate.toggleLeftDrawer(sender: self, animated: true)
+            let helpNav = appDelegate.helpNavController()
+            self.present(helpNav, animated: true, completion: nil)
+            
         } else if (indexPath.section == 5) {
             //sign out
             appDelegate.firebaseSignOut()
