@@ -483,7 +483,6 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
         
         //maybe venmo id is a global var in app delegate with a getter/setter for moments like this.
         
-        print("ride offered") //this one is if you hit the snooze button
         
         //self.googleMap.clear() //clears the map of all pins so w can show only what we care about.
         
@@ -491,9 +490,6 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
         //make tracker observers etc from only the baseDictionaries uid etc?...
         
         self.performSegue(withIdentifier: "driverAcceptsSegue", sender: self)
-        infoWindow.removeFromSuperview()
-        
-        // Set Active Trip of Right Drawer to riders name and set it to clickable.
         infoWindow.removeFromSuperview()
     }
     
