@@ -370,6 +370,7 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
         marker.userData = cellInfo //giving each marker a dictionary of the info that set them up for future use.
         marker.map = self.googleMap
 
+        baseDictionary = marker.userData as! NSDictionary
         
         ref.child("requests/immediate/\(cellInfo["uid"]!)").observeSingleEvent(of: .childRemoved, with:{ snapshot in
                 print("PIN BEING DELETED")
@@ -423,6 +424,7 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
         marker.userData = cellInfo //giving each marker a dictionary of the info that set them up for future use.
         marker.map = self.googleMap
         
+        baseDictionary = marker.userData as! NSDictionary
         
         ref.child("requests/immediate/\(cellInfo["uid"]!)").observeSingleEvent(of: .childRemoved, with:{ snapshot in
             print("PIN BEING DELETED")
@@ -556,7 +558,8 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
             let long = locationInfo.value(forKey: "long") as! CLLocationDegrees
             
             marker.position = CLLocationCoordinate2D(latitude: lat, longitude: long)
-            
+            marker.userData = cellInfo
+            baseDictionary = marker.userData as! NSDictionary
             marker.title = "Rider: \(cellInfo["name"])"
             marker.map = self.googleMap
             

@@ -153,7 +153,7 @@ class RequestRideViewController: UIViewController, UISearchBarDelegate {
         
         print("Current lat and long: \(currentLat) \(currentLong)")
         
-        ref.child("requests/immediate/\(currentUser!.uid)/").setValue(["name": currentUser!.displayName!, "uid": currentUser!.uid, "venmoID": "none", "origin": ["lat": currentLat, "long": currentLong], "destination": ["latitude": destLat, "longitude" : destLong], "destinationName": destName, "rate" : (offerTextField.text! as! NSInteger), "accepted": 0, "repeats": freqArray.description, "duration": "none"]) //locations being sent here.
+        ref.child("requests/immediate/\(currentUser!.uid)/").setValue(["name": currentUser!.displayName!, "uid": currentUser!.uid, "venmoID": "none", "origin": ["lat": currentLat, "long": currentLong], "destination": ["latitude": destLat, "longitude" : destLong], "destinationName": destName, "rate" : NSInteger.init(self.offerTextField.text!)!, "accepted": 0, "repeats": freqArray.description, "duration": "none"]) //locations being sent here.
         
         //repeats, duration, and destination needs to be set dynamically!!!
         
@@ -275,7 +275,7 @@ class RequestRideViewController: UIViewController, UISearchBarDelegate {
         print("Send: Place attributions: \(destination.attributions)")
         self.destLat = destination.coordinate.latitude
         self.destLong = destination.coordinate.longitude
-        self.destName = destination.formattedAddress as! NSString
+        self.destName = destination.formattedAddress as NSString!
     }
 }
 
