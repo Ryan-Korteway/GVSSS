@@ -13,11 +13,8 @@ import GooglePlaces
 class RideSummaryTableViewController: UITableViewController {
 
     @IBOutlet var nameLabel: UILabel!
-    @IBOutlet var rateLabel: UILabel!
-    
     @IBOutlet var phoneLabel: UILabel!
     @IBOutlet var ratingLabel: UILabel!
-    
     @IBOutlet var originStreetLabel: UILabel!
     @IBOutlet var destStreetLabel: UILabel!
     @IBOutlet var rateLabel: UILabel!
@@ -34,7 +31,7 @@ class RideSummaryTableViewController: UITableViewController {
     
     var localLong :  CLLocationDegrees = 0.0
     
-    var localAddress : String
+    var localAddress : String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -80,7 +77,7 @@ class RideSummaryTableViewController: UITableViewController {
         
         originStreetLabel.text = localAddress
         
-        destStreetLabel.text = informationDictionary.value(forKey: "destinationName")
+        destStreetLabel.text = informationDictionary.value(forKey: "destinationName") as! String?
         
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false

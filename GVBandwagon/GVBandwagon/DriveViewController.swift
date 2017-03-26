@@ -249,10 +249,10 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
                     print("marker moving!!! \(snapshot.key)")
                     if(snapshot.key == "lat") {
                         marker.position.latitude = snapshot.value as! CLLocationDegrees
-                        riderLat = snapshot.value as! CLLocationDegrees
+                        self.riderLat = snapshot.value as! CLLocationDegrees
                     } else {
                         marker.position.longitude = snapshot.value as! CLLocationDegrees
-                        riderLong = snapshot.value as! CLLocationDegrees
+                        self.riderLong = snapshot.value as! CLLocationDegrees
                     }
                 })
                 //do any of these matter thanks to the custom display window?...
@@ -534,7 +534,7 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
                 // Set the attributes in the next VC.
                 nextVC.informationDictionary = self.baseDictionary
                 nextVC.paymentText = "Request Payment"
-                nextVC.localAddress = riderAddress
+                nextVC.localAddress = riderAddress as String
                 nextVC.localLat = riderLat
                 nextVC.localLong = riderLong 
             }

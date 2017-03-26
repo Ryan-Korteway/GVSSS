@@ -1424,54 +1424,54 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ZZ2-pr-J18">
-                                <rect key="frame" x="21" y="35" width="333" height="100"/>
+                                <rect key="frame" x="21" y="45" width="333" height="100"/>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="100" id="E9w-EY-1zV"/>
                                 </constraints>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Go Online!" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HPv-fo-RTT">
-                                <rect key="frame" x="36" y="170" width="88" height="23"/>
+                                <rect key="frame" x="36" y="180" width="88" height="23"/>
                                 <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0yj-Gq-i0h">
-                                <rect key="frame" x="149" y="166" width="51" height="31"/>
+                                <rect key="frame" x="149" y="176" width="51" height="31"/>
                             </switch>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Your Rating" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mM8-U5-Iwr">
-                                <rect key="frame" x="36" y="228" width="105" height="26"/>
+                                <rect key="frame" x="36" y="238" width="105" height="26"/>
                                 <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="20"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="fivestars" translatesAutoresizingMaskIntoConstraints="NO" id="TWC-hX-dEE">
-                                <rect key="frame" x="36" y="262" width="150" height="30"/>
+                                <rect key="frame" x="36" y="272" width="150" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="150" id="eDJ-G7-Neh"/>
                                     <constraint firstAttribute="height" constant="30" id="lK5-vJ-VXg"/>
                                 </constraints>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Your Total Trips" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="O1j-y3-3Wf">
-                                <rect key="frame" x="36" y="327" width="132" height="25"/>
+                                <rect key="frame" x="36" y="337" width="132" height="25"/>
                                 <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="19"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0 Trips" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Shm-mj-581">
-                                <rect key="frame" x="36" y="360" width="53" height="21"/>
+                                <rect key="frame" x="36" y="370" width="53" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Active Trip" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3OU-0P-c7d">
-                                <rect key="frame" x="36" y="416" width="96" height="26"/>
+                                <rect key="frame" x="36" y="426" width="96" height="26"/>
                                 <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="20"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OSR-dU-sZt">
-                                <rect key="frame" x="0.0" y="452" width="375" height="40"/>
+                                <rect key="frame" x="0.0" y="462" width="375" height="40"/>
                                 <subviews>
                                     <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No Active Trip" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="32L-kN-KEu">
                                         <rect key="frame" x="36" y="10" width="108" height="21"/>
@@ -1480,7 +1480,6 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                 </subviews>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <gestureRecognizers/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="C0F-RV-ov2"/>
@@ -1508,7 +1507,7 @@
                             <constraint firstItem="0yj-Gq-i0h" firstAttribute="centerY" secondItem="HPv-fo-RTT" secondAttribute="centerY" id="fgp-aJ-jw6"/>
                             <constraint firstAttribute="trailingMargin" secondItem="ZZ2-pr-J18" secondAttribute="trailing" constant="5" id="gqR-cP-zHs"/>
                             <constraint firstItem="0yj-Gq-i0h" firstAttribute="leading" secondItem="HPv-fo-RTT" secondAttribute="trailing" constant="25" id="lB9-gf-yCT"/>
-                            <constraint firstItem="ZZ2-pr-J18" firstAttribute="top" secondItem="kwo-Sl-25g" secondAttribute="bottom" constant="15" id="nvC-7Q-qE6"/>
+                            <constraint firstItem="ZZ2-pr-J18" firstAttribute="top" secondItem="kwo-Sl-25g" secondAttribute="bottom" constant="25" id="nvC-7Q-qE6"/>
                             <constraint firstAttribute="trailing" secondItem="OSR-dU-sZt" secondAttribute="trailing" id="qg2-Wh-2a1"/>
                             <constraint firstItem="HPv-fo-RTT" firstAttribute="leading" secondItem="aPe-ux-gg7" secondAttribute="leadingMargin" constant="20" id="rIe-5a-Cgf"/>
                             <constraint firstItem="Shm-mj-581" firstAttribute="leading" secondItem="mM8-U5-Iwr" secondAttribute="leading" id="sVZ-sV-gHD"/>
@@ -1691,7 +1690,7 @@
                         <outlet property="nameLabel" destination="L0Z-ix-NVx" id="HLq-xs-s2d"/>
                         <outlet property="originStreetLabel" destination="7nM-hv-m2y" id="Pfc-X0-YV1"/>
                         <outlet property="paymentButton" destination="0Cd-lD-wxJ" id="wqc-Df-Z7Q"/>
-                        <outlet property="phoneLabel" destination="UGz-NF-4Si" id="S8K-bd-WUu"/>
+                        <outlet property="phoneLabel" destination="UGz-NF-4Si" id="siD-PJ-cow"/>
                         <outlet property="rateLabel" destination="x1E-1q-0hk" id="bEV-hj-B84"/>
                         <outlet property="ratingLabel" destination="fZa-Qe-cny" id="wxe-Dl-rCG"/>
                     </connections>

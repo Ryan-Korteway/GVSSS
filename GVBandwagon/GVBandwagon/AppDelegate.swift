@@ -39,7 +39,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var ourlat : CLLocationDegrees = 0.0
     var ourlong : CLLocationDegrees = 0.0
-    var ourAddress : NSString
+    var ourAddress : NSString?
     
     let kKGDrawersStoryboardName = "Main"
     
@@ -583,7 +583,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             
                 } else if (self.riderStatus == "accepted") {
                     
-                        ref.child("users/\(ourID)/rider/offers/accepted/immediate/rider/\(ourID)/origin").setValue(["lat": self.ourlat, "long": self.ourlong, "address": ourAddress]);
+                        ref.child("users/\(ourID)/rider/offers/accepted/immediate/rider/\(ourID)/origin").setValue(["lat": self.ourlat, "long": self.ourlong, "address": self.ourAddress]);
                    
                 } else {
                     print("something up with timer")
@@ -746,7 +746,25 @@ extension AppDelegate: CLLocationManagerDelegate {
         print("locations = \(locValue.latitude) \(locValue.longitude)")
         
         //here set ourAddress to the google places address.
-        //ourAddress =
+        
+        // Get riders current place
+        let placesClient = GMSPlacesClient.shared()
+        
+        placesClient.currentPlace(callback: { (placeLikelihoodList, error) -> Void in
+            if let error = error {
+                print("Pick Place error: \(error.localizedDescription)")
+                return
+            }
+            
+            // address = an NSString of the address where the user is.
+            if let place = placeLikelihoodList?.likelihoods.first?.place {
+                if let address = place.formattedAddress {
+                    self.ourAddress = address as NSString?
+                }
+            }
+        })
+        // End get riders current place
+        
         ourlat = locValue.latitude
         ourlong = locValue.longitude
     }
