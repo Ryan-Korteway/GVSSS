@@ -15,7 +15,7 @@ class MenuTableViewController: UITableViewController {
     @IBOutlet var firstNameLabel: UILabel!
     @IBOutlet var modeLabel: UILabel!
     @IBOutlet var profilePicImageView: UIImageView!
-    var vehicleImage = UIImage? = nil
+    var vehicleImage: UIImage? = nil
     
     // Get a reference to the storage service using the default Firebase App
     let storage = FIRStorage.storage()
@@ -25,6 +25,7 @@ class MenuTableViewController: UITableViewController {
         
         self.navigationController?.navigationBar.isHidden = false
         
+        // Gets the user's name, profile image, AND vehicle image:
         self.getProfilePicFromFB()
         
         /*
@@ -89,6 +90,7 @@ class MenuTableViewController: UITableViewController {
             let profileNav = appDelegate.profileNavigationController()
             if let profileVC = profileNav.childViewControllers[0] as? userInfoTableViewController {
                 profileVC.profileImage = self.profilePicImageView.image
+                profileVC.vehicleImage = self.vehicleImage
             }
             self.present(profileNav, animated: true, completion: nil)
             

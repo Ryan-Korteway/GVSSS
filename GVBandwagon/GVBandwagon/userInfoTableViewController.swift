@@ -24,7 +24,8 @@ UINavigationControllerDelegate {
     @IBOutlet var profilePicView: UIImageView!
     @IBOutlet var vehiclePhotoImageView: UIImageView!
     
-    var profileImage:UIImage? = nil
+    var profileImage: UIImage? = nil
+    var vehicleImage: UIImage? = nil
     var changingImage = "Profile"
     
     var currentUser : FIRUser?
@@ -38,6 +39,10 @@ UINavigationControllerDelegate {
         
         if let image = self.profileImage {
             self.profilePicView.image = image
+        }
+        
+        if let image = self.vehicleImage {
+            self.vehiclePhotoImageView.image = image
         }
 
         // Uncomment the following line to preserve selection between presentations
