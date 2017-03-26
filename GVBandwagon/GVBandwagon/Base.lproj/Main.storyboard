@@ -70,7 +70,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="defaultUserPhoto" translatesAutoresizingMaskIntoConstraints="NO" id="ru3-th-MUL">
-                                                    <rect key="frame" x="20" y="-4" width="50" height="51"/>
+                                                    <rect key="frame" x="20" y="-3.5" width="50" height="50"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="50" id="Arw-Ry-iWh"/>
                                                         <constraint firstAttribute="width" constant="50" id="BBA-Ch-qxQ"/>
@@ -1778,7 +1778,7 @@
             <objects>
                 <navigationController storyboardIdentifier="profileNavigationControllerStoryboardId" automaticallyAdjustsScrollViewInsets="NO" id="3qB-dj-fru" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="RkK-Gu-smX">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="RkK-Gu-smX">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
