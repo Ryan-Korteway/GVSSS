@@ -85,7 +85,7 @@ UINavigationControllerDelegate {
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if (indexPath.section == 0 || indexPath.section == 7) {
+        if (indexPath.section == 0 || indexPath.section == 6 || indexPath.section == 7) {
             return 100
         } else {
             return 44

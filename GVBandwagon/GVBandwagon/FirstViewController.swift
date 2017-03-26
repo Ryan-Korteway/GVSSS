@@ -9,11 +9,14 @@
 import UIKit
 import Firebase
 import GoogleMaps
+import GooglePlaces
 
 //TODO: Each viewDidLoad, check didLoadMapsYet and set googleMapsView = persisted map.  
 class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notifications {
     
     var localDelegate: AppDelegate!
+    
+    var placesClient: GMSPlacesClient!
 
     @IBOutlet var rideNowButton: UIButton!
     @IBOutlet var superViewTapGesture: UITapGestureRecognizer!
@@ -37,7 +40,9 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
     var shadowLayer: CAShapeLayer!
     
     override func viewDidLoad() {
-        super.viewDidLoad()       
+        super.viewDidLoad()
+        
+        placesClient = GMSPlacesClient.shared()
         
         // Custom button design. We should put this in its own class later.
         if shadowLayer == nil {

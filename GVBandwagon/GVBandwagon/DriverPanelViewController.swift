@@ -18,6 +18,10 @@ class DriverPanelViewController: UIViewController {
     @IBOutlet var activeTripLabel: UILabel!
     @IBOutlet var activeTripView: UIView!
     
+    @IBOutlet var ratingImageView: UIImageView!
+    @IBOutlet var tripCounterLabel: UILabel!
+    var totalTrips = 0
+    
     var mode = "Ride"
     
     var ourlat : CLLocationDegrees = 0.0
@@ -53,6 +57,9 @@ class DriverPanelViewController: UIViewController {
         
         self.goOnlineSwitch.setOn(false, animated: false)
         self.goOnlineSwitch.addTarget(self, action: #selector(switchIsChanged(mySwitch:)), for: .valueChanged)
+        
+        self.ratingImageView.image = getRating()
+        getActiveTrip()
     }
     
     func switchIsChanged(mySwitch: UISwitch) {
