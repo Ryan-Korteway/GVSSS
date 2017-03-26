@@ -39,7 +39,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var ourlat : CLLocationDegrees = 0.0
     var ourlong : CLLocationDegrees = 0.0
-    var ourAddress : NSString
+    var ourAddress : NSString = ""
     
     let kKGDrawersStoryboardName = "Main"
     
@@ -583,7 +583,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             
                 } else if (self.riderStatus == "accepted") {
                     
-                        ref.child("users/\(ourID)/rider/offers/accepted/immediate/rider/\(ourID)/origin").setValue(["lat": self.ourlat, "long": self.ourlong, "address": ourAddress]);
+                        ref.child("users/\(ourID)/rider/offers/accepted/immediate/rider/\(ourID)/origin").setValue(["lat": self.ourlat, "long": self.ourlong, "address": self.ourAddress]);
                    
                 } else {
                     print("something up with timer")

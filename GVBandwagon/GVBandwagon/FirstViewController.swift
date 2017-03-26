@@ -228,7 +228,7 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
                     if let placeLikelihoodList = placeLikelihoodList {
                         if let place = placeLikelihoodList.likelihoods.first?.place {
                             let address = place.formattedAddress
-                            nextVC.localAddress = address
+                            nextVC.localAddress = address!
                         }
                     }
                 })

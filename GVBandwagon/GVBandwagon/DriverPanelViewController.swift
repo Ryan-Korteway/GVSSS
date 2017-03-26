@@ -130,7 +130,7 @@ class DriverPanelViewController: UIViewController {
             (segue.destination as! RideSummaryTableViewController).mode = "drive"
         }
     }
-    */
+    
     
     // Get active trip from FB
     func getActiveTrip() {
