@@ -718,11 +718,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 }
             })
         } else if (self.riderStatus == "accepted"){ //path needs to go deeper....
-            ref.child("users/\(userID)/rider/offers/accepted/immediate/driver").observeSingleEvent(of: .childChanged, with: { snapshot in //child added may be an issue here...
+            ref.child("users/\(userID)/rider/offers/accepted/immediate/driver").observeSingleEvent(of: .value, with: { snapshot in //child added may be an issue here...
                 print(snapshot.key)
-                if(snapshot.key != userID) {
-                    (self.firstViewController as! FirstViewController).fillWithAcceptance(item: cellItem.init(snapshot: snapshot))
-                }
+                
+                (self.firstViewController as! FirstViewController).fillWithAcceptance(item: cellItem.init(snapshot: snapshot))
             })
         } //no else for status == request because request is the base which means we dont have any position to advertise or any pins to recreate
     }

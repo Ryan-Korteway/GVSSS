@@ -56,7 +56,7 @@ class RideSummaryTableViewController: UITableViewController {
         
         if(informationDictionary.count > 0 ) {
             nameLabel.text = informationDictionary.value(forKey: "name") as! String?
-            rateLabel.text = "\(informationDictionary.value(forKey: "rate"))"
+            rateLabel.text = "\(informationDictionary.value(forKey: "rate")!)"
             
             if(paymentText == "Request Payment") {
                 //driver side so pull riders ratings

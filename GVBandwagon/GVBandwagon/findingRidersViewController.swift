@@ -43,20 +43,15 @@ class findingRidersViewController: UIViewController {
                             
                             let yesAction = UIAlertAction(title:"Yes", style:.default) { action -> Void in
                                 //code for the action can go here. so accepts or deny's
-                                self.ref.child("users/\(snapshot.value!)/rider/driver_uid").setValue(self.currentUser!.uid)
-                                self.ref.child("users/\(snapshot.value!)/rider/driver_found").setValue(true)
                             }
                             
                             let noAction = UIAlertAction(title:"No", style:.default) { action -> Void in
                                 //code for the action can go here. so accepts or deny's
-                                self.ref.child("users/\(snapshot.value!)/rider/driver_uid").setValue("none")
-                                self.ref.child("users/\(snapshot.value!)/rider/driver_found").setValue(true)
                             }
                             
                             alert.addAction(yesAction)
                             alert.addAction(noAction)
                             self.present(alert, animated:true, completion:nil)
-                            driverRef.child("rider_found").setValue(false)
                             
                         })
                         
