@@ -495,7 +495,7 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
         
         ref.observeSingleEvent(of: .value, with: { snapshot in
             if(snapshot.value != nil) { //i think the origin base dictionary usage here is the cause of the pins starting in the wrong placees. try experimenting with just putting in our own lats and longs later.
-                ref.child("\(user.uid)").setValue(["name": user.displayName!, "uid": user.uid, "venmoID": self.localDelegate.getVenmoID(), "origin": self.baseDictionary.value(forKey: "origin"), "destination": self.baseDictionary.value(forKey: "destination"), "rate": self.baseDictionary.value(forKey: "rate"), "accepted" : 0, "repeats": "none", "duration": "none"]) //value set needs to be all of our info for the snapshot.
+                ref.child("\(user.uid)").setValue(["name": user.displayName!, "uid": user.uid, "venmoID": self.localDelegate.getVenmoID(), "origin": self.baseDictionary.value(forKey: "origin"), "destination": self.baseDictionary.value(forKey: "destination"), "rate": self.baseDictionary.value(forKey: "rate"), "accepted" : 0, "repeats": "none", "duration": "none", "destinationName": self.baseDictionary.value(forKey: "destinationName")]) //value set needs to be all of our info for the snapshot.
             
                 print("ride offered") //this one is if you hit the snooze button
             
