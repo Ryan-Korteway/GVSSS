@@ -15,6 +15,7 @@ class MenuTableViewController: UITableViewController {
     @IBOutlet var firstNameLabel: UILabel!
     @IBOutlet var modeLabel: UILabel!
     @IBOutlet var profilePicImageView: UIImageView!
+    var vehicleImage = UIImage? = nil
     
     // Get a reference to the storage service using the default Firebase App
     let storage = FIRStorage.storage()
@@ -184,8 +185,8 @@ class MenuTableViewController: UITableViewController {
         
         // Create a reference to 'images/profilepic.jpg'
         let profileImageRef = storageRef.child("images/\(userID)/profilepic.jpg")
+        let vehicleImageRef = storageRef.child("images/\(userID)/vehiclepic.jpg")
         
-        // TODO: Compress Images before UPLOAD!
         // Download in memory with a maximum allowed size of 1MB (1 * 1024 * 1024 bytes)
         profileImageRef.data(withMaxSize: 1 * 1024 * 1024) { data, error in
             if let error = error {
@@ -195,6 +196,15 @@ class MenuTableViewController: UITableViewController {
                 let image = UIImage(data: data!)
                 self.profilePicImageView.image = image
 
+            }
+        }
+        
+        vehicleImageRef.data(withMaxSize: 1 * 1024 * 1024) { data, error in
+            if let error = error {
+                print("Error occurred: \(error.localizedDescription)")
+            } else {
+                let image = UIImage(data: data!)
+                self.vehicleImage = image
             }
         }
         

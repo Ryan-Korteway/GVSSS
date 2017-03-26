@@ -39,7 +39,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var ourlat : CLLocationDegrees = 0.0
     var ourlong : CLLocationDegrees = 0.0
-    var ourAddress : NSString?
+    var ourAddress : NSString = ""
     
     let kKGDrawersStoryboardName = "Main"
     
@@ -759,7 +759,7 @@ extension AppDelegate: CLLocationManagerDelegate {
             // address = an NSString of the address where the user is.
             if let place = placeLikelihoodList?.likelihoods.first?.place {
                 if let address = place.formattedAddress {
-                    self.ourAddress = address as NSString?
+                    self.ourAddress = (address as NSString?)!
                 }
             }
         })

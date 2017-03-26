@@ -539,7 +539,6 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
                 nextVC.localLong = riderLong 
             }
             
-            
         }
     }
     

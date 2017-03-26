@@ -31,7 +31,7 @@ class RideSummaryTableViewController: UITableViewController {
     
     var localLong :  CLLocationDegrees = 0.0
     
-    var localAddress : String?
+    var localAddress : String = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
