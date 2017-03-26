@@ -9,11 +9,14 @@
 import UIKit
 import Firebase
 import GoogleMaps
+import GooglePlaces
 
 //TODO: Each viewDidLoad, check didLoadMapsYet and set googleMapsView = persisted map.  
 class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notifications {
     
     var localDelegate: AppDelegate!
+    
+    var placesClient: GMSPlacesClient!
 
     @IBOutlet var rideNowButton: UIButton!
     @IBOutlet var superViewTapGesture: UITapGestureRecognizer!
@@ -37,7 +40,9 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
     var shadowLayer: CAShapeLayer!
     
     override func viewDidLoad() {
-        super.viewDidLoad()       
+        super.viewDidLoad()
+        
+        placesClient = GMSPlacesClient.shared()
         
         // Custom button design. We should put this in its own class later.
         if shadowLayer == nil {
@@ -208,6 +213,24 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
                 // Set the attributes in the next VC.
                 nextVC.paymentText = "Submit Payment"
                 //here i could grab a global accepts dictionary and send it over to the other view controller..
+                
+                // Get riders current place
+                // address = an NSString of the address where the user is.
+                // TODO: Pass the address to nextVC
+                self.placesClient.currentPlace(callback: { (placeLikelihoodList, error) -> Void in
+                    if let error = error {
+                        print("Pick Place error: \(error.localizedDescription)")
+                        return
+                    }
+                    
+                    if let placeLikelihoodList = placeLikelihoodList {
+                        if let place = placeLikelihoodList.likelihoods.first?.place {
+                            let address = place.formattedAddress
+                        }
+                    }
+                })
+                // End get riders current place
+                
             }
         } else if segue.identifier == "toRequestRideSegue" {
             if let nextVC = segue.destination as? RequestRideViewController {

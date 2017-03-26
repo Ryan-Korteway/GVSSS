@@ -262,6 +262,12 @@ class RequestRideViewController: UIViewController, UISearchBarDelegate {
             }
         })
     }
+    
+    func sendRequestToFirebase(destination: GMSPlace) {
+        print("Send to FB: Place name: \(destination.name)")
+        print("Send: Place address: \(destination.formattedAddress)")
+        print("Send: Place attributions: \(destination.attributions)")
+    }
 }
 
 extension RequestRideViewController: GMSAutocompleteResultsViewControllerDelegate {
@@ -272,6 +278,7 @@ extension RequestRideViewController: GMSAutocompleteResultsViewControllerDelegat
         print("Place name: \(place.name)")
         print("Place address: \(place.formattedAddress)")
         print("Place attributions: \(place.attributions)")
+        sendRequestToFirebase(destination: place)
     }
     
     func resultsController(_ resultsController: GMSAutocompleteResultsViewController,

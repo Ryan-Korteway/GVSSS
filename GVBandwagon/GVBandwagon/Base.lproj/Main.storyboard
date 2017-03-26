@@ -70,7 +70,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="defaultUserPhoto" translatesAutoresizingMaskIntoConstraints="NO" id="ru3-th-MUL">
-                                                    <rect key="frame" x="20" y="-4" width="50" height="51"/>
+                                                    <rect key="frame" x="20" y="-3.5" width="50" height="50"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="50" id="Arw-Ry-iWh"/>
                                                         <constraint firstAttribute="width" constant="50" id="BBA-Ch-qxQ"/>
@@ -1423,52 +1423,69 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Go Online!" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HPv-fo-RTT">
-                                <rect key="frame" x="38" y="57" width="137" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ZZ2-pr-J18">
+                                <rect key="frame" x="21" y="28" width="333" height="100"/>
+                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="100" id="E9w-EY-1zV"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Go Online!" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HPv-fo-RTT">
+                                <rect key="frame" x="36" y="163" width="88" height="23"/>
                                 <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Your Rating" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mM8-U5-Iwr">
-                                <rect key="frame" x="38" y="149" width="137" height="32"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0yj-Gq-i0h">
+                                <rect key="frame" x="149" y="159" width="51" height="31"/>
+                            </switch>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Your Rating" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mM8-U5-Iwr">
+                                <rect key="frame" x="36" y="221" width="105" height="26"/>
                                 <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="20"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Your Total Trips" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="O1j-y3-3Wf">
-                                <rect key="frame" x="38" y="261" width="137" height="23"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="fivestars" translatesAutoresizingMaskIntoConstraints="NO" id="TWC-hX-dEE">
+                                <rect key="frame" x="36" y="255" width="200" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="200" id="eDJ-G7-Neh"/>
+                                    <constraint firstAttribute="height" constant="40" id="lK5-vJ-VXg"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Your Total Trips" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="O1j-y3-3Wf">
+                                <rect key="frame" x="36" y="330" width="132" height="25"/>
                                 <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="19"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Active Trip" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3OU-0P-c7d">
-                                <rect key="frame" x="38" y="357" width="137" height="23"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0 Trips" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Shm-mj-581">
+                                <rect key="frame" x="36" y="363" width="53" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Active Trip" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3OU-0P-c7d">
+                                <rect key="frame" x="36" y="419" width="96" height="26"/>
                                 <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="20"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0yj-Gq-i0h">
-                                <rect key="frame" x="183" y="52" width="51" height="31"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            </switch>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="OSR-dU-sZt">
-                                <rect key="frame" x="30" y="392" width="240" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OSR-dU-sZt">
+                                <rect key="frame" x="0.0" y="455" width="375" height="40"/>
                                 <subviews>
-                                    <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="No Active Trip" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="32L-kN-KEu">
-                                        <rect key="frame" x="8" y="4" width="137" height="23"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="17"/>
+                                    <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No Active Trip" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="32L-kN-KEu">
+                                        <rect key="frame" x="36" y="10" width="108" height="21"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <gestureRecognizers/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="C0F-RV-ov2"/>
+                                    <constraint firstItem="32L-kN-KEu" firstAttribute="centerY" secondItem="OSR-dU-sZt" secondAttribute="centerY" id="Ua5-qO-MWS"/>
+                                </constraints>
                                 <connections>
                                     <outletCollection property="gestureRecognizers" destination="VyI-Wj-ABE" appends="YES" id="hCx-T8-RKy"/>
                                 </connections>
@@ -1476,12 +1493,37 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <gestureRecognizers/>
+                        <constraints>
+                            <constraint firstItem="O1j-y3-3Wf" firstAttribute="top" secondItem="TWC-hX-dEE" secondAttribute="bottom" constant="35" id="1WR-Ui-dDR"/>
+                            <constraint firstItem="mM8-U5-Iwr" firstAttribute="leading" secondItem="aPe-ux-gg7" secondAttribute="leadingMargin" constant="20" id="7iy-WO-E1e"/>
+                            <constraint firstItem="mM8-U5-Iwr" firstAttribute="top" secondItem="HPv-fo-RTT" secondAttribute="bottom" constant="35" id="HXv-8s-xPM"/>
+                            <constraint firstItem="OSR-dU-sZt" firstAttribute="top" secondItem="3OU-0P-c7d" secondAttribute="bottom" constant="10" id="JN9-Fo-fW3"/>
+                            <constraint firstItem="Shm-mj-581" firstAttribute="top" secondItem="O1j-y3-3Wf" secondAttribute="bottom" constant="8" id="KR1-1q-kIG"/>
+                            <constraint firstItem="ZZ2-pr-J18" firstAttribute="leading" secondItem="aPe-ux-gg7" secondAttribute="leadingMargin" constant="5" id="NFX-bQ-8X0"/>
+                            <constraint firstItem="3OU-0P-c7d" firstAttribute="top" secondItem="Shm-mj-581" secondAttribute="bottom" constant="35" id="OEJ-B5-BGT"/>
+                            <constraint firstItem="HPv-fo-RTT" firstAttribute="top" secondItem="ZZ2-pr-J18" secondAttribute="bottom" constant="35" id="OdN-Rb-yq7"/>
+                            <constraint firstItem="TWC-hX-dEE" firstAttribute="leading" secondItem="mM8-U5-Iwr" secondAttribute="leading" id="Q5B-9d-chD"/>
+                            <constraint firstItem="TWC-hX-dEE" firstAttribute="top" secondItem="mM8-U5-Iwr" secondAttribute="bottom" constant="8" id="SSi-5Z-yP8"/>
+                            <constraint firstItem="32L-kN-KEu" firstAttribute="leading" secondItem="mM8-U5-Iwr" secondAttribute="leading" id="XcD-ec-4F5"/>
+                            <constraint firstItem="3OU-0P-c7d" firstAttribute="leading" secondItem="mM8-U5-Iwr" secondAttribute="leading" id="c2O-nG-sc1"/>
+                            <constraint firstItem="0yj-Gq-i0h" firstAttribute="centerY" secondItem="HPv-fo-RTT" secondAttribute="centerY" id="fgp-aJ-jw6"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="ZZ2-pr-J18" secondAttribute="trailing" constant="5" id="gqR-cP-zHs"/>
+                            <constraint firstItem="0yj-Gq-i0h" firstAttribute="leading" secondItem="HPv-fo-RTT" secondAttribute="trailing" constant="25" id="lB9-gf-yCT"/>
+                            <constraint firstItem="ZZ2-pr-J18" firstAttribute="top" secondItem="kwo-Sl-25g" secondAttribute="bottom" constant="8" id="nvC-7Q-qE6"/>
+                            <constraint firstAttribute="trailing" secondItem="OSR-dU-sZt" secondAttribute="trailing" id="qg2-Wh-2a1"/>
+                            <constraint firstItem="HPv-fo-RTT" firstAttribute="leading" secondItem="aPe-ux-gg7" secondAttribute="leadingMargin" constant="20" id="rIe-5a-Cgf"/>
+                            <constraint firstItem="Shm-mj-581" firstAttribute="leading" secondItem="mM8-U5-Iwr" secondAttribute="leading" id="sVZ-sV-gHD"/>
+                            <constraint firstItem="O1j-y3-3Wf" firstAttribute="leading" secondItem="mM8-U5-Iwr" secondAttribute="leading" id="txa-sg-rzT"/>
+                            <constraint firstItem="OSR-dU-sZt" firstAttribute="leading" secondItem="aPe-ux-gg7" secondAttribute="leading" id="vAm-qg-8UR"/>
+                        </constraints>
                     </view>
                     <connections>
                         <outlet property="activeTripLabel" destination="32L-kN-KEu" id="gBy-w4-8qq"/>
                         <outlet property="activeTripView" destination="OSR-dU-sZt" id="3Tw-Hh-PUW"/>
                         <outlet property="goOnlineLabel" destination="HPv-fo-RTT" id="CPR-jZ-nk1"/>
                         <outlet property="goOnlineSwitch" destination="0yj-Gq-i0h" id="vmK-Xk-yXz"/>
+                        <outlet property="ratingImageView" destination="TWC-hX-dEE" id="T5D-yS-wRf"/>
+                        <outlet property="tripCounterLabel" destination="Shm-mj-581" id="xO2-Mh-LxF"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="t2b-sH-Jgh" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1491,7 +1533,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="2746" y="-1361"/>
+            <point key="canvasLocation" x="2744.8000000000002" y="-1361.4692653673164"/>
         </scene>
         <!--Ride Summary-->
         <scene sceneID="doC-82-JO4">
@@ -1719,7 +1761,7 @@
             <objects>
                 <navigationController storyboardIdentifier="historyNavigationControllerStoryboardId" automaticallyAdjustsScrollViewInsets="NO" id="uFx-a6-EjB" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="cEz-5G-en9">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="cEz-5G-en9">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1737,7 +1779,7 @@
             <objects>
                 <navigationController storyboardIdentifier="rideNavController" automaticallyAdjustsScrollViewInsets="NO" id="HC5-ET-4zC" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="VD2-H3-46M">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="VD2-H3-46M">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1756,7 +1798,7 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Jyl-nh-N2F" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Urgent Rides" image="expointTab" id="E42-3c-tFb"/>
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="4eg-G6-LA2">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="4eg-G6-LA2">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1774,7 +1816,7 @@
             <objects>
                 <navigationController storyboardIdentifier="profileNavigationControllerStoryboardId" automaticallyAdjustsScrollViewInsets="NO" id="3qB-dj-fru" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="RkK-Gu-smX">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="RkK-Gu-smX">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1792,7 +1834,7 @@
             <objects>
                 <navigationController storyboardIdentifier="helpNavControllerStoryboardId" automaticallyAdjustsScrollViewInsets="NO" id="310-Ue-cRZ" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="jCp-Y1-93A">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="jCp-Y1-93A">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1810,7 +1852,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="cSE-YZ-bUT" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="pzh-l2-tnv">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="pzh-l2-tnv">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1828,6 +1870,7 @@
         <image name="clockTab" width="25" height="25"/>
         <image name="defaultUserPhoto" width="200" height="200"/>
         <image name="expointTab" width="5" height="25"/>
+        <image name="fivestars" width="596" height="121"/>
         <image name="gvbwlogo.jpg" width="889" height="1334"/>
         <image name="iconmonstr-book-17-240" width="240" height="240"/>
         <image name="iconmonstr-car-4-240" width="240" height="240"/>
@@ -1837,7 +1880,7 @@
         <image name="imagicon.png" width="57" height="45"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="qU9-iD-UHd"/>
+        <segue reference="gXi-1e-BDf"/>
         <segue reference="W9u-9l-6Si"/>
     </inferredMetricsTieBreakers>
 </document>
