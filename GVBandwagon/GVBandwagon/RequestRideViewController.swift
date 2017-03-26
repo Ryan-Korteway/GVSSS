@@ -50,6 +50,10 @@ class RequestRideViewController: UIViewController, UISearchBarDelegate {
     var startingFrom: NSDictionary = ["lat": 43.013570, "long": -85.775875 ]
     var goingTo: NSDictionary = ["latitude": 42.013570, "longitude": -85.775875]
     
+    var destLat : Double = 0.0
+    var destLong : Double = 0.0
+    var destName: NSString = ""
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController?.navigationBar.isHidden = false
@@ -149,7 +153,7 @@ class RequestRideViewController: UIViewController, UISearchBarDelegate {
         
         print("Current lat and long: \(currentLat) \(currentLong)")
         
-        ref.child("requests/immediate/\(currentUser!.uid)/").setValue(["name": currentUser!.displayName!, "uid": currentUser!.uid, "venmoID": "none", "origin": ["lat": currentLat, "long": currentLong], "destination": self.goingTo, "rate" : 15, "accepted": 0, "repeats": "none", "duration": "none"]) //locations being sent here.
+        ref.child("requests/immediate/\(currentUser!.uid)/").setValue(["name": currentUser!.displayName!, "uid": currentUser!.uid, "venmoID": "none", "origin": ["lat": currentLat, "long": currentLong], "destination": ["latitude": destLat, "longitude" : destLong], "rate" : (offerTextField.text! as! NSInteger), "accepted": 0, "repeats": freqArray.description, "duration": "none"]) //locations being sent here.
         
         //repeats, duration, and destination needs to be set dynamically!!!
         
@@ -269,6 +273,9 @@ class RequestRideViewController: UIViewController, UISearchBarDelegate {
         print("Send to FB: Place name: \(destination.name)")
         print("Send: Place address: \(destination.formattedAddress)")
         print("Send: Place attributions: \(destination.attributions)")
+        self.destLat = destination.coordinate.latitude
+        self.destLong = destination.coordinate.longitude
+        self.destName = destination.formattedAddress as! NSString
     }
 }
 

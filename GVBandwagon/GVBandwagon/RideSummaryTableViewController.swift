@@ -37,6 +37,8 @@ class RideSummaryTableViewController: UITableViewController {
     
     var localLong :  CLLocationDegrees = 0.0
     
+    var localAddress : String
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController?.navigationBar.isHidden = false
@@ -80,10 +82,13 @@ class RideSummaryTableViewController: UITableViewController {
         }
         //NEED A CALL TO TURN THE LATS AND LONGS BACK TO ADDRESSES TO THEN USE TO POPULATE THE 
         //ORIGIN AND DESTINATION LABELS!!!
+        if(mode == "ride") {
+            originStreetLabel.text = localAddress
+        } else {
+           //originStreetLabel.text = localAddress from localLat and localLong
+        }
         
-        //originStreetLabel.text = SOME GOOGLE PLACES MAGIC USING LOCAL LAT AND LONG
-        
-        //destStreetLabel.text = SOME GOOGLE PLACES MAGIC USING the destination LAT AND LONG from the request/accept
+        destStreetLabel.text = informationDictionary.value(forKey: "destinationName")
         
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false

@@ -130,7 +130,34 @@ class DriverPanelViewController: UIViewController {
             (segue.destination as! RideSummaryTableViewController).mode = "drive"
         }
     }
- 
+    */
+    
+    // Get active trip from FB
+    func getActiveTrip() {
+    }
+    
+    // Get rating from FB. Return stars based on rounded to nearest whole number:
+    func getRating() -> UIImage {
+        
+        var rating = 0.0
+        
+        // Call to FB for rating
+        
+        if (rating >=  4.5) {
+            return #imageLiteral(resourceName: "fivestars")
+        } else if (rating >= 3.5) {
+            return #imageLiteral(resourceName: "fourstars")
+        } else if (rating >= 2.5) {
+            return #imageLiteral(resourceName: "threestars")
+        } else if (rating >= 1.5) {
+            return #imageLiteral(resourceName: "threestars")
+        } else if (rating >= 0.5) {
+            return #imageLiteral(resourceName: "onestar")
+        } else {
+            // Possibly post message saying "No ratings yet"
+            return #imageLiteral(resourceName: "zerostars")
+        }
+    }
 
 }
 

@@ -38,6 +38,7 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
     
     var riderLat : CLLocationDegrees = 0.0
     var riderLong : CLLocationDegrees = 0.0
+    var riderAddress : NSString = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -147,7 +148,7 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
         self.googleMap.clear()
     }
     
-    
+    /*
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
@@ -161,6 +162,7 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
             nextVC.localLong = riderLong
         }
     }
+     */
  
     
     func createMap() {
@@ -533,6 +535,9 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
                 // Set the attributes in the next VC.
                 nextVC.informationDictionary = self.baseDictionary
                 nextVC.paymentText = "Request Payment"
+                nextVC.localAddress = riderAddress
+                nextVC.localLat = riderLat
+                nextVC.localLong = riderLong 
             }
         }
     }
@@ -559,8 +564,12 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
             self.ref.child("users/\(cellInfo["uid"]!)/rider/accepted/immediate/rider/\(cellInfo["uid"]!)/origin").observe( .childChanged, with: { snapshot in
                 if(snapshot.key == "lat") {
                     marker.position.latitude = snapshot.value as! CLLocationDegrees
-                } else {
+                    self.riderLat = snapshot.value as! CLLocationDegrees
+                } else if (snapshot.key == "long"){
                     marker.position.longitude = snapshot.value as! CLLocationDegrees
+                    self.riderLong = snapshot.value as! CLLocationDegrees
+                }  else {
+                    self.riderAddress = snapshot.value as! NSString
                 }
             }) //hopefully this makes the pins update their locations and then its needed in the driver stuff to set up the driver to update these fields.
             //once we accept the offer, we will need a .value to get each key to remove each observer before we delete the whole section.

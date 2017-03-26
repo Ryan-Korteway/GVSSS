@@ -46,6 +46,7 @@ struct cellItem {
     let venmoID: String
     let origin: NSDictionary
     let destination: NSDictionary //going to need destination strings added to struct at some point.
+    let destinationName: NSString
     let rate: NSInteger
     var accepted: NSInteger
     var repeats: NSString
@@ -59,6 +60,7 @@ struct cellItem {
         rate = snapshotValue["rate"] as! NSInteger
         origin = snapshotValue["origin"] as! NSDictionary //should be a dictionary of lats and longs
         destination = snapshotValue["destination"] as! NSDictionary //should be a dictionary of lats and longs
+        destinationName = snapshotValue["destinationName"] as! NSString
         accepted = snapshotValue["accepted"] as! NSInteger //if its set to 0, its false/no ride acceptance, else it is 1 and ride accepted.
         repeats = snapshotValue["repeats"] as! NSString
         duration = snapshotValue["duration"] as! NSString
@@ -72,6 +74,7 @@ struct cellItem {
         origin = start.value(forKey: "origin") as! NSDictionary //should be a dictionary of lats and longs
         destination = start.value(forKey: "destination") as! NSDictionary //should be a dictionary of lats and longs
         accepted = start.value(forKey: "accepted") as! NSInteger //if its set to 0, its false/no ride acceptance, else it is 1 and ride accepted.
+        destinationName = start.value(forKey: "destinationName") as! NSString
         repeats = start.value(forKey: "repeats") as! NSString
         duration = start.value(forKey: "duration") as! NSString
     }
@@ -85,6 +88,7 @@ struct cellItem {
             "rate": rate,
             "origin" : origin,
             "destination": destination,
+            "destinationName": destinationName,
             "accepted" : accepted,
             "repeats": repeats,
             "duration": duration

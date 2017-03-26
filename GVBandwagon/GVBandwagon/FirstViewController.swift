@@ -216,8 +216,24 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
                 nextVC.paymentText = "Submit Payment"
                 //here i could grab a global accepts dictionary and send it over to the other view controller..
                 
-                nextVC.localLat = localDelegate.ourlat
-                nextVC.localLong = localDelegate.ourlong
+                // Get riders current place
+                // address = an NSString of the address where the user is.
+                // TODO: Pass the address to nextVC
+                self.placesClient.currentPlace(callback: { (placeLikelihoodList, error) -> Void in
+                    if let error = error {
+                        print("Pick Place error: \(error.localizedDescription)")
+                        return
+                    }
+                    
+                    if let placeLikelihoodList = placeLikelihoodList {
+                        if let place = placeLikelihoodList.likelihoods.first?.place {
+                            let address = place.formattedAddress
+                            nextVC.localAddress = address
+                        }
+                    }
+                })
+                // End get riders current place
+                
             }
         } else if segue.identifier == "toRequestRideSegue" {
             if let nextVC = segue.destination as? RequestRideViewController {
