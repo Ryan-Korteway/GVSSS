@@ -80,13 +80,8 @@ class RideSummaryTableViewController: UITableViewController {
                 self.phoneLabel.text = "\(snapshot.value!)"
             })
         }
-        //NEED A CALL TO TURN THE LATS AND LONGS BACK TO ADDRESSES TO THEN USE TO POPULATE THE 
-        //ORIGIN AND DESTINATION LABELS!!!
-        if(mode == "ride") {
-            originStreetLabel.text = localAddress
-        } else {
-           //originStreetLabel.text = localAddress from localLat and localLong
-        }
+        
+        originStreetLabel.text = localAddress
         
         destStreetLabel.text = informationDictionary.value(forKey: "destinationName")
         
