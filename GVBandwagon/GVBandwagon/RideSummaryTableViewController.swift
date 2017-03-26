@@ -7,12 +7,17 @@
 //
 
 import UIKit
+import Firebase
+import GooglePlaces
 
 class RideSummaryTableViewController: UITableViewController {
 
     @IBOutlet var nameLabel: UILabel!
-    @IBOutlet var ratingLabel: UILabel!
+    @IBOutlet var rateLabel: UILabel!
+    
     @IBOutlet var phoneLabel: UILabel!
+    @IBOutlet var ratingLabel: UILabel!
+    
     @IBOutlet var originStreetLabel: UILabel!
     @IBOutlet var destStreetLabel: UILabel!
     @IBOutlet var rateLabel: UILabel!
@@ -20,6 +25,16 @@ class RideSummaryTableViewController: UITableViewController {
 
     var paymentText = "Request Payment"
     var informationDictionary: NSDictionary = [:]
+    
+    var mode = "none"
+    
+    let ref = FIRDatabase.database().reference()
+    
+    var localLat : CLLocationDegrees = 0.0
+    
+    var localLong :  CLLocationDegrees = 0.0
+    
+    var localAddress : String
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,8 +56,31 @@ class RideSummaryTableViewController: UITableViewController {
 
         // Need to pull and fill all information from firebase. Use self.paymentText for check if here from Ride or Drive.
         // We can use UID of driver/rider in the users profile to pull the appropriate information for this view controller.
-        nameLabel.text = informationDictionary.value(forKey: "name") as! String?
         
+        if(informationDictionary.count > 0 ) {
+            nameLabel.text = informationDictionary.value(forKey: "name") as! String?
+            rateLabel.text = "\(informationDictionary.value(forKey: "rate"))"
+            
+            if(paymentText == "Request Payment") {
+                //driver side so pull riders ratings
+                ref.child("users/\(informationDictionary.value(forKey: "uid"))/rider/rating").observeSingleEvent(of: .value, with: { snapshot in
+                    self.ratingLabel.text = snapshot.value! as? String
+                })
+            } else {
+                //riders side so pull drivers ratings
+                ref.child("users/\(informationDictionary.value(forKey: "uid"))/driver/rating").observeSingleEvent(of: .value, with: { snapshot in
+                    self.ratingLabel.text = snapshot.value! as? String
+                })
+            }
+            
+            ref.child("users/\(informationDictionary.value(forKey: "uid"))/phone").observeSingleEvent(of: .value, with: { snapshot in
+                self.phoneLabel.text = "\(snapshot.value!)"
+            })
+        }
+        
+        originStreetLabel.text = localAddress
+        
+        destStreetLabel.text = informationDictionary.value(forKey: "destinationName")
         
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false

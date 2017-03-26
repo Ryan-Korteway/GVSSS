@@ -39,6 +39,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var ourlat : CLLocationDegrees = 0.0
     var ourlong : CLLocationDegrees = 0.0
+    var ourAddress : NSString
     
     let kKGDrawersStoryboardName = "Main"
     
@@ -109,7 +110,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         FIRApp.configure()
         // not really needed unless you really need it 
-        //FIRDatabase.database().persistenceEnabled = true
+        //FIRDatabase.database().persistenceEnabled = true;
+        
+        //selective persistence possible? save the writes and removes but dont save old data...
         
         // Moved to didFinish... below
         //GIDSignIn.sharedInstance().clientID = FIRApp.defaultApp()?.options.clientID
@@ -580,7 +583,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             
                 } else if (self.riderStatus == "accepted") {
                     
-                        ref.child("users/\(ourID)/rider/offers/accepted/immediate/rider/\(ourID)/origin").setValue(["lat": self.ourlat, "long": self.ourlong]);
+                        ref.child("users/\(ourID)/rider/offers/accepted/immediate/rider/\(ourID)/origin").setValue(["lat": self.ourlat, "long": self.ourlong, "address": ourAddress]);
                    
                 } else {
                     print("something up with timer")
@@ -714,7 +717,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     
                 }
             })
-        } else if (self.riderStatus == "accepted"){
+        } else if (self.riderStatus == "accepted"){ //path needs to go deeper....
             ref.child("users/\(userID)/rider/offers/accepted/immediate/driver").observeSingleEvent(of: .childChanged, with: { snapshot in //child added may be an issue here...
                 print(snapshot.key)
                 if(snapshot.key != userID) {
@@ -742,6 +745,8 @@ extension AppDelegate: CLLocationManagerDelegate {
         let locValue:CLLocationCoordinate2D = self.locationManager.location!.coordinate
         print("locations = \(locValue.latitude) \(locValue.longitude)")
         
+        //here set ourAddress to the google places address.
+        //ourAddress =
         ourlat = locValue.latitude
         ourlong = locValue.longitude
     }

@@ -51,10 +51,12 @@ class GVBNotificationDelegate: NSObject, UNUserNotificationCenterDelegate {
             //idk about user.displayName here.
             
             //maybe venmo id is a global var in app delegate with a getter/setter for moments like this.
-            ref.child("\(user.uid)").setValue(["name": user.displayName!, "uid": user.uid, "venmoID": localDelegate.getVenmoID(), "origin": notification.userInfo["origin"], "destination": notification.userInfo["destination"], "rate": notification.userInfo["rate"], "accepted" : 0, "repeats": 0, "duration": "none"]) //value set needs to be all of our info for the snapshot.
+            ref.child("\(user.uid)").setValue(["name": user.displayName!, "uid": user.uid, "venmoID": localDelegate.getVenmoID(), "origin": notification.userInfo["origin"], "destination": notification.userInfo["destination"], "rate": notification.userInfo["rate"], "accepted" : 0, "repeats": notification.userInfo["repeats"], "duration": notification.userInfo["duration"]]) //value set needs to be all of our info for the snapshot.
+            
+            //see even here we are passing back to the rider their own locations (origin and dest)...
             
             localDelegate.changeDriverStatus(status: "offer")
-            
+            localDelegate.changeMode(mode: "driver")
             print("ride offered") //this one is if you hit the snooze button
             
         case "accept":
@@ -67,7 +69,7 @@ class GVBNotificationDelegate: NSObject, UNUserNotificationCenterDelegate {
             
             ref.child("offers/immediate/\(notification.userInfo["uid"]!)/accepted").setValue(1); //set the accepted drivers accepted value to 1.
 
-            ref.child("/accepted/immediate/").setValue(notification.userInfo) //create an accepted branch of the riders table
+            ref.child("accepted/immediate/").setValue(notification.userInfo) //create an accepted branch of the riders table
             
             ref.child("offers/immediate/").removeValue() //remove the offers immediate branch from the riders account so that the drivers are able to observe the destruction and if they were selected or not.
             

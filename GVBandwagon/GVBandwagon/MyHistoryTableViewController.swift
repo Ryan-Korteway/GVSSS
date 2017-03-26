@@ -5,12 +5,44 @@
 //  Created by Nicolas Heady on 3/7/17.
 //  Copyright © 2017 Nicolas Heady. All rights reserved.
 //
+//  By using a tutorial and its start up materials as a guide for certain 
+//  portions of our project, we must attach this copyright notice within our project.
+
+
+/*
+ * Copyright (c) 2015 Razeware LLC
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+
 
 import UIKit
+import Firebase
 
 class MyHistoryTableViewController: UITableViewController {
 
     @IBOutlet var doneButton: UIBarButtonItem!
+    
+    let ref = FIRDatabase.database().reference()
+    let ourId = FIRAuth.auth()!.currentUser!.uid
+    
+    var ourHistory : [cellItem] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,6 +52,14 @@ class MyHistoryTableViewController: UITableViewController {
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+        
+        ref.child("users/\(ourId)/history/").observeSingleEvent(of: .value, with: { snapshot in
+            for item in snapshot.children {
+                self.ourHistory.append(cellItem.init(snapshot: item as! FIRDataSnapshot))
+            }
+            self.tableView.reloadData()
+        })
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -31,31 +71,33 @@ class MyHistoryTableViewController: UITableViewController {
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 0
+        return 1
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return 0
+        return ourHistory.count
     }
 
-    /*
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
 
+        let cellItem = ourHistory[indexPath.row]
         // Configure the cell...
-
+        cell.detailTextLabel?.text = (cellItem.destination.description);
+        cell.textLabel?.text = (cellItem.name) + "\t\t\t$\(cellItem.rate)"
         return cell
     }
-    */
+    
 
-    /*
+    
     // Override to support conditional editing of the table view.
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         // Return false if you do not want the specified item to be editable.
-        return true
+        return false
     }
-    */
+
 
     /*
     // Override to support editing the table view.

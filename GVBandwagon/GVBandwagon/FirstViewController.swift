@@ -211,6 +211,8 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
         if segue.identifier == "riderAcceptsSegue" {
             if let nextVC = segue.destination as? RideSummaryTableViewController {
                 // Set the attributes in the next VC.
+                nextVC.informationDictionary = baseDictionary
+                
                 nextVC.paymentText = "Submit Payment"
                 //here i could grab a global accepts dictionary and send it over to the other view controller..
                 
@@ -226,6 +228,7 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
                     if let placeLikelihoodList = placeLikelihoodList {
                         if let place = placeLikelihoodList.likelihoods.first?.place {
                             let address = place.formattedAddress
+                            nextVC.localAddress = address
                         }
                     }
                 })
@@ -249,7 +252,6 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
     
     // reset custom infowindow whenever marker is tapped
     func mapView(_ mapView: GMSMapView, didTap marker: GMSMarker) -> Bool {
-        baseDictionary = marker.userData as! NSDictionary
         let locationDictionary = baseDictionary.value(forKey: "origin") as! NSDictionary
         
         let location = CLLocationCoordinate2D(latitude: locationDictionary.value(forKey: "lat") as! CLLocationDegrees, longitude: locationDictionary.value(forKey: "long") as! CLLocationDegrees)
@@ -296,7 +298,7 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
             let dictionary: NSDictionary = snapshot.value! as! NSDictionary
             ref.child("offers/accepted/immediate/driver/\(cellInfo.value(forKey: "uid")!)").setValue(dictionary) //create an accepted branch of the riders table
             
-            ref.child("offers/accepted/immediate/rider/\(user.uid)").setValue(["name": user.displayName!, "uid": user.uid, "venmoID": "none", "origin": ["lat": self.ourLat, "long": self.ourLong], "destination": dictionary.value(forKey: "destination"), "rate" : dictionary.value(forKey: "rate"), "accepted": 0, "repeats": 0, "duration": dictionary.value(forKey: "duration")])
+            ref.child("offers/accepted/immediate/rider/\(user.uid)").setValue(["name": user.displayName!, "uid": user.uid, "venmoID": "none", "origin": ["lat": self.ourLat, "long": self.ourLong], "destination": dictionary.value(forKey: "destination"), "rate" : dictionary.value(forKey: "rate"), "accepted": 0, "repeats": "none", "duration": dictionary.value(forKey: "duration")])
             
             let localDelegate = UIApplication.shared.delegate as! AppDelegate
             localDelegate.riderStatus = "accepted"
@@ -357,6 +359,8 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
         marker.title = "Driver: \(cellInfo["name"])"
         marker.map = self.googleMapsView
         marker.userData = cellInfo
+        
+        baseDictionary = marker.userData as! NSDictionary
             //self.googleMapsView.animate(to: camera)
             let currentUser = FIRAuth.auth()!.currentUser
         

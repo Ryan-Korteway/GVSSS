@@ -36,7 +36,25 @@ class DriverPanelViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        if(mode == "Driver") {
+            ref.child("users/\(ourid)/driver/rating").observeSingleEvent(of: .value, with: { snapshot in
+                //ratingLabel.text = snapshot.value as! String
+            })
+            
+            ref.child("users/\(ourid)/driver/totalRiders").observeSingleEvent(of: .value, with: { snapshot in
+                //CountLabel.text = snapshot.value as! String
+            })
+        } else {
+            ref.child("users/\(ourid)/rider/rating").observeSingleEvent(of: .value, with: { snapshot in
+                //ratingLabel.text = snapshot.value as! String
+            })
+            
+            ref.child("users/\(ourid)/rider/totalRides").observeSingleEvent(of: .value, with: { snapshot in
+                //CountLabel.text = snapshot.value as! String
+            })
+        }
+        
         self.goOnlineSwitch.setOn(false, animated: false)
         self.goOnlineSwitch.addTarget(self, action: #selector(switchIsChanged(mySwitch:)), for: .valueChanged)
         
@@ -57,7 +75,7 @@ class DriverPanelViewController: UIViewController {
             ref.child("/activedrivers/\(ourid)").setValue(["name": FIRAuth.auth()!.currentUser!.displayName! as NSString,
                                                            "uid": ourid, "venmoID": localDelegate.getVenmoID(), "origin": ["lat": ourlat, "long": ourlong],
                                                         "destination": ["latitude": "none", "longitude": "none"],
-                                                           "rate" : 0, "accepted": 0, "repeats": 0, "duration": "none"]) //need protections of if destination is none, dont make a pin.
+                                                           "rate" : 0, "accepted": 0, "repeats": "none", "duration": "none"]) //need protections of if destination is none, dont make a pin.
         
             localDelegate.changeMode(mode: "driver")
             localDelegate.isSwitched = true
@@ -98,13 +116,19 @@ class DriverPanelViewController: UIViewController {
         }
     }
 
-    /*
+    
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
+        
+        if(segue.identifier == "riderAcceptsSegue") {
+            (segue.destination as! RideSummaryTableViewController).mode = "ride"
+        } else {
+            (segue.destination as! RideSummaryTableViewController).mode = "drive"
+        }
     }
     */
     
