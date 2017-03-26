@@ -430,7 +430,6 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
         
         self.view.addSubview(infoWindow)
         
-        
         // Remember to return false
         // so marker event is still handled by delegate
         return false
@@ -505,6 +504,8 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
                 nextVC.informationDictionary = self.baseDictionary
                 nextVC.paymentText = "Request Payment"
             }
+            
+            
         }
     }
     

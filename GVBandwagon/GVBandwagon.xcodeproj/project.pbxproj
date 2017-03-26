@@ -30,7 +30,6 @@
 		0B944AAD1E6BB0D800A856DE /* FutureRidesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B944AAC1E6BB0D800A856DE /* FutureRidesTableViewController.swift */; };
 		0B9583651E7C851800752DD5 /* RideSummaryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9583641E7C851800752DD5 /* RideSummaryTableViewController.swift */; };
 		0BABBF711E4A275F00108DC2 /* RideViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BABBF701E4A275F00108DC2 /* RideViewController.swift */; };
-		0BABBF731E4A84A600108DC2 /* accountTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BABBF721E4A84A600108DC2 /* accountTableViewController.swift */; };
 		0BABBF751E4A8F5F00108DC2 /* HelpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BABBF741E4A8F5F00108DC2 /* HelpViewController.swift */; };
 		0BABBF771E4A912D00108DC2 /* userInfoTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BABBF761E4A912D00108DC2 /* userInfoTableViewController.swift */; };
 		0BE676301E3D78B5009675F2 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0BE6762F1E3D78B5009675F2 /* GoogleService-Info.plist */; };
@@ -91,7 +90,6 @@
 		0B944AAC1E6BB0D800A856DE /* FutureRidesTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FutureRidesTableViewController.swift; sourceTree = "<group>"; };
 		0B9583641E7C851800752DD5 /* RideSummaryTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RideSummaryTableViewController.swift; sourceTree = "<group>"; };
 		0BABBF701E4A275F00108DC2 /* RideViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RideViewController.swift; sourceTree = "<group>"; };
-		0BABBF721E4A84A600108DC2 /* accountTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = accountTableViewController.swift; sourceTree = "<group>"; };
 		0BABBF741E4A8F5F00108DC2 /* HelpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HelpViewController.swift; path = ../HelpViewController.swift; sourceTree = "<group>"; };
 		0BABBF761E4A912D00108DC2 /* userInfoTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = userInfoTableViewController.swift; sourceTree = "<group>"; };
 		0BC8F62D1E3A795A00E94F5B /* GVBandwagon.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GVBandwagon.entitlements; sourceTree = "<group>"; };
@@ -181,7 +179,6 @@
 				0B197CE21E32815200392B40 /* FirstViewController.swift */,
 				0B556BBE1E51390400EAE537 /* DriveViewController.swift */,
 				0BABBF761E4A912D00108DC2 /* userInfoTableViewController.swift */,
-				0BABBF721E4A84A600108DC2 /* accountTableViewController.swift */,
 				0BABBF701E4A275F00108DC2 /* RideViewController.swift */,
 				85365DE41E3E8ACB003709C3 /* RegisterAsViewController.swift */,
 				0BABBF741E4A8F5F00108DC2 /* HelpViewController.swift */,
@@ -559,7 +556,6 @@
 				0B197CE31E32815200392B40 /* FirstViewController.swift in Sources */,
 				0BF1B4FC1E79EB6C0062739B /* MapMarkerWindow.swift in Sources */,
 				0B9583651E7C851800752DD5 /* RideSummaryTableViewController.swift in Sources */,
-				0BABBF731E4A84A600108DC2 /* accountTableViewController.swift in Sources */,
 				851AAD191E58C54B0023F0D7 /* findingRidersViewController.swift in Sources */,
 				0B6935291E3CE6C300F551CB /* RegistrationViewController.swift in Sources */,
 				0BABBF711E4A275F00108DC2 /* RideViewController.swift in Sources */,

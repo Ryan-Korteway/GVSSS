@@ -14,9 +14,7 @@ class RideSummaryTableViewController: UITableViewController {
     @IBOutlet var ratingLabel: UILabel!
     @IBOutlet var phoneLabel: UILabel!
     @IBOutlet var originStreetLabel: UILabel!
-    @IBOutlet var originCityLabel: UILabel!
     @IBOutlet var destStreetLabel: UILabel!
-    @IBOutlet var destCityLabel: UILabel!
     @IBOutlet var rateLabel: UILabel!
     @IBOutlet var paymentButton: UIButton!
 

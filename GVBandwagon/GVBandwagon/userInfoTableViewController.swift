@@ -25,6 +25,7 @@ UINavigationControllerDelegate {
     @IBOutlet var vehiclePhotoImageView: UIImageView!
     
     var profileImage:UIImage? = nil
+    var changingImage = "Profile"
     
     var currentUser : FIRUser?
     var userID: String?
@@ -96,6 +97,11 @@ UINavigationControllerDelegate {
         if (indexPath.section == 0) {
             
             // Open the photo library
+            self.changingImage = "Profile"
+            self.openPhotoLibrary()
+            
+        } else if (indexPath.section == 7) {
+            self.changingImage = "Vehicle"
             self.openPhotoLibrary()
         }
     }
@@ -173,7 +179,7 @@ UINavigationControllerDelegate {
         }
     }
     
-    @IBAction func openPhotoLibrary() {
+    func openPhotoLibrary() {
         if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.photoLibrary) {
             let imagePicker = UIImagePickerController()
             imagePicker.delegate = self
@@ -187,23 +193,46 @@ UINavigationControllerDelegate {
         
         picker.dismiss(animated: true, completion: nil)
         
-        if let image = info[UIImagePickerControllerEditedImage] as? UIImage {
-            self.profilePicView.image = image
-            self.setMenuProfilePic(image: image)
-        } else if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
-            self.profilePicView.image = image
+        var type: String
+        
+        // If user is updating their proifle pic:
+        if (self.changingImage == "Profile") {
+            if let image = info[UIImagePickerControllerEditedImage] as? UIImage {
+                self.profilePicView.image = image
+                self.setMenuProfilePic(image: image)
+            } else if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
+                self.profilePicView.image = image
+            } else {
+                self.profilePicView.image = nil
+            }
+            
+            // TODO: Not using???
+            // Capture the image path for uploading to Firebase:
+            let url = info["UIImagePickerControllerReferenceURL"] as! URL
+            
+            type = "Profile"
+            
+        // If user is updating their vehicle pic:
         } else {
-            self.profilePicView.image = nil
+            if let image = info[UIImagePickerControllerEditedImage] as? UIImage {
+                self.vehiclePhotoImageView.image = image
+            } else if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
+                self.vehiclePhotoImageView.image = image
+            } else {
+                self.vehiclePhotoImageView.image = nil
+            }
+            
+            // Capture the image path for uploading to Firebase:
+            let url = info["UIImagePickerControllerReferenceURL"] as! URL
+            
+            type = "Vehicle"
         }
         
-        // Capture the image path for uploading to Firebase:
-        let url = info["UIImagePickerControllerReferenceURL"] as! URL
-        //print("Image path: \(url.absoluteString)")
+        self.updatePic(info: info, type: type)
         
-        self.updateProfilePic(info: info)
     }
     
-    func updateProfilePic(info: [String : Any]) {
+    func updatePic(info: [String : Any], type: String) {
         
         let storage = FIRStorage.storage()
         let storageRef = storage.reference()
@@ -216,13 +245,20 @@ UINavigationControllerDelegate {
         let image             = info[UIImagePickerControllerOriginalImage]as! UIImage
         let data              = UIImageJPEGRepresentation(image, 0.0)
         
-        // Create a reference to 'images/profilepic.jpg'
-        let profileImageRef = storageRef.child("images/\(self.userID!)/profilepic.jpg")
+        
+        var imageRef: FIRStorageReference
+        
+        // Create a reference to 'images/profilepic.jpg' or 'images/vehiclepic.jpg'
+        if (type == "Profile") {
+            imageRef = storageRef.child("images/\(self.userID!)/profilepic.jpg")
+        } else {
+            imageRef = storageRef.child("images/\(self.userID!)/vehiclepic.jpg")
+        }
 
         print("Path from update: \(localPath?.absoluteString)")
             
         // Upload the file to the path "images/rivers.jpg"
-        let uploadTask = profileImageRef.put(data!, metadata: nil) { (metadata, error) in
+        let uploadTask = imageRef.put(data!, metadata: nil) { (metadata, error) in
             guard let metadata = metadata else {
                 // Uh-oh, an error occurred!
                 return
