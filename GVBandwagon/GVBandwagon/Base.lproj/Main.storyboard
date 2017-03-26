@@ -21,7 +21,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="SOZ-eA-wuf">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="reuseIdentifier" id="SOZ-eA-wuf">
                                 <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="SOZ-eA-wuf" id="rF7-ku-nQB">
@@ -58,7 +58,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                        <color key="sectionIndexBackgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="sectionIndexBackgroundColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <sections>
                             <tableViewSection headerTitle=" " id="Syj-EW-S5k">
                                 <cells>
@@ -70,7 +70,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="defaultUserPhoto" translatesAutoresizingMaskIntoConstraints="NO" id="ru3-th-MUL">
-                                                    <rect key="frame" x="20" y="-4" width="50" height="51"/>
+                                                    <rect key="frame" x="20" y="-3.5" width="50" height="50"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="50" id="Arw-Ry-iWh"/>
                                                         <constraint firstAttribute="width" constant="50" id="BBA-Ch-qxQ"/>
@@ -1474,7 +1474,6 @@
                                 </connections>
                             </view>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <gestureRecognizers/>
                     </view>
                     <connections>
@@ -1719,7 +1718,7 @@
             <objects>
                 <navigationController storyboardIdentifier="historyNavigationControllerStoryboardId" automaticallyAdjustsScrollViewInsets="NO" id="uFx-a6-EjB" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="cEz-5G-en9">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="cEz-5G-en9">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1737,7 +1736,7 @@
             <objects>
                 <navigationController storyboardIdentifier="rideNavController" automaticallyAdjustsScrollViewInsets="NO" id="HC5-ET-4zC" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="VD2-H3-46M">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="VD2-H3-46M">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1756,7 +1755,7 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Jyl-nh-N2F" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Urgent Rides" image="expointTab" id="E42-3c-tFb"/>
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="4eg-G6-LA2">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="4eg-G6-LA2">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1774,7 +1773,7 @@
             <objects>
                 <navigationController storyboardIdentifier="profileNavigationControllerStoryboardId" automaticallyAdjustsScrollViewInsets="NO" id="3qB-dj-fru" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="RkK-Gu-smX">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="RkK-Gu-smX">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1792,7 +1791,7 @@
             <objects>
                 <navigationController storyboardIdentifier="helpNavControllerStoryboardId" automaticallyAdjustsScrollViewInsets="NO" id="310-Ue-cRZ" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="jCp-Y1-93A">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="jCp-Y1-93A">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1810,7 +1809,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="cSE-YZ-bUT" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="pzh-l2-tnv">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="pzh-l2-tnv">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>

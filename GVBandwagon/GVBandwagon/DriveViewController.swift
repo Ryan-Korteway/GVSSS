@@ -36,6 +36,9 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
     
     var baseDictionary: NSDictionary = [:]
     
+    var riderLat : CLLocationDegrees = 0.0
+    var riderLong : CLLocationDegrees = 0.0
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -63,11 +66,20 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
             
             guard snapshot.value! is String else {
                 self.localDelegate.driverStatus = "request"
-                self.localDelegate.startDriverMapObservers()//the new function to populate the riders map each time the view loads.
+                if(self.localDelegate.isSwitched){
+                    self.localDelegate.startDriverMapObservers()
+                } else {
+                    self.googleMap.clear()
+                }
                 return
             }
             self.localDelegate.driverStatus = snapshot.value! as! String
-            self.localDelegate.startDriverMapObservers() //the new function to populate the riders map each time the view loads.
+            
+            if(self.localDelegate.isSwitched){
+                self.localDelegate.startDriverMapObservers()
+            } else {
+                self.googleMap.clear()
+            }
             return
         })
         
@@ -76,11 +88,19 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
             
             guard snapshot.value! is String else {
                 self.localDelegate.offeredID = "none"
-                self.localDelegate.startDriverMapObservers()//the new function to populate the riders map each time the view loads.
+                if(self.localDelegate.isSwitched){
+                    self.localDelegate.startDriverMapObservers()
+                } else {
+                    self.googleMap.clear()
+                }
                 return
             }
             self.localDelegate.offeredID = snapshot.value! as! String
-            self.localDelegate.startDriverMapObservers() //the new function to populate the riders map each time the view loads.
+            if(self.localDelegate.isSwitched){
+                self.localDelegate.startDriverMapObservers()
+            } else {
+                self.googleMap.clear()
+            }
             return
         })
         
@@ -127,15 +147,21 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
         self.googleMap.clear()
     }
     
-    /*
+    
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
+        if(segue.identifier == "driverAcceptSegue") {
+            let nextVC = segue.destination as! RideSummaryTableViewController
+        
+            nextVC.localLat = riderLat
+            nextVC.localLong = riderLong
+        }
     }
-    */
+ 
     
     func createMap() {
         self.googleMap.isMyLocationEnabled = true
@@ -221,8 +247,10 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
                     print("marker moving!!! \(snapshot.key)")
                     if(snapshot.key == "lat") {
                         marker.position.latitude = snapshot.value as! CLLocationDegrees
+                        riderLat = snapshot.value as! CLLocationDegrees
                     } else {
                         marker.position.longitude = snapshot.value as! CLLocationDegrees
+                        riderLong = snapshot.value as! CLLocationDegrees
                     }
                 })
                 //do any of these matter thanks to the custom display window?...
@@ -232,7 +260,8 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
                 marker.userData = cellInfo //giving each marker a dictionary of the info that set them up for future use.
                 marker.map = self.googleMap
                 
-                
+                baseDictionary = marker.userData as! NSDictionary
+            
                 ref.child("users/\(self.localDelegate.offeredID)/rider/accepted/immediate/").observeSingleEvent(of: .childRemoved, with:{ snapshot in
                     print("PIN BEING DELETED")
                     marker.map = nil;
@@ -409,7 +438,7 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
     
     // reset custom infowindow whenever marker is tapped
     func mapView(_ mapView: GMSMapView, didTap marker: GMSMarker) -> Bool {
-        baseDictionary = marker.userData as! NSDictionary
+        
         let locationDictionary = baseDictionary.value(forKey: "origin") as! NSDictionary
         
         let location = CLLocationCoordinate2D(latitude: locationDictionary.value(forKey: "lat") as! CLLocationDegrees, longitude: locationDictionary.value(forKey: "long") as! CLLocationDegrees)
@@ -460,8 +489,8 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
         let user = FIRAuth.auth()!.currentUser!
         
         ref.observeSingleEvent(of: .value, with: { snapshot in
-            if(snapshot.value != nil) {
-                ref.child("\(user.uid)").setValue(["name": user.displayName!, "uid": user.uid, "venmoID": self.localDelegate.getVenmoID(), "origin": self.baseDictionary.value(forKey: "origin"), "destination": self.baseDictionary.value(forKey: "destination"), "rate": self.baseDictionary.value(forKey: "rate"), "accepted" : 0, "repeats": 0, "duration": "none"]) //value set needs to be all of our info for the snapshot.
+            if(snapshot.value != nil) { //i think the origin base dictionary usage here is the cause of the pins starting in the wrong placees. try experimenting with just putting in our own lats and longs later.
+                ref.child("\(user.uid)").setValue(["name": user.displayName!, "uid": user.uid, "venmoID": self.localDelegate.getVenmoID(), "origin": self.baseDictionary.value(forKey: "origin"), "destination": self.baseDictionary.value(forKey: "destination"), "rate": self.baseDictionary.value(forKey: "rate"), "accepted" : 0, "repeats": "none", "duration": "none"]) //value set needs to be all of our info for the snapshot.
             
                 print("ride offered") //this one is if you hit the snooze button
             

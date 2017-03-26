@@ -86,17 +86,22 @@ class RegistrationViewController: UIViewController {
             
             self.ref.child("users/\(self.currentUser!.uid)/name").setValue(self.fNameField.text! + " " + self.lNameField.text!)
             self.ref.child("users/\(self.currentUser!.uid)/phone").setValue(self.phoneField.text)
-            self.ref.child("users/\(self.currentUser!.uid)/driver/rider_found").setValue(false)
-            //self.ref.child("users/\(self.currentUser!.uid)/rider_UIDs").setValue() //rider_UID's should be added and removed as riders sign up to use the driver as their ride to the destination.
-            self.ref.child("users/\(self.currentUser!.uid)/driver/total_riders").setValue(0) //gets incremented by one for each rider the driver drives.
-            self.ref.child("users/\(self.currentUser!.uid)/driver/rider_score").setValue(0) //gets incremented by value from rider, 1-5 for each ride the driver gives.
+            self.ref.child("users/\(self.currentUser!.uid)/driver/totalRiders").setValue(1) //gets incremented by one for each rider the driver drives.
+            self.ref.child("users/\(self.currentUser!.uid)/driver/rating").setValue(1) //gets incremented by value from rider, 1-5 for each ride the driver gives.
         
-            self.ref.child("users/\(self.currentUser!.uid)/rider/driver_found").setValue(false)
-            self.ref.child("users/\(self.currentUser!.uid)/rider/driver_UID").setValue("none")
+            self.ref.child("users/\(self.currentUser!.uid)/rider/rating").setValue(1)
+            self.ref.child("users/\(self.currentUser!.uid)/rider/totalRides").setValue(1)
             
             // Obviously will need to check fields are formatted correctly
             // and data successfully transferred before segue.
-          
+            
+            if(self.registeringAs == "Driver"){
+                self.ref.child("userStates").child("\(self.currentUser!.uid)/driver/venmoID").setValue(self.venmoField.text!)
+                self.ref.child("users/\(self.currentUser!.uid)/totalRides").setValue(1)
+            } else {
+                self.ref.child("userStates").child("\(self.currentUser!.uid)").setValue(false)
+            }
+            
             // Load up the drawer from AppDelegate:
             let appDelegate = UIApplication.shared.delegate as! AppDelegate
             appDelegate.initiateDrawer()

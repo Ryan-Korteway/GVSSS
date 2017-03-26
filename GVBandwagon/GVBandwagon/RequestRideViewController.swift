@@ -149,7 +149,9 @@ class RequestRideViewController: UIViewController, UISearchBarDelegate {
         
         print("Current lat and long: \(currentLat) \(currentLong)")
         
-        ref.child("requests/immediate/\(currentUser!.uid)/").setValue(["name": currentUser!.displayName!, "uid": currentUser!.uid, "venmoID": "none", "origin": ["lat": currentLat, "long": currentLong], "destination": self.goingTo, "rate" : 15, "accepted": 0, "repeats": 0, "duration": "none"]) //locations being sent here.
+        ref.child("requests/immediate/\(currentUser!.uid)/").setValue(["name": currentUser!.displayName!, "uid": currentUser!.uid, "venmoID": "none", "origin": ["lat": currentLat, "long": currentLong], "destination": self.goingTo, "rate" : 15, "accepted": 0, "repeats": "none", "duration": "none"]) //locations being sent here.
+        
+        //repeats, duration, and destination needs to be set dynamically!!!
         
         localDelegate.startTimer();
         //localDelegate.status = "offer"

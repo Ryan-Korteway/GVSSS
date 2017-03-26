@@ -109,7 +109,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         FIRApp.configure()
         // not really needed unless you really need it 
-        //FIRDatabase.database().persistenceEnabled = true
+        //FIRDatabase.database().persistenceEnabled = true;
+        
+        //selective persistence possible? save the writes and removes but dont save old data...
         
         // Moved to didFinish... below
         //GIDSignIn.sharedInstance().clientID = FIRApp.defaultApp()?.options.clientID

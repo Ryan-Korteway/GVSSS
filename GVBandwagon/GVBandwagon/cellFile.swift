@@ -35,6 +35,7 @@
 import Foundation
 import Firebase
 
+//We really should add dates to this...
 
 //This is the structure that will be made each time a rider makes a request and the data
 //is sent to firebase and then is being pulled back from firebase to some other users phone.
@@ -44,10 +45,10 @@ struct cellItem {
     let name: String
     let venmoID: String
     let origin: NSDictionary
-    let destination: NSDictionary
+    let destination: NSDictionary //going to need destination strings added to struct at some point.
     let rate: NSInteger
     var accepted: NSInteger
-    var repeats: NSInteger
+    var repeats: NSString
     var duration: NSString
     
     init(snapshot: FIRDataSnapshot) {
@@ -59,7 +60,7 @@ struct cellItem {
         origin = snapshotValue["origin"] as! NSDictionary //should be a dictionary of lats and longs
         destination = snapshotValue["destination"] as! NSDictionary //should be a dictionary of lats and longs
         accepted = snapshotValue["accepted"] as! NSInteger //if its set to 0, its false/no ride acceptance, else it is 1 and ride accepted.
-        repeats = snapshotValue["repeats"] as! NSInteger
+        repeats = snapshotValue["repeats"] as! NSString
         duration = snapshotValue["duration"] as! NSString
     }
     
@@ -71,7 +72,7 @@ struct cellItem {
         origin = start.value(forKey: "origin") as! NSDictionary //should be a dictionary of lats and longs
         destination = start.value(forKey: "destination") as! NSDictionary //should be a dictionary of lats and longs
         accepted = start.value(forKey: "accepted") as! NSInteger //if its set to 0, its false/no ride acceptance, else it is 1 and ride accepted.
-        repeats = start.value(forKey: "repeats") as! NSInteger
+        repeats = start.value(forKey: "repeats") as! NSString
         duration = start.value(forKey: "duration") as! NSString
     }
     
@@ -92,7 +93,6 @@ struct cellItem {
     
 }
 
-
 //  These are the protocols that the rider and driver view controllers must follow so that they can either create a local 
 //  notification talking about the ride request or offer being accepted. Aside from local notifications, actions to notify the user
 //  of changes to their request status could be to see the map change from "all active drivers" to the "offering drivers" to "The accepted driver" etc.
@@ -110,7 +110,3 @@ protocol driver_notifications {
     func isRider() -> Bool
     func isDriver() -> Bool
 }
-
-
-
-
