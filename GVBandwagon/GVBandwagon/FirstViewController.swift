@@ -250,6 +250,7 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
     
     // reset custom infowindow whenever marker is tapped
     func mapView(_ mapView: GMSMapView, didTap marker: GMSMarker) -> Bool {
+        self.baseDictionary = marker.userData as! NSDictionary
         let locationDictionary = baseDictionary.value(forKey: "origin") as! NSDictionary
         
         let location = CLLocationCoordinate2D(latitude: locationDictionary.value(forKey: "lat") as! CLLocationDegrees, longitude: locationDictionary.value(forKey: "long") as! CLLocationDegrees)
@@ -276,7 +277,7 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
         return false
     }
         
-        func ride_accept(item: NSDictionary) { //all map set ups/marker creations may need to be in their own functions in ride and drive
+    func ride_accept(item: NSDictionary) { //all map set ups/marker creations may need to be in their own functions in ride and drive
         //view controllers so that upon the map being reloaded, it can be repopulated with the correct data given the current user state.
         
         let user = FIRAuth.auth()!.currentUser!

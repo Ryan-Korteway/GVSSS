@@ -38,10 +38,6 @@ class RideSummaryTableViewController: UITableViewController {
         self.navigationController?.navigationBar.isHidden = false
         
         self.paymentButton.setTitle(paymentText, for: .normal)
-        //UIApplication.shared.open(NSURL(string:"https://venmo.com/?txn=pay&audience=private&recipients=@michael-christensen-20&amount=3&note=GVB") as! URL, options: [:], completionHandler: nil)
-        
-            // PAYMENT CODE AFTER GETTING THE RATE AND VENMO ID OF THE DRIVER ETC.
-            // MIGHT JUST DO A SINGLE OBSERVE ON THE USERS RIDER
         
         // If this is a summary for the driver:
         // name and rating are of Rider
@@ -162,11 +158,32 @@ class RideSummaryTableViewController: UITableViewController {
     }
     */
     
+    @IBAction func onPaymentTapped(_ sender: Any) {
+        
+        // Determine whether rider clicked this or driver clicked this:
+        if (self.paymentText == "Submit Payment") {
+            
+            // Rider clicked this
+            payDriver()
+            
+        } else {
+            
+            // Driver clicked this
+            
+        }
+        
+    }
+    
     func payDriver() {
         
         //TO DO PASS IN THE MARKERS USER DATA WHATEVER SO THAT THE VENMO ID AND RATE CAN BE PULLED OUT TO BE USED TO PAY THE DRIVER.
         
         //UIApplication.shared.open(NSURL(string:"https://venmo.com/?txn=pay&audience=private&recipients=@\(venmoID)&amount=\(rate)&note=GVB") as! URL, options: [:], completionHandler: nil)
+        
+        
+        // Static example (remove when no longer needed):
+        
+        //UIApplication.shared.open(NSURL(string:"https://venmo.com/?txn=pay&audience=private&recipients=@michael-christensen-20&amount=3&note=GVB") as! URL, options: [:], completionHandler: nil)
     }
 
 }

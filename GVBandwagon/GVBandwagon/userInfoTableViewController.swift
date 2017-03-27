@@ -202,10 +202,10 @@ UINavigationControllerDelegate {
         
         // If user is updating their proifle pic:
         if (self.changingImage == "Profile") {
-            if let image = info[UIImagePickerControllerEditedImage] as? UIImage {
+            if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
                 self.profilePicView.image = image
                 self.setMenuProfilePic(image: image)
-            } else if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
+            } else if let image = info[UIImagePickerControllerEditedImage] as? UIImage {
                 self.profilePicView.image = image
             } else {
                 self.profilePicView.image = nil
@@ -219,9 +219,9 @@ UINavigationControllerDelegate {
             
         // If user is updating their vehicle pic:
         } else {
-            if let image = info[UIImagePickerControllerEditedImage] as? UIImage {
+            if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
                 self.vehiclePhotoImageView.image = image
-            } else if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
+            } else if let image = info[UIImagePickerControllerEditedImage] as? UIImage {
                 self.vehiclePhotoImageView.image = image
             } else {
                 self.vehiclePhotoImageView.image = nil

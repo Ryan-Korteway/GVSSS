@@ -36,6 +36,8 @@ class RequestRideViewController: UIViewController, UISearchBarDelegate {
     @IBOutlet var cancelButton: UIBarButtonItem!
     @IBOutlet var submitButton: UIBarButtonItem!
     
+    @IBOutlet var datePicker: UIDatePicker!
+    @IBOutlet var dateView: UIView!
     @IBOutlet var freqSwitch: UISwitch!
     @IBOutlet var freqView: UIView!
     @IBOutlet var offerLabel: UILabel!
@@ -59,6 +61,7 @@ class RequestRideViewController: UIViewController, UISearchBarDelegate {
         self.navigationController?.navigationBar.isHidden = false
         
         self.offerTextField.text = "0"
+        self.datePicker.isHidden = true
         
         placesClient = GMSPlacesClient.shared()
         
@@ -219,6 +222,26 @@ class RequestRideViewController: UIViewController, UISearchBarDelegate {
             freqArray.append("Sunday")
         }
     }
+    
+    @IBAction func onDateViewTapped(_ sender: Any) {
+        
+        // Open and close variable
+        var newHeight: CGFloat = 200
+        self.datePicker.isHidden = false
+        
+        if (self.dateView.frame.height > 100) {
+            newHeight = 35
+            self.datePicker.isHidden = true
+        }
+        
+        UIView.animate(withDuration: 0.3, animations: {
+            self.dateView.frame = CGRect(x: self.dateView.frame.origin.x, y: self.dateView.frame.origin.y, width: self.dateView.frame.width, height: newHeight)
+            
+        }, completion: { (Bool) -> Void in
+            // Do nothing.
+        })
+    }
+    
     
     @IBAction func placesPicker(_ sender: Any) {
         if let center = self.coordLocation {

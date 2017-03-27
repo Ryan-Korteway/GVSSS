@@ -42,7 +42,7 @@ class MyHistoryTableViewController: UITableViewController {
     let ref = FIRDatabase.database().reference()
     let ourId = FIRAuth.auth()!.currentUser!.uid
     
-    var ourHistory : [cellItem] = []
+    var ourHistory: [cellItem] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
