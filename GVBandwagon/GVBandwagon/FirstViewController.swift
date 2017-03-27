@@ -266,7 +266,10 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
         infoWindow.center = mapView.projection.point(for: location)
         infoWindow.center.y -= 90
         
+        infoWindow.acceptButton.isEnabled = false
         infoWindow.acceptButton.setTitle("Accept", for: .normal) // Not working...
+        infoWindow.acceptButton.isEnabled = true
+        
         infoWindow.acceptButton.addTarget(self, action: #selector(acceptTapped(button:)), for: .touchUpInside)
         infoWindow.declineButton.addTarget(self, action: #selector(declineTapped(button:)), for: .touchUpInside)
             

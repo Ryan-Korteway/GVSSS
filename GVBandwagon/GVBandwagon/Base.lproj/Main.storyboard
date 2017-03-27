@@ -167,7 +167,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="defaultUserPhoto" translatesAutoresizingMaskIntoConstraints="NO" id="ru3-th-MUL">
-                                                    <rect key="frame" x="20" y="-3.5" width="50" height="50"/>
+                                                    <rect key="frame" x="20" y="-4" width="50" height="51"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="50" id="Arw-Ry-iWh"/>
                                                         <constraint firstAttribute="width" constant="50" id="BBA-Ch-qxQ"/>
@@ -522,6 +522,39 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9tS-wS-qUh">
+                                <rect key="frame" x="16" y="253" width="343" height="35"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Date" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cDH-sf-jma">
+                                        <rect key="frame" x="15" y="3" width="48" height="29"/>
+                                        <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="22"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="0hs-SU-nwx">
+                                        <rect key="frame" x="0.0" y="-52.5" width="343" height="140"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="140" id="EBn-TE-FJT"/>
+                                        </constraints>
+                                        <date key="date" timeIntervalSinceReferenceDate="512311453.91863102">
+                                            <!--2017-03-27 12:44:13 +0000-->
+                                        </date>
+                                    </datePicker>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <gestureRecognizers/>
+                                <constraints>
+                                    <constraint firstItem="0hs-SU-nwx" firstAttribute="leading" secondItem="9tS-wS-qUh" secondAttribute="leading" id="7GJ-oe-Vw0"/>
+                                    <constraint firstItem="0hs-SU-nwx" firstAttribute="centerY" secondItem="9tS-wS-qUh" secondAttribute="centerY" id="IQc-Jg-GT1"/>
+                                    <constraint firstAttribute="height" constant="35" id="LcU-07-Nde"/>
+                                    <constraint firstItem="cDH-sf-jma" firstAttribute="top" secondItem="9tS-wS-qUh" secondAttribute="top" constant="3" id="i16-u1-yMM"/>
+                                    <constraint firstAttribute="trailing" secondItem="0hs-SU-nwx" secondAttribute="trailing" id="rqn-4f-11j"/>
+                                    <constraint firstItem="0hs-SU-nwx" firstAttribute="centerX" secondItem="9tS-wS-qUh" secondAttribute="centerX" id="shN-EW-L4s"/>
+                                </constraints>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="3Y2-0B-Ze4" appends="YES" id="tjn-9m-zCn"/>
+                                </connections>
+                            </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qm8-lH-1TL">
                                 <rect key="frame" x="0.0" y="323" width="375" height="35"/>
                                 <subviews>
@@ -559,24 +592,6 @@
                                     <constraint firstItem="PKZ-fU-MM6" firstAttribute="leading" secondItem="sIr-OR-BIV" secondAttribute="trailing" constant="10" id="u7d-tu-3VU"/>
                                 </constraints>
                             </view>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Offer" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="z6m-oL-A4z">
-                                <rect key="frame" x="31" y="393" width="55" height="29"/>
-                                <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="22"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="$" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hXp-d1-68o">
-                                <rect key="frame" x="245" y="394" width="14" height="29"/>
-                                <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="22"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="exL-XX-RED">
-                                <rect key="frame" x="267" y="393" width="93" height="30"/>
-                                <nil key="textColor"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
-                            </textField>
                             <view alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bJe-fe-Uj3">
                                 <rect key="frame" x="0.0" y="358" width="375" height="0.0"/>
                                 <subviews>
@@ -678,39 +693,24 @@
                                     <constraint firstItem="kwL-eQ-hwR" firstAttribute="centerX" secondItem="fNN-lz-Wru" secondAttribute="centerX" id="xK8-p6-G3l"/>
                                 </constraints>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9tS-wS-qUh">
-                                <rect key="frame" x="16" y="253" width="343" height="35"/>
-                                <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Date" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cDH-sf-jma">
-                                        <rect key="frame" x="15" y="3" width="48" height="29"/>
-                                        <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="22"/>
-                                        <nil key="textColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="0hs-SU-nwx">
-                                        <rect key="frame" x="0.0" y="-52.5" width="343" height="140"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="140" id="EBn-TE-FJT"/>
-                                        </constraints>
-                                        <date key="date" timeIntervalSinceReferenceDate="512311453.91863102">
-                                            <!--2017-03-27 12:44:13 +0000-->
-                                        </date>
-                                    </datePicker>
-                                </subviews>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <gestureRecognizers/>
-                                <constraints>
-                                    <constraint firstItem="0hs-SU-nwx" firstAttribute="leading" secondItem="9tS-wS-qUh" secondAttribute="leading" id="7GJ-oe-Vw0"/>
-                                    <constraint firstItem="0hs-SU-nwx" firstAttribute="centerY" secondItem="9tS-wS-qUh" secondAttribute="centerY" id="IQc-Jg-GT1"/>
-                                    <constraint firstAttribute="height" constant="35" id="LcU-07-Nde"/>
-                                    <constraint firstItem="cDH-sf-jma" firstAttribute="top" secondItem="9tS-wS-qUh" secondAttribute="top" constant="3" id="i16-u1-yMM"/>
-                                    <constraint firstAttribute="trailing" secondItem="0hs-SU-nwx" secondAttribute="trailing" id="rqn-4f-11j"/>
-                                    <constraint firstItem="0hs-SU-nwx" firstAttribute="centerX" secondItem="9tS-wS-qUh" secondAttribute="centerX" id="shN-EW-L4s"/>
-                                </constraints>
-                                <connections>
-                                    <outletCollection property="gestureRecognizers" destination="3Y2-0B-Ze4" appends="YES" id="tjn-9m-zCn"/>
-                                </connections>
-                            </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Offer" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="z6m-oL-A4z">
+                                <rect key="frame" x="31" y="393" width="55" height="29"/>
+                                <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="22"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="$" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hXp-d1-68o">
+                                <rect key="frame" x="245" y="394" width="14" height="29"/>
+                                <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="22"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="exL-XX-RED">
+                                <rect key="frame" x="267" y="393" width="93" height="30"/>
+                                <nil key="textColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -809,7 +809,7 @@
                                 </connections>
                             </view>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="gvblogo" translatesAutoresizingMaskIntoConstraints="NO" id="26d-xj-HB6">
-                                <rect key="frame" x="21" y="121" width="333" height="100"/>
+                                <rect key="frame" x="21" y="146" width="333" height="100"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="100" id="KT7-6p-4Dy"/>
                                     <constraint firstAttribute="width" constant="333" id="lnd-46-ns8"/>
@@ -819,7 +819,7 @@
                         <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="26d-xj-HB6" firstAttribute="centerX" secondItem="9wy-nJ-WGw" secondAttribute="centerX" id="6Ep-cZ-j9V"/>
-                            <constraint firstItem="o4O-gV-ikD" firstAttribute="top" secondItem="26d-xj-HB6" secondAttribute="bottom" constant="75" id="QSK-MM-MNU"/>
+                            <constraint firstItem="o4O-gV-ikD" firstAttribute="top" secondItem="26d-xj-HB6" secondAttribute="bottom" constant="50" id="QSK-MM-MNU"/>
                             <constraint firstItem="o4O-gV-ikD" firstAttribute="centerX" secondItem="9wy-nJ-WGw" secondAttribute="centerX" id="qdY-Ud-yNQ"/>
                             <constraint firstItem="o4O-gV-ikD" firstAttribute="centerY" secondItem="9wy-nJ-WGw" secondAttribute="centerY" id="wCL-T6-4Lc"/>
                         </constraints>
@@ -1910,7 +1910,7 @@
             <objects>
                 <navigationController storyboardIdentifier="historyNavigationControllerStoryboardId" automaticallyAdjustsScrollViewInsets="NO" id="uFx-a6-EjB" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="cEz-5G-en9">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="cEz-5G-en9">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1928,7 +1928,7 @@
             <objects>
                 <navigationController storyboardIdentifier="rideNavController" automaticallyAdjustsScrollViewInsets="NO" id="HC5-ET-4zC" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="VD2-H3-46M">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="VD2-H3-46M">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1947,7 +1947,7 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Jyl-nh-N2F" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Urgent Rides" image="expointTab" id="E42-3c-tFb"/>
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="4eg-G6-LA2">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="4eg-G6-LA2">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1965,7 +1965,7 @@
             <objects>
                 <navigationController storyboardIdentifier="profileNavigationControllerStoryboardId" automaticallyAdjustsScrollViewInsets="NO" id="3qB-dj-fru" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="RkK-Gu-smX">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="RkK-Gu-smX">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1983,7 +1983,7 @@
             <objects>
                 <navigationController storyboardIdentifier="helpNavControllerStoryboardId" automaticallyAdjustsScrollViewInsets="NO" id="310-Ue-cRZ" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="jCp-Y1-93A">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="jCp-Y1-93A">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -2001,7 +2001,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="cSE-YZ-bUT" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="pzh-l2-tnv">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="pzh-l2-tnv">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -2029,7 +2029,7 @@
         <image name="imagicon.png" width="57" height="45"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="gXi-1e-BDf"/>
+        <segue reference="qU9-iD-UHd"/>
         <segue reference="W9u-9l-6Si"/>
     </inferredMetricsTieBreakers>
 </document>
