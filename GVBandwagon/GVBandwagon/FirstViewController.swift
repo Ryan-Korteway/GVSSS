@@ -305,8 +305,11 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
             
             let localDelegate = UIApplication.shared.delegate as! AppDelegate
             localDelegate.riderStatus = "accepted"
-                
+            
+            print("we have accepted")
+            
             ref.child("offers/immediate/").removeValue() //remove the offers immediate branch from the riders account so that the drivers are able to observe the destruction and if they were selected or not.
+            
             
             self.googleMapsView.clear()
             
@@ -369,7 +372,7 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
         
             print("in acceptance, we are watching: \(cellInfo["uid"]!)")
         
-            self.ref.child("users/\(currentUser!.uid)/rider/offers/accepted/immediate/driver/\(cellInfo["uid"]!)/origin").observe( .childChanged, with: { snapshot in
+            self.ref.child("users/\(currentUser!.uid)/rider/offers/accepted/immediate/driver/\(cellInfo["uid"]!)/origin/").observe( .childChanged, with: { snapshot in
                 if(snapshot.key == "lat") {
                     marker.position.latitude = snapshot.value as! CLLocationDegrees
                 } else {
