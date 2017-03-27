@@ -153,14 +153,10 @@ class RequestRideViewController: UIViewController, UISearchBarDelegate {
         //all this to be moved into new view controller logic at some point.
         
         //SELF GOING TO NEED REPLACING WITH THE SEARCHING OF A DESTINATION FROM THE PAGE.
+
         
-        let currentLat = self.localDelegate.locationManager.location!.coordinate.latitude
-        let currentLong = self.localDelegate.locationManager.location!.coordinate.longitude
-        
-        print("Current lat and long: \(currentLat) \(currentLong)")
-        
-        ref.child("requests/immediate/\(currentUser!.uid)/").setValue(["name": currentUser!.displayName!, "uid": currentUser!.uid, "venmoID": "none", "origin": ["lat": currentLat, "long": currentLong], "destination": ["latitude": destLat, "longitude" : destLong], "destinationName": destName, "rate" : (NSInteger.init(self.offerTextField.text!)), "accepted": 0, "repeats": freqArray.description, "duration": "none"]) //locations being sent here.
-        
+        sendRequestToFirebase()
+
         //repeats, duration, and destination needs to be set dynamically!!!
         
         localDelegate.startTimer();
@@ -170,6 +166,55 @@ class RequestRideViewController: UIViewController, UISearchBarDelegate {
         for day in freqArray {
             print(day)
         }
+    }
+    
+    func sendRequestToFirebase() -> Void {
+    
+        let currentLat = self.localDelegate.locationManager.location!.coordinate.latitude
+        let currentLong = self.localDelegate.locationManager.location!.coordinate.longitude
+    
+        print("Current lat and long: \(currentLat) \(currentLong)")
+        
+        // Get riders current place, in completion send to Firebase
+        placesClient.currentPlace(callback: { (placeLikelihoodList, error) -> Void in
+            if let error = error {
+                print("Pick Place error: \(error.localizedDescription)")
+                return
+            }
+            
+            // address = an NSString of the address where the user is.
+            if let place = placeLikelihoodList?.likelihoods.first?.place {
+                if let address = place.formattedAddress {
+                    print("address: \(address)")
+                    let addr = address as NSString
+                    
+                    self.ref.child("requests/immediate/\(self.currentUser!.uid)/").setValue(["name": self.currentUser!.displayName!, "uid": self.currentUser!.uid, "venmoID": "none", "origin": ["lat": currentLat, "long": currentLong, "address": addr], "destination": ["latitude": self.destLat, "longitude" : self.destLong], "destinationName": self.destName, "rate" : (NSInteger.init(self.offerTextField.text!)), "accepted": 0, "repeats": self.freqArray.description, "duration": "none"]) //locations being sent here.
+                }
+            }
+        })
+        // End get riders current place
+    }
+    
+    func getCurrentLocation() -> NSString {
+        var addr: NSString = "Unknown"
+        
+        placesClient.currentPlace(callback: { (placeLikelihoodList, error) -> Void in
+            if let error = error {
+                print("Pick Place error: \(error.localizedDescription)")
+                return
+            }
+            
+            // address = an NSString of the address where the user is.
+            if let place = placeLikelihoodList?.likelihoods.first?.place {
+                if let address = place.formattedAddress {
+                    print("address: \(address)")
+                    addr = address as NSString
+                }
+            }
+        })
+        // End get riders current place
+        
+        return addr
     }
     
     /*
@@ -313,7 +358,7 @@ class RequestRideViewController: UIViewController, UISearchBarDelegate {
         })
     }
     
-    func sendRequestToFirebase(destination: GMSPlace) {
+    func setFirebaseRequest(destination: GMSPlace) {
         print("Send to FB: Place name: \(destination.name)")
         print("Send: Place address: \(destination.formattedAddress)")
         print("Send: Place attributions: \(destination.attributions)")
@@ -331,7 +376,7 @@ extension RequestRideViewController: GMSAutocompleteResultsViewControllerDelegat
         print("Place name: \(place.name)")
         print("Place address: \(place.formattedAddress)")
         print("Place attributions: \(place.attributions)")
-        sendRequestToFirebase(destination: place)
+        setFirebaseRequest(destination: place)
     }
     
     func resultsController(_ resultsController: GMSAutocompleteResultsViewController,
