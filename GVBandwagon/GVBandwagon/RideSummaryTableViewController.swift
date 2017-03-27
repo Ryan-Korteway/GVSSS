@@ -54,6 +54,9 @@ class RideSummaryTableViewController: UITableViewController {
         //print("our uid: \(informationDictionary.value(forKey: "uid")!)")
         
         if(informationDictionary.count > 0 ) {
+            
+            //pull information down fresh/correctly from firebase.
+            
             nameLabel.text = informationDictionary.value(forKey: "name") as! String?
             rateLabel.text = "\(informationDictionary.value(forKey: "rate")!)"
             

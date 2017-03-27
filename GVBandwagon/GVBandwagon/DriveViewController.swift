@@ -251,9 +251,11 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
                     if(snapshot.key == "lat") {
                         marker.position.latitude = snapshot.value as! CLLocationDegrees
                         self.riderLat = snapshot.value as! CLLocationDegrees
-                    } else {
+                    } else if(snapshot.key == "long") {
                         marker.position.longitude = snapshot.value as! CLLocationDegrees
                         self.riderLong = snapshot.value as! CLLocationDegrees
+                    } else {
+                        self.localDelegate.ourAddress = snapshot.value as! NSString
                     }
                 })
                 //do any of these matter thanks to the custom display window?...
@@ -360,7 +362,7 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
                 print("marker moving!!! \(snapshot.key)")
                 if(snapshot.key == "lat") {
                     marker.position.latitude = snapshot.value as! CLLocationDegrees
-                } else {
+                } else if(snapshot.key == "long") {
                     marker.position.longitude = snapshot.value as! CLLocationDegrees
                 }
             })
@@ -414,7 +416,7 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
             print("marker moving!!! \(snapshot.key)")
             if(snapshot.key == "lat") {
                 marker.position.latitude = snapshot.value as! CLLocationDegrees
-            } else {
+            } else if(snapshot.key == "long") {
                 marker.position.longitude = snapshot.value as! CLLocationDegrees
             }
         })
