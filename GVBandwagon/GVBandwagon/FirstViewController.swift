@@ -24,7 +24,7 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
     
     // initialize and keep a marker and a custom infowindow
     var tappedMarker = GMSMarker()
-    var infoWindow = MapMarkerWindow(frame: CGRect(x: 0, y: 0, width: 200, height: 100))
+    var infoWindow = MapMarkerWindow(frame: CGRect(x: 0, y: 0, width: 200, height: 100), type: "Rider", name: "Name", dest: "Destination", rate: "$5")
     
     var baseDictionary: NSDictionary = [:]
     
@@ -138,18 +138,11 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
     }
     
     func createMap() {
-// TODO: Need to do these every time?
+
         self.googleMapsView.isMyLocationEnabled = true
         self.googleMapsView.settings.myLocationButton = true
         self.googleMapsView.delegate = self
-            
-//        let marker = GMSMarker()
-//        marker.position = CLLocationCoordinate2D(latitude: 51.507351, longitude: -0.127758)
-//        marker.title = "Driver"
-//        marker.snippet = "Close enough to Grand Valley."
-//        marker.icon = GMSMarker.markerImage(with: .blue) //custom icon color code here.
-        // can also do marker.icon = UIImage(named: "house") and then our app would just have to have a house.png file in it to use that marker. better to use a constant to hold that UIImage and to set the icon off of that instead of doing lots of redeclarations/assignments fresh each time.
-            //marker.map = self.googleMapsView
+        
         if CLLocationManager.locationServicesEnabled() {
             locationManager.requestAlwaysAuthorization()
             locationManager.requestWhenInUseAuthorization()
@@ -197,7 +190,7 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
             } else if (snapshot.key == "long") {
                 marker.position.longitude = snapshot.value as! CLLocationDegrees
             } else {
-                localDelegate.ourAddress = snapshot.value as NSString
+                self.localDelegate.ourAddress = snapshot.value as! NSString
             }
         }) //hopefully this makes the pins update their locations and then its needed in the driver stuff to set up the driver to update these fields.
         //once we accept the offer, we will need a .value to get each key to remove each observer before we delete the whole section.
@@ -258,20 +251,16 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
         
         let location = CLLocationCoordinate2D(latitude: locationDictionary.value(forKey: "lat") as! CLLocationDegrees, longitude: locationDictionary.value(forKey: "long") as! CLLocationDegrees)
         
+        let name = (baseDictionary.value(forKey: "name") as! NSString) as String
+        let destination = baseDictionary.value(forKey: "destination").debugDescription
+        let rate = "\(baseDictionary.value(forKey: "rate")!)"
+        
         tappedMarker = marker
         infoWindow.removeFromSuperview()
-        infoWindow = MapMarkerWindow(frame: CGRect(x: 0, y: 0, width: 200, height: 100))
-        
-        infoWindow.nameLabel.text = (baseDictionary.value(forKey: "name") as! NSString) as String
-        infoWindow.destLabel.text = baseDictionary.value(forKey: "destination").debugDescription
-        infoWindow.rateLabel.text = "\(baseDictionary.value(forKey: "rate"))"
+        infoWindow = MapMarkerWindow(frame: CGRect(x: 0, y: 0, width: 200, height: 100), type: "Rider", name: name, dest: destination, rate: rate)
             
         infoWindow.center = mapView.projection.point(for: location)
         infoWindow.center.y -= 90
-        
-        infoWindow.acceptButton.isEnabled = false
-        infoWindow.acceptButton.setTitle("Accept", for: .normal) // Not working...
-        infoWindow.acceptButton.isEnabled = true
         
         infoWindow.acceptButton.addTarget(self, action: #selector(acceptTapped(button:)), for: .touchUpInside)
         infoWindow.declineButton.addTarget(self, action: #selector(declineTapped(button:)), for: .touchUpInside)
@@ -303,7 +292,7 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
             let dictionary: NSDictionary = snapshot.value! as! NSDictionary
             ref.child("offers/accepted/immediate/driver/\(cellInfo.value(forKey: "uid")!)").setValue(dictionary) //create an accepted branch of the riders table
             
-            ref.child("offers/accepted/immediate/rider/\(user.uid)").setValue(["name": user.displayName!, "uid": user.uid, "venmoID": "none", "origin": ["lat": self.ourLat, "long": self.ourLong], "destination": dictionary.value(forKey: "destination"), "rate" : dictionary.value(forKey: "rate"), "accepted": 1, "repeats": "none", "duration": dictionary.value(forKey: "duration"), "destinationName": dictionary.value(forKey: "destinationName")])
+            ref.child("offers/accepted/immediate/rider/\(user.uid)").setValue(["name": user.displayName!, "uid": user.uid, "venmoID": "none", "origin": ["lat": self.ourLat, "long": self.ourLong, "address": self.localDelegate.ourAddress], "destination": dictionary.value(forKey: "destination"), "rate" : dictionary.value(forKey: "rate"), "accepted": 1, "repeats": "none", "duration": dictionary.value(forKey: "duration"), "destinationName": dictionary.value(forKey: "destinationName")])
             
             let localDelegate = UIApplication.shared.delegate as! AppDelegate
             localDelegate.riderStatus = "accepted"
@@ -319,6 +308,8 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
             localDelegate.startRiderMapObservers()
             
         })
+        
+        print("\nride_accept was called!\n")
         
     }
     
@@ -380,7 +371,7 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
                 } else if (snapshot.key == "long"){
                     marker.position.longitude = snapshot.value as! CLLocationDegrees
                 } else {
-                    localDelegate.ourAddress = snapshot.value as! NSString
+                    self.localDelegate.ourAddress = snapshot.value as! NSString
                 }
             }) //hopefully this makes the pins update their locations and then its needed in the driver stuff to set up the driver to update these fields.
             

@@ -50,9 +50,13 @@ class RideSummaryTableViewController: UITableViewController {
         // Need to pull and fill all information from firebase. Use self.paymentText for check if here from Ride or Drive.
         // We can use UID of driver/rider in the users profile to pull the appropriate information for this view controller.
         
-        print("our uid: \(informationDictionary.value(forKey: "uid")!)")
+        // informationDictionary is not instantiated so of cours it's nil!
+        //print("our uid: \(informationDictionary.value(forKey: "uid")!)")
         
         if(informationDictionary.count > 0 ) {
+            
+            //pull information down fresh/correctly from firebase.
+            
             nameLabel.text = informationDictionary.value(forKey: "name") as! String?
             rateLabel.text = "\(informationDictionary.value(forKey: "rate")!)"
             
@@ -92,6 +96,24 @@ class RideSummaryTableViewController: UITableViewController {
     }
 
     // MARK: - Table view data source
+    
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        if section == 0 {
+            if paymentText == "Request Payment" {
+                return "Rider"
+            } else {
+                return "Driver"
+            }
+        } else if section == 1 {
+            return "Origin"
+        } else if section == 2 {
+            return "Destination"
+        } else if section == 3 {
+            return "Rate"
+        } else {
+            return ""
+        }
+    }
     
     /*
     override func numberOfSections(in tableView: UITableView) -> Int {

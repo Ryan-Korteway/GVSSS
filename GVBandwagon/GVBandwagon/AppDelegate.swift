@@ -39,7 +39,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var ourlat : CLLocationDegrees = 0.0
     var ourlong : CLLocationDegrees = 0.0
-    var ourAddress : NSString = ""
+    var ourAddress : NSString?
     
     let kKGDrawersStoryboardName = "Main"
     
@@ -170,9 +170,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             ref.child("users/\(userID)/stateVars").setValue(["riderStatus" : riderStatus, "driverStatus" : driverStatus, "offeredID" : offeredID])
             
         }
-        
-        
-
         
     }
 
@@ -575,11 +572,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             
                 if(self.riderStatus == "request") {
                     
-                        ref.child("requests/immediate/\(ourID)/origin").setValue(["lat": self.ourlat, "long": self.ourlong]);
+                        ref.child("requests/immediate/\(ourID)/origin").setValue(["lat": self.ourlat, "long": self.ourlong, "address": self.ourAddress]);
                     
                 } else if (self.riderStatus == "offer") {
                     
-                        ref.child("users/\(ourID)/rider/offers/immediate/\(ourID)/origin").setValue(["lat": self.ourlat, "long": self.ourlong]);
+                        ref.child("users/\(ourID)/rider/offers/immediate/\(ourID)/origin").setValue(["lat": self.ourlat, "long": self.ourlong, "address": self.ourAddress]);
             
                 } else if (self.riderStatus == "accepted") {
                     
@@ -741,7 +738,7 @@ extension AppDelegate: CLLocationManagerDelegate {
             print("\nNOT AUTHORIZED\n")
         }
     }
-    
+
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         let locValue:CLLocationCoordinate2D = self.locationManager.location!.coordinate
         print("locations = \(locValue.latitude) \(locValue.longitude)")

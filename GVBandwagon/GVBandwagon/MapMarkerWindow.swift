@@ -17,6 +17,9 @@ class MapMarkerWindow: UIView {
     let declineButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 20))
     let offerButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 20))
     
+    var windowType = "Rider"
+    
+    /*
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -24,6 +27,25 @@ class MapMarkerWindow: UIView {
         self.layer.cornerRadius = 10.0
         self.clipsToBounds = true
         
+    }
+ */
+    
+    init(frame: CGRect, type: String, name: String, dest: String, rate: String) {
+        super.init(frame: frame)
+        
+        self.backgroundColor = UIColor.init(red: 0, green: 0, blue: 100, alpha: 0.8)
+        self.layer.cornerRadius = 10.0
+        self.clipsToBounds = true
+        
+        if type == "Rider" {
+            self.windowType = "Accept"
+        } else {
+            self.windowType = "Offer"
+        }
+        
+        self.nameLabel.text = name
+        self.destLabel.text = dest
+        self.rateLabel.text = rate
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -52,7 +74,6 @@ class MapMarkerWindow: UIView {
         //nameLabel.trailingAnchor.constraint(equalTo: margins.trailingAnchor).isActive = true
         nameLabel.textColor = UIColor.white
         nameLabel.textAlignment = .center
-        nameLabel.text = "Name"
         
         
         destLabel.center = CGPoint(x: 100, y: 30)
@@ -65,7 +86,6 @@ class MapMarkerWindow: UIView {
         
         destLabel.textColor = UIColor.white
         destLabel.textAlignment = .center
-        destLabel.text = "Downtown"
         
         
         rateLabel.center = CGPoint(x: 100, y: 50)
@@ -74,7 +94,6 @@ class MapMarkerWindow: UIView {
         //rateLabel.topAnchor.constraint(equalTo: margins.topAnchor, constant: 60).isActive = true
         rateLabel.textColor = UIColor.white
         rateLabel.textAlignment = .center
-        rateLabel.text = "$5"
         
         acceptButton.center = CGPoint(x: 50, y: 75)
         //acceptButton.leadingAnchor.constraint(equalTo: margins.leadingAnchor).isActive = true
@@ -85,7 +104,7 @@ class MapMarkerWindow: UIView {
         //self.addConstraint(y)
         
         acceptButton.setTitleColor(UIColor.white, for: .normal)
-        acceptButton.setTitle("Offer", for: .normal)
+        acceptButton.setTitle(self.windowType, for: .normal)
         acceptButton.titleLabel?.textAlignment = .center
         
         declineButton.center = CGPoint(x: 150, y: 75)
