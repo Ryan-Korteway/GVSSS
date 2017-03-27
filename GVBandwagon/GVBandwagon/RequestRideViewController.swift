@@ -36,6 +36,7 @@ class RequestRideViewController: UIViewController, UISearchBarDelegate {
     @IBOutlet var cancelButton: UIBarButtonItem!
     @IBOutlet var submitButton: UIBarButtonItem!
     
+    @IBOutlet var freqSwitchView: UIView!
     @IBOutlet var datePicker: UIDatePicker!
     @IBOutlet var dateView: UIView!
     @IBOutlet var freqSwitch: UISwitch!
@@ -61,8 +62,7 @@ class RequestRideViewController: UIViewController, UISearchBarDelegate {
         self.navigationController?.navigationBar.isHidden = false
         
         self.offerTextField.text = "0"
-        self.datePicker.isHidden = true
-        self.dateView.frame = CGRect(x: self.dateView.frame.origin.x, y: self.dateView.frame.origin.y, width: self.dateView.frame.width, height: 35)
+        self.datePicker.alpha = 0
         
         placesClient = GMSPlacesClient.shared()
         
@@ -231,18 +231,30 @@ class RequestRideViewController: UIViewController, UISearchBarDelegate {
         // Open and close variable
         var newHeight: CGFloat = 200
         var newY: CGFloat = 200
-        self.datePicker.isHidden = false
+        var newAlpha: CGFloat = 1
         
         if (self.dateView.frame.height > 100) {
             newHeight = 35
             newY = -200
-            self.datePicker.isHidden = true
+            newAlpha = 0
         }
+        print(newHeight)
+        print(newY)
         
         UIView.animate(withDuration: 0.3, animations: {
             self.dateView.frame = CGRect(x: self.dateView.frame.origin.x, y: self.dateView.frame.origin.y, width: self.dateView.frame.width, height: newHeight)
             
             self.datePicker.frame = CGRect(x: self.datePicker.frame.origin.x, y: self.datePicker.frame.origin.y + newY, width: self.datePicker.frame.width, height: self.datePicker.frame.height)
+            
+            self.datePicker.alpha = newAlpha
+            
+            self.freqSwitchView.frame = CGRect(x: self.freqSwitchView.frame.origin.x, y: self.freqSwitchView.frame.origin.y + newY, width: self.freqSwitchView.frame.width, height: self.freqSwitchView.frame.height)
+            
+            self.freqView.frame = CGRect(x: self.freqView.frame.origin.x, y: self.freqView.frame.origin.y + newY, width: self.freqView.frame.width, height: self.freqView.frame.height)
+            
+            self.offerLabel.frame = CGRect(x: self.offerLabel.frame.origin.x, y: self.offerLabel.frame.origin.y + newY, width: self.offerLabel.frame.width, height: self.offerLabel.frame.height)
+            self.dollarSignLabel.frame = CGRect(x: self.dollarSignLabel.frame.origin.x, y: self.dollarSignLabel.frame.origin.y + newY, width: self.dollarSignLabel.frame.width, height: self.dollarSignLabel.frame.height)
+            self.offerTextField.frame = CGRect(x: self.offerTextField.frame.origin.x, y: self.offerTextField.frame.origin.y + newY, width: self.offerTextField.frame.width, height: self.offerTextField.frame.height)
             
         }, completion: { (Bool) -> Void in
             // Do nothing.

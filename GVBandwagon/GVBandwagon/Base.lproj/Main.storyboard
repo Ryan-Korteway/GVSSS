@@ -167,7 +167,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="defaultUserPhoto" translatesAutoresizingMaskIntoConstraints="NO" id="ru3-th-MUL">
-                                                    <rect key="frame" x="20" y="-4" width="50" height="51"/>
+                                                    <rect key="frame" x="20" y="-3.5" width="50" height="50"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="50" id="Arw-Ry-iWh"/>
                                                         <constraint firstAttribute="width" constant="50" id="BBA-Ch-qxQ"/>
@@ -532,7 +532,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="0hs-SU-nwx">
-                                        <rect key="frame" x="0.0" y="-52.5" width="343" height="140"/>
+                                        <rect key="frame" x="0.0" y="-52" width="343" height="140"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="140" id="EBn-TE-FJT"/>
                                         </constraints>
@@ -545,11 +545,12 @@
                                 <gestureRecognizers/>
                                 <constraints>
                                     <constraint firstItem="0hs-SU-nwx" firstAttribute="leading" secondItem="9tS-wS-qUh" secondAttribute="leading" id="7GJ-oe-Vw0"/>
-                                    <constraint firstItem="0hs-SU-nwx" firstAttribute="centerY" secondItem="9tS-wS-qUh" secondAttribute="centerY" id="IQc-Jg-GT1"/>
+                                    <constraint firstItem="0hs-SU-nwx" firstAttribute="centerX" secondItem="9tS-wS-qUh" secondAttribute="centerX" id="A61-kb-0bH"/>
                                     <constraint firstAttribute="height" constant="35" id="LcU-07-Nde"/>
+                                    <constraint firstItem="cDH-sf-jma" firstAttribute="centerY" secondItem="9tS-wS-qUh" secondAttribute="centerY" id="Sdv-7O-GhQ"/>
+                                    <constraint firstItem="0hs-SU-nwx" firstAttribute="centerY" secondItem="9tS-wS-qUh" secondAttribute="centerY" id="Xxd-S9-0nL"/>
                                     <constraint firstItem="cDH-sf-jma" firstAttribute="top" secondItem="9tS-wS-qUh" secondAttribute="top" constant="3" id="i16-u1-yMM"/>
                                     <constraint firstAttribute="trailing" secondItem="0hs-SU-nwx" secondAttribute="trailing" id="rqn-4f-11j"/>
-                                    <constraint firstItem="0hs-SU-nwx" firstAttribute="centerX" secondItem="9tS-wS-qUh" secondAttribute="centerX" id="shN-EW-L4s"/>
                                 </constraints>
                                 <connections>
                                     <outletCollection property="gestureRecognizers" destination="3Y2-0B-Ze4" appends="YES" id="tjn-9m-zCn"/>
@@ -762,6 +763,7 @@
                         <outlet property="dateView" destination="9tS-wS-qUh" id="h2T-1P-gXs"/>
                         <outlet property="dollarSignLabel" destination="hXp-d1-68o" id="ihN-uQ-GoI"/>
                         <outlet property="freqSwitch" destination="PKZ-fU-MM6" id="k6r-KI-5z9"/>
+                        <outlet property="freqSwitchView" destination="qm8-lH-1TL" id="r0I-vY-Asj"/>
                         <outlet property="freqView" destination="bJe-fe-Uj3" id="Gtj-01-Ywe"/>
                         <outlet property="friSwitch" destination="Gm5-xC-cpA" id="miQ-RY-bgc"/>
                         <outlet property="monSwitch" destination="fNN-lz-Wru" id="AXN-bY-PvD"/>
@@ -1910,7 +1912,7 @@
             <objects>
                 <navigationController storyboardIdentifier="historyNavigationControllerStoryboardId" automaticallyAdjustsScrollViewInsets="NO" id="uFx-a6-EjB" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="cEz-5G-en9">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="cEz-5G-en9">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1928,7 +1930,7 @@
             <objects>
                 <navigationController storyboardIdentifier="rideNavController" automaticallyAdjustsScrollViewInsets="NO" id="HC5-ET-4zC" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="VD2-H3-46M">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="VD2-H3-46M">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1947,7 +1949,7 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Jyl-nh-N2F" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Urgent Rides" image="expointTab" id="E42-3c-tFb"/>
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="4eg-G6-LA2">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="4eg-G6-LA2">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1965,7 +1967,7 @@
             <objects>
                 <navigationController storyboardIdentifier="profileNavigationControllerStoryboardId" automaticallyAdjustsScrollViewInsets="NO" id="3qB-dj-fru" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="RkK-Gu-smX">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="RkK-Gu-smX">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1983,7 +1985,7 @@
             <objects>
                 <navigationController storyboardIdentifier="helpNavControllerStoryboardId" automaticallyAdjustsScrollViewInsets="NO" id="310-Ue-cRZ" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="jCp-Y1-93A">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="jCp-Y1-93A">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -2001,7 +2003,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="cSE-YZ-bUT" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="pzh-l2-tnv">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="pzh-l2-tnv">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
