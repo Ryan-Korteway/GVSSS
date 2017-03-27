@@ -255,7 +255,7 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
                         marker.position.longitude = snapshot.value as! CLLocationDegrees
                         self.riderLong = snapshot.value as! CLLocationDegrees
                     } else {
-                        localDelegate.ourAddress = snapshot.value as! NSString
+                        self.localDelegate.ourAddress = snapshot.value as! NSString
                     }
                 })
                 //do any of these matter thanks to the custom display window?...
