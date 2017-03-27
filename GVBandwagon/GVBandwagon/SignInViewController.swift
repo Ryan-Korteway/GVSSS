@@ -16,6 +16,7 @@ class SignInViewController: UIViewController, GIDSignInDelegate, GIDSignInUIDele
     @IBOutlet var googleSignInButton: GIDSignInButton!
     var isUserLoggedIn = false
     var ref: FIRDatabaseReference!
+    let appDelegate = UIApplication.shared.delegate as! AppDelegate
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -159,9 +160,9 @@ class SignInViewController: UIViewController, GIDSignInDelegate, GIDSignInUIDele
             print("our value \(snapshot.value!)")
             
             // Load up the drawer from AppDelegate:
-            let appDelegate = UIApplication.shared.delegate as! AppDelegate
-            appDelegate.initiateDrawer()
-            appDelegate.setUpOpenObservers();
+//            let appDelegate = UIApplication.shared.delegate as! AppDelegate // could it be this redeclaration be the issue?
+            self.appDelegate.initiateDrawer()
+            self.appDelegate.setUpOpenObservers();
             
             //self.performSegue(withIdentifier: "signInApproved", sender: self)
             

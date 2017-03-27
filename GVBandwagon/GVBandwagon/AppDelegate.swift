@@ -380,7 +380,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             print("Successfully signed out user.")
             //performSegue(withIdentifier: "signOutSegue", sender: self)
             let signInVC = viewControllerForStoryboardId(storyboardId: signInViewControllerStoryboardId)
-            window?.rootViewController = signInVC
+            window?.rootViewController = signInVC //i think its this transfer back that is preventing our signing out and back in...
         } catch let signOutError as NSError {
             print ("Error signing out: %@", signOutError)
         }
@@ -672,8 +672,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             ref.child("requests/immediate").removeAllObservers();
             ref.child("users/\(self.offeredID)/rider/offers/immediate").observe( .childRemoved, with: { snapshot in
                 
-                //need a check potentially to make sure that 
-                
+                print("we are calling ride accept")
                 (self.DriveViewController_AD as! DriveViewController).ride_accept(item: cellItem.init(snapshot: snapshot))
                 //acceptsToWatch = acceptsToWatch.adding(toWatchUid) as NSArray; //not sure about where this line should go. its purpose is to track which userID needs to be watched when we call the closed observer set up function.
             })
@@ -718,11 +717,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 }
             })
         } else if (self.riderStatus == "accepted"){ //path needs to go deeper....
-            ref.child("users/\(userID)/rider/offers/accepted/immediate/driver").observeSingleEvent(of: .childChanged, with: { snapshot in //child added may be an issue here...
+            ref.child("users/\(userID)/rider/offers/accepted/immediate/driver").observeSingleEvent(of: .value, with: { snapshot in //child added may be an issue here...
                 print(snapshot.key)
-                if(snapshot.key != userID) {
-                    (self.firstViewController as! FirstViewController).fillWithAcceptance(item: cellItem.init(snapshot: snapshot))
+                for item in snapshot.children{
+                    (self.firstViewController as! FirstViewController).fillWithAcceptance(item: cellItem.init(snapshot: (item as! FIRDataSnapshot)))
+                    
                 }
+                
             })
         } //no else for status == request because request is the base which means we dont have any position to advertise or any pins to recreate
     }

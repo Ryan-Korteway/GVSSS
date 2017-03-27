@@ -133,6 +133,7 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
             panelVC.mode = "Ride"
             panelVC.goOnlineSwitch.isHidden = true
             panelVC.goOnlineLabel.isHidden = true
+            panelVC.viewReload()
         }
     }
     
@@ -300,7 +301,7 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
             let dictionary: NSDictionary = snapshot.value! as! NSDictionary
             ref.child("offers/accepted/immediate/driver/\(cellInfo.value(forKey: "uid")!)").setValue(dictionary) //create an accepted branch of the riders table
             
-            ref.child("offers/accepted/immediate/rider/\(user.uid)").setValue(["name": user.displayName!, "uid": user.uid, "venmoID": "none", "origin": ["lat": self.ourLat, "long": self.ourLong], "destination": dictionary.value(forKey: "destination"), "rate" : dictionary.value(forKey: "rate"), "accepted": 0, "repeats": "none", "duration": dictionary.value(forKey: "duration")])
+            ref.child("offers/accepted/immediate/rider/\(user.uid)").setValue(["name": user.displayName!, "uid": user.uid, "venmoID": "none", "origin": ["lat": self.ourLat, "long": self.ourLong], "destination": dictionary.value(forKey: "destination"), "rate" : dictionary.value(forKey: "rate"), "accepted": 0, "repeats": "none", "duration": dictionary.value(forKey: "duration"), "destinationName": dictionary.value(forKey: "destinationName")])
             
             let localDelegate = UIApplication.shared.delegate as! AppDelegate
             localDelegate.riderStatus = "accepted"

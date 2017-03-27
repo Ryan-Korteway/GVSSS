@@ -50,27 +50,31 @@ class RideSummaryTableViewController: UITableViewController {
         // Need to pull and fill all information from firebase. Use self.paymentText for check if here from Ride or Drive.
         // We can use UID of driver/rider in the users profile to pull the appropriate information for this view controller.
         
+        print("our uid: \(informationDictionary.value(forKey: "uid")!)")
+        
         if(informationDictionary.count > 0 ) {
             nameLabel.text = informationDictionary.value(forKey: "name") as! String?
-            rateLabel.text = "\(informationDictionary.value(forKey: "rate"))"
+            rateLabel.text = "\(informationDictionary.value(forKey: "rate")!)"
             
             if(paymentText == "Request Payment") {
                 //driver side so pull riders ratings
-                ref.child("users/\(informationDictionary.value(forKey: "uid"))/rider/rating").observeSingleEvent(of: .value, with: { snapshot in
-                    self.ratingLabel.text = snapshot.value! as? String
+                ref.child("users/\(informationDictionary.value(forKey: "uid")!)/rider/rating").observeSingleEvent(of: .value, with: { snapshot in
+                    self.ratingLabel.text = "\((snapshot.value! as? NSInteger)!)"
                 })
             } else {
                 //riders side so pull drivers ratings
-                ref.child("users/\(informationDictionary.value(forKey: "uid"))/driver/rating").observeSingleEvent(of: .value, with: { snapshot in
-                    self.ratingLabel.text = snapshot.value! as? String
+                ref.child("users/\(informationDictionary.value(forKey: "uid")!)/driver/rating").observeSingleEvent(of: .value, with: { snapshot in
+                    self.ratingLabel.text = "\((snapshot.value! as? NSInteger)!)"
                 })
             }
             
-            ref.child("users/\(informationDictionary.value(forKey: "uid"))/phone").observeSingleEvent(of: .value, with: { snapshot in
-                self.phoneLabel.text = "\(snapshot.value!)"
+            ref.child("users/\(informationDictionary.value(forKey: "uid")!)/phone").observeSingleEvent(of: .value, with: { snapshot in
+                print("our phone: \(snapshot.value! as? NSString)")
+                self.phoneLabel.text = "\((snapshot.value! as? NSString)!)"
             })
         }
         
+        print("address \(localAddress)")
         originStreetLabel.text = localAddress
         
         destStreetLabel.text = informationDictionary.value(forKey: "destinationName") as! String?

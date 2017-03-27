@@ -37,29 +37,47 @@ class DriverPanelViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if(mode == "Driver") {
-            ref.child("users/\(ourid)/driver/rating").observeSingleEvent(of: .value, with: { snapshot in
-                //ratingLabel.text = snapshot.value as! String
-            })
-            
-            ref.child("users/\(ourid)/driver/totalRiders").observeSingleEvent(of: .value, with: { snapshot in
-                //CountLabel.text = snapshot.value as! String
-            })
-        } else {
-            ref.child("users/\(ourid)/rider/rating").observeSingleEvent(of: .value, with: { snapshot in
-                //ratingLabel.text = snapshot.value as! String
-            })
-            
-            ref.child("users/\(ourid)/rider/totalRides").observeSingleEvent(of: .value, with: { snapshot in
-                //CountLabel.text = snapshot.value as! String
-            })
-        }
-        
         self.goOnlineSwitch.setOn(false, animated: false)
         self.goOnlineSwitch.addTarget(self, action: #selector(switchIsChanged(mySwitch:)), for: .valueChanged)
         
         self.ratingImageView.image = getRating()
         getActiveTrip()
+        viewReload()
+    }
+    
+    func viewReload() {
+        if(mode == "Driver") {
+            
+            print("driver reload")
+            ref.child("users/\(ourid)/driver/rating").observeSingleEvent(of: .value, with: { snapshot in
+                //ratingLabel.text = snapshot.value as! String
+                
+                //based on the rating, update the stars picture here Nick
+            })
+            
+            ref.child("users/\(ourid)/driver/totalRiders/").observeSingleEvent(of: .value, with: { snapshot in
+                print("key " + snapshot.key)
+                print("value  \((snapshot.value as? NSInteger)!)")
+                self.tripCounterLabel.text = "\((snapshot.value as? NSInteger)!) trips."
+            })
+            
+        } else {
+            
+            print("rider reload")
+            ref.child("users/\(ourid)/rider/rating").observeSingleEvent(of: .value, with: { snapshot in
+                //ratingLabel.text = snapshot.value as! String
+                
+                //based on the rating, update the stars picture here Nick
+            })
+            
+            
+            print("HERE \(ourid)")
+            ref.child("users/\(ourid)/rider/totalRides/").observeSingleEvent(of: .value, with: { snapshot in
+                print("key " + snapshot.key)
+                print("value  \((snapshot.value as? NSInteger)!)")
+                self.tripCounterLabel.text = "\((snapshot.value as? NSInteger)!) trips."
+            })
+        }
     }
     
     func switchIsChanged(mySwitch: UISwitch) {

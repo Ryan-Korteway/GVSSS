@@ -203,9 +203,10 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         appDelegate.toggleRightDrawer(sender: sender as AnyObject, animated: false)
         if let panelVC = appDelegate.drawerViewController.rightViewController as? DriverPanelViewController {
-            panelVC.mode = "Drive"
+            panelVC.mode = "Driver"
             panelVC.goOnlineLabel.isHidden = false
             panelVC.goOnlineSwitch.isHidden = false
+            panelVC.viewReload()
         }
     }
     
@@ -521,7 +522,10 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
         //make the pin with only the riders info.
         //make tracker observers etc from only the baseDictionaries uid etc?...
         
-        self.performSegue(withIdentifier: "driverAcceptsSegue", sender: self)
+        //self.performSegue(withIdentifier: "driverAcceptsSegue", sender: self)
+        print("end of ride accept")
+        localDelegate.driverStatus = "offer"
+        localDelegate.startDriverMapObservers()
         infoWindow.removeFromSuperview()
     }
     
