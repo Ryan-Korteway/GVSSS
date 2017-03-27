@@ -60,17 +60,17 @@ class RideSummaryTableViewController: UITableViewController {
             
             if(paymentText == "Request Payment") {
                 //driver side so pull riders ratings
-                ref.child("users/\(informationDictionary.value(forKey: "uid"))/rider/rating").observeSingleEvent(of: .value, with: { snapshot in
+                ref.child("users/\(informationDictionary.value(forKey: "uid")!)/rider/rating").observeSingleEvent(of: .value, with: { snapshot in
                     self.ratingLabel.text = snapshot.value! as? String
                 })
             } else {
                 //riders side so pull drivers ratings
-                ref.child("users/\(informationDictionary.value(forKey: "uid"))/driver/rating").observeSingleEvent(of: .value, with: { snapshot in
+                ref.child("users/\(informationDictionary.value(forKey: "uid")!)/driver/rating").observeSingleEvent(of: .value, with: { snapshot in
                     self.ratingLabel.text = snapshot.value! as? String
                 })
             }
             
-            ref.child("users/\(informationDictionary.value(forKey: "uid"))/phone").observeSingleEvent(of: .value, with: { snapshot in
+            ref.child("users/\(informationDictionary.value(forKey: "uid")!)/phone").observeSingleEvent(of: .value, with: { snapshot in
                 self.phoneLabel.text = "\(snapshot.value!)"
             })
         }
