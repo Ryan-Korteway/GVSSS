@@ -672,8 +672,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             ref.child("requests/immediate").removeAllObservers();
             ref.child("users/\(self.offeredID)/rider/offers/immediate").observe( .childRemoved, with: { snapshot in
                 
-                //need a check potentially to make sure that 
-                
+                print("we are calling ride accept")
                 (self.DriveViewController_AD as! DriveViewController).ride_accept(item: cellItem.init(snapshot: snapshot))
                 //acceptsToWatch = acceptsToWatch.adding(toWatchUid) as NSArray; //not sure about where this line should go. its purpose is to track which userID needs to be watched when we call the closed observer set up function.
             })
