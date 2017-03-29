@@ -171,16 +171,12 @@ UINavigationControllerDelegate {
         
         if (self.isMovingFromParentViewController) {
             
-            print("Updating...") //dont see why we need the observer to do the updates but okay...
+            print("Updating...")
             
-            self.ref.child("users").child("\(self.currentUser!.uid)").observeSingleEvent(of: .value, with: { (snapshot) in
-                
-                self.ref.child("users/\(self.currentUser!.uid)/name").setValue(self.fNameField.text! + " " + self.lNameField.text!)
-                self.ref.child("users/\(self.currentUser!.uid)/phone").setValue(self.phoneField.text)
-                
-            }) { (error) in
-                print("Update Error, \(error.localizedDescription)")
-            }
+            self.ref.child("users/\(self.currentUser!.uid)/name").setValue(self.fNameField.text! + " " + self.lNameField.text!)
+            self.ref.child("users/\(self.currentUser!.uid)/phone").setValue(self.phoneField.text)
+            
+            //other values need updating too.
         }
     }
     

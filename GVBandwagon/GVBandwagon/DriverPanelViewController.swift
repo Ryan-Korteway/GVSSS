@@ -144,8 +144,11 @@ class DriverPanelViewController: UIViewController {
         
         if(segue.identifier == "riderAcceptsSegue") {
             (segue.destination as! RideSummaryTableViewController).mode = "ride"
+            (segue.destination as! RideSummaryTableViewController).localAddress = localDelegate.ourAddress as! String
         } else {
             (segue.destination as! RideSummaryTableViewController).mode = "drive"
+            (segue.destination as! RideSummaryTableViewController).localAddress = localDelegate.riderAddress
+            
         }
     }
     
@@ -158,7 +161,9 @@ class DriverPanelViewController: UIViewController {
         
         var rating = 0.0
         
-        // Call to FB for rating
+        // Call to FB for rating and total riders/rides here
+        
+        //also need to know here if we are on rider map vs driver map.
         
         if (rating >=  4.5) {
             return #imageLiteral(resourceName: "fivestars")

@@ -373,7 +373,7 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
         marker.userData = cellInfo //giving each marker a dictionary of the info that set them up for future use.
         marker.map = self.googleMap
 
-        baseDictionary = marker.userData as! NSDictionary
+        //baseDictionary = marker.userData as! NSDictionary
         
         ref.child("requests/immediate/\(cellInfo["uid"]!)").observeSingleEvent(of: .childRemoved, with:{ snapshot in
                 print("PIN BEING DELETED")
@@ -427,7 +427,7 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
         marker.userData = cellInfo //giving each marker a dictionary of the info that set them up for future use.
         marker.map = self.googleMap
         
-        baseDictionary = marker.userData as! NSDictionary
+        //baseDictionary = marker.userData as! NSDictionary
         
         ref.child("requests/immediate/\(cellInfo["uid"]!)").observeSingleEvent(of: .childRemoved, with:{ snapshot in
             print("PIN BEING DELETED")
@@ -488,16 +488,19 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
     }
     
     func acceptTapped(button: UIButton) -> Void {
+        
+        let originLocal: NSDictionary = baseDictionary.value(forKey: "origin") as! NSDictionary
+        let ourAddress : NSString = originLocal.value(forKey: "address") as! NSString
+        localDelegate.riderAddress = ourAddress as String
+        
         localDelegate.changeDriverStatus(status: "offer")
         localDelegate.offeredID = baseDictionary.value(forKey: "uid")! as! String
+        
         print("Accept Tapped but it is really an offer.")
         
         let ref = FIRDatabase.database().reference().child("users/\(baseDictionary.value(forKey: "uid")!)/rider/offers/immediate/")
         
         let user = FIRAuth.auth()!.currentUser!
-        
-        let originLocal: NSDictionary = baseDictionary.value(forKey: "origin") as! NSDictionary
-        let ourAddress : NSString = originLocal.value(forKey: "address") as! NSString
         
         let newOrigin = [ "lat": self.localDelegate.ourlat,
                           "long": self.localDelegate.ourlong,

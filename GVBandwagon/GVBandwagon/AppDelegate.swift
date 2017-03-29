@@ -33,6 +33,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var driverStatus = "request";
     var mode = "rider";
     var offeredID = "none"; //the id of the offered rider, to be set when we offer a ride to someone.
+    var riderAddress = ""
     //---------------------------
     
     var locationManager = CLLocationManager()
@@ -373,6 +374,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func firebaseSignOut() {
         let firebaseAuth = FIRAuth.auth()
         do {
+            let userID = FIRAuth.auth()!.currentUser!.uid
+            ref.child("users/\(userID)/stateVars").setValue(["riderStatus" : riderStatus, "driverStatus" : driverStatus, "offeredID" : offeredID])
+            
             try firebaseAuth!.signOut()
             print("Successfully signed out user.")
             //performSegue(withIdentifier: "signOutSegue", sender: self)
@@ -572,11 +576,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             
                 if(self.riderStatus == "request") {
                     
-                        ref.child("requests/immediate/\(ourID)/origin").setValue(["lat": self.ourlat, "long": self.ourlong]);
+                        ref.child("requests/immediate/\(ourID)/origin").setValue(["lat": self.ourlat, "long": self.ourlong, "address": self.ourAddress]);
                     
                 } else if (self.riderStatus == "offer") {
                     
-                        ref.child("users/\(ourID)/rider/offers/immediate/\(ourID)/origin").setValue(["lat": self.ourlat, "long": self.ourlong]);
+                        ref.child("users/\(ourID)/rider/offers/immediate/\(ourID)/origin").setValue(["lat": self.ourlat, "long": self.ourlong, "address": self.ourAddress]);
             
                 } else if (self.riderStatus == "accepted") {
                     
@@ -586,19 +590,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     print("something up with timer")
                 }
                 
-            } else { // mode == driver
+            } else { // mode == driver, cant let the driver wipe out the riders origin address...
              
                 if(self.driverStatus == "request") {
                     
-                        ref.child("activedrivers/\(ourID)/origin").setValue(["lat": self.ourlat, "long": self.ourlong]);
+                        ref.child("activedrivers/\(ourID)/origin").setValue(["lat": self.ourlat, "long": self.ourlong, "address": self.riderAddress]);
                     
                 } else if (self.driverStatus == "offer") {
                     
-                        ref.child("users/\(self.offeredID)/rider/offers/immediate/\(ourID)/origin").setValue(["lat": self.ourlat, "long": self.ourlong]);
+                        ref.child("users/\(self.offeredID)/rider/offers/immediate/\(ourID)/origin").setValue(["lat": self.ourlat, "long": self.ourlong, "address": self.riderAddress]);
                     
                 } else if (self.driverStatus == "accepted") {
                     
-                        ref.child("users/\(self.offeredID)/rider/offers/accepted/immediate/driver/\(ourID)/origin").setValue( ["lat": self.ourlat, "long": self.ourlong]);
+                        ref.child("users/\(self.offeredID)/rider/offers/accepted/immediate/driver/\(ourID)/origin").setValue( ["lat": self.ourlat, "long": self.ourlong, "address": self.riderAddress]);
                     
                 } else {
                     print("something up with timer")
@@ -714,7 +718,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 }
             })
         } else if (self.riderStatus == "accepted"){ //path needs to go deeper....
-            ref.child("users/\(userID)/rider/offers/accepted/immediate/driver").observeSingleEvent(of: .value, with: { snapshot in //child added may be an issue here...
+            ref.child("users/\(userID)/rider/offers/accepted/immediate/driver/").observeSingleEvent(of: .value, with: { snapshot in //child added may be an issue here...
                 print(snapshot.key)
                 for item in snapshot.children{
                     (self.firstViewController as! FirstViewController).fillWithAcceptance(item: cellItem.init(snapshot: (item as! FIRDataSnapshot)))

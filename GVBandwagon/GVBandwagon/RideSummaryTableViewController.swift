@@ -50,10 +50,11 @@ class RideSummaryTableViewController: UITableViewController {
         // Need to pull and fill all information from firebase. Use self.paymentText for check if here from Ride or Drive.
         // We can use UID of driver/rider in the users profile to pull the appropriate information for this view controller.
         
-        print("our uid: \(informationDictionary.value(forKey: "uid")!)")
+        
         
         if(informationDictionary.count > 0 ) {
-            
+        
+            print("our uid: \(informationDictionary.value(forKey: "uid")!)")
             //pull information down fresh/correctly from firebase.
             
             nameLabel.text = informationDictionary.value(forKey: "name") as! String?
