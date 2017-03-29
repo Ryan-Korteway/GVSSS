@@ -85,7 +85,8 @@ class RideSummaryTableViewController: UITableViewController {
         }
         
         print("address \(localAddress)")
-        originStreetLabel.text = localAddress
+        let originDict = informationDictionary.value(forKey: "origin") as! NSDictionary
+        originStreetLabel.text = originDict.value(forKey: "address") as! String!
         
         destStreetLabel.text = informationDictionary.value(forKey: "destinationName") as! String?
         

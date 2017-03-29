@@ -252,7 +252,7 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
         let location = CLLocationCoordinate2D(latitude: locationDictionary.value(forKey: "lat") as! CLLocationDegrees, longitude: locationDictionary.value(forKey: "long") as! CLLocationDegrees)
         
         let name = (baseDictionary.value(forKey: "name") as! NSString) as String
-        let destination = baseDictionary.value(forKey: "destination").debugDescription
+        let destination = baseDictionary.value(forKey: "destinationName") as! String
         let rate = "\(baseDictionary.value(forKey: "rate")!)"
         
         tappedMarker = marker
