@@ -36,6 +36,7 @@ class RequestRideViewController: UIViewController, UISearchBarDelegate {
     @IBOutlet var cancelButton: UIBarButtonItem!
     @IBOutlet var submitButton: UIBarButtonItem!
     
+    @IBOutlet var dateTextField: UITextField!
     @IBOutlet var freqSwitchView: UIView!
     @IBOutlet var datePicker: UIDatePicker!
     @IBOutlet var dateView: UIView!
@@ -62,7 +63,6 @@ class RequestRideViewController: UIViewController, UISearchBarDelegate {
         self.navigationController?.navigationBar.isHidden = false
         
         self.offerTextField.text = "0"
-        self.datePicker.alpha = 0
         
         placesClient = GMSPlacesClient.shared()
         
@@ -90,8 +90,6 @@ class RequestRideViewController: UIViewController, UISearchBarDelegate {
         // Google Places End
         
         self.configSwitches()
-        
-        //self.freqView.frame = CGRect(x: self.freqView.frame.origin.x, y: self.freqView.frame.origin.y, width: self.freqView.frame.width, height: 0)
         
         self.freqSwitch.setOn(false, animated: false)
         self.freqSwitch.addTarget(self, action: #selector(switchIsChanged(mySwitch:)), for: .valueChanged)
@@ -287,9 +285,8 @@ class RequestRideViewController: UIViewController, UISearchBarDelegate {
         print(newY)
         
         UIView.animate(withDuration: 0.3, animations: {
-            self.dateView.frame = CGRect(x: self.dateView.frame.origin.x, y: self.dateView.frame.origin.y, width: self.dateView.frame.width, height: newHeight)
             
-            self.datePicker.frame = CGRect(x: self.datePicker.frame.origin.x, y: self.datePicker.frame.origin.y + newY, width: self.datePicker.frame.width, height: self.datePicker.frame.height)
+            self.dateView.frame = CGRect(x: self.dateView.frame.origin.x, y: self.dateView.frame.origin.y, width: self.dateView.frame.width, height: newHeight)
             
             self.datePicker.alpha = newAlpha
             
@@ -303,6 +300,16 @@ class RequestRideViewController: UIViewController, UISearchBarDelegate {
             
         }, completion: { (Bool) -> Void in
             // Do nothing.
+            
+            /*
+            UIView.animate(withDuration: 0.3, animations: {
+                self.datePicker.frame = CGRect(x: self.datePicker.frame.origin.x, y: self.datePicker.frame.origin.y + newY, width: self.datePicker.frame.width, height: self.datePicker.frame.height)
+                print("Frame y: \(self.datePicker.frame.origin.y)")
+            }, completion: { (Bool) -> Void in
+                // Do nothing
+            })
+            */
+            
         })
     }
     
