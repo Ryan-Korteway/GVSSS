@@ -24,7 +24,7 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
     
     // initialize and keep a marker and a custom infowindow
     var tappedMarker = GMSMarker()
-    var infoWindow = MapMarkerWindow(frame: CGRect(x: 0, y: 0, width: 200, height: 100))
+    var infoWindow = MapMarkerWindow(frame: CGRect(x: 0, y: 0, width: 200, height: 100), type: "Rider", name: "Name", dest: "Destination", rate: "$5")
     
     var baseDictionary: NSDictionary = [:]
     
@@ -251,20 +251,16 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
         
         let location = CLLocationCoordinate2D(latitude: locationDictionary.value(forKey: "lat") as! CLLocationDegrees, longitude: locationDictionary.value(forKey: "long") as! CLLocationDegrees)
         
+        let name = (baseDictionary.value(forKey: "name") as! NSString) as String
+        let destination = baseDictionary.value(forKey: "destination").debugDescription
+        let rate = "\(baseDictionary.value(forKey: "rate")!)"
+        
         tappedMarker = marker
         infoWindow.removeFromSuperview()
-        infoWindow = MapMarkerWindow(frame: CGRect(x: 0, y: 0, width: 200, height: 100))
-        
-        infoWindow.nameLabel.text = (baseDictionary.value(forKey: "name") as! NSString) as String
-        infoWindow.destLabel.text = baseDictionary.value(forKey: "destination").debugDescription
-        infoWindow.rateLabel.text = "\(baseDictionary.value(forKey: "rate"))"
+        infoWindow = MapMarkerWindow(frame: CGRect(x: 0, y: 0, width: 200, height: 100), type: "Rider", name: name, dest: destination, rate: rate)
             
         infoWindow.center = mapView.projection.point(for: location)
         infoWindow.center.y -= 90
-        
-        infoWindow.acceptButton.isEnabled = false
-        infoWindow.acceptButton.setTitle("Accept", for: .normal) // Not working...
-        infoWindow.acceptButton.isEnabled = true
         
         infoWindow.acceptButton.addTarget(self, action: #selector(acceptTapped(button:)), for: .touchUpInside)
         infoWindow.declineButton.addTarget(self, action: #selector(declineTapped(button:)), for: .touchUpInside)
@@ -311,6 +307,8 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
             localDelegate.startRiderMapObservers()
             
         })
+        
+        print("\nride_accept was called!\n")
         
     }
     

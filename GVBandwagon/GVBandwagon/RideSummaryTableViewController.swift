@@ -97,6 +97,24 @@ class RideSummaryTableViewController: UITableViewController {
 
     // MARK: - Table view data source
     
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        if section == 0 {
+            if paymentText == "Request Payment" {
+                return "Rider"
+            } else {
+                return "Driver"
+            }
+        } else if section == 1 {
+            return "Origin"
+        } else if section == 2 {
+            return "Destination"
+        } else if section == 3 {
+            return "Rate"
+        } else {
+            return ""
+        }
+    }
+    
     /*
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 5

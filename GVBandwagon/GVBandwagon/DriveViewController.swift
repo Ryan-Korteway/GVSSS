@@ -22,7 +22,7 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
     
     // initialize and keep a marker and a custom infowindow
     var tappedMarker = GMSMarker()
-    var infoWindow = MapMarkerWindow(frame: CGRect(x: 0, y: 0, width: 200, height: 100))
+    var infoWindow = MapMarkerWindow(frame: CGRect(x: 0, y: 0, width: 200, height: 100), type: "Driver", name: "Name", dest: "Destination", rate: "?")
     
     var isMessageDisplayed = false
     let locationManager = CLLocationManager()
@@ -452,13 +452,13 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
         
         let location = CLLocationCoordinate2D(latitude: locationDictionary.value(forKey: "lat") as! CLLocationDegrees, longitude: locationDictionary.value(forKey: "long") as! CLLocationDegrees)
         
+        let name = (baseDictionary.value(forKey: "name") as! NSString) as String
+        let destination = baseDictionary.value(forKey: "destination").debugDescription
+        let rate = "\(baseDictionary.value(forKey: "rate"))"
+        
         tappedMarker = marker
         infoWindow.removeFromSuperview()
-        infoWindow = MapMarkerWindow(frame: CGRect(x: 0, y: 0, width: 200, height: 100))
-        
-        infoWindow.nameLabel.text = (baseDictionary.value(forKey: "name") as! NSString) as String
-        infoWindow.destLabel.text = baseDictionary.value(forKey: "destination").debugDescription
-        infoWindow.rateLabel.text = "\(baseDictionary.value(forKey: "rate"))"
+        infoWindow = MapMarkerWindow(frame: CGRect(x: 0, y: 0, width: 200, height: 100), type: "Driver", name: name, dest: destination, rate: rate)
         
         infoWindow.center = mapView.projection.point(for: location)
         infoWindow.center.y -= 90

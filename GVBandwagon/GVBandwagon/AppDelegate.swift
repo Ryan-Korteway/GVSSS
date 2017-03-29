@@ -40,7 +40,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var ourlat : CLLocationDegrees = 0.0
     var ourlong : CLLocationDegrees = 0.0
-    var ourAddress : NSString = ""
+    var ourAddress : NSString?
     
     let kKGDrawersStoryboardName = "Main"
     
@@ -742,7 +742,7 @@ extension AppDelegate: CLLocationManagerDelegate {
             print("\nNOT AUTHORIZED\n")
         }
     }
-    
+
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         let locValue:CLLocationCoordinate2D = self.locationManager.location!.coordinate
         print("locations = \(locValue.latitude) \(locValue.longitude)")
