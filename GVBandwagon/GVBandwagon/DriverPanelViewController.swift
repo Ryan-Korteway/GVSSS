@@ -17,6 +17,7 @@ class DriverPanelViewController: UIViewController {
     @IBOutlet var goOnlineSwitch: UISwitch!
     @IBOutlet var activeTripLabel: UILabel!
     @IBOutlet var activeTripView: UIView!
+    @IBOutlet var scheduledRidesContainerView: UIView!
     
     @IBOutlet var ratingImageView: UIImageView!
     @IBOutlet var tripCounterLabel: UILabel!
@@ -142,10 +143,12 @@ class DriverPanelViewController: UIViewController {
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
         
-        if(segue.identifier == "riderAcceptsSegue") {
+        if (segue.identifier == "riderAcceptsSegue") {
             (segue.destination as! RideSummaryTableViewController).mode = "ride"
-        } else {
+        } else if (segue.identifier == "driverAcceptsSegue") {
             (segue.destination as! RideSummaryTableViewController).mode = "drive"
+            (segue.destination as! RideSummaryTableViewController).localAddress = localDelegate.riderAddress
+            
         }
     }
     
@@ -158,7 +161,9 @@ class DriverPanelViewController: UIViewController {
         
         var rating = 0.0
         
-        // Call to FB for rating
+        // Call to FB for rating and total riders/rides here
+        
+        //also need to know here if we are on rider map vs driver map.
         
         if (rating >=  4.5) {
             return #imageLiteral(resourceName: "fivestars")
