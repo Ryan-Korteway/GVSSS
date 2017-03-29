@@ -453,8 +453,8 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
         let location = CLLocationCoordinate2D(latitude: locationDictionary.value(forKey: "lat") as! CLLocationDegrees, longitude: locationDictionary.value(forKey: "long") as! CLLocationDegrees)
         
         let name = (baseDictionary.value(forKey: "name") as! NSString) as String
-        let destination = baseDictionary.value(forKey: "destination").debugDescription
-        let rate = "\(baseDictionary.value(forKey: "rate"))"
+        let destination = baseDictionary.value(forKey: "destinationName") as! String //replaced destination with destinationName
+        let rate = "\(baseDictionary.value(forKey: "rate")!)" //added ! here
         
         tappedMarker = marker
         infoWindow.removeFromSuperview()
@@ -591,8 +591,8 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
             marker.map = self.googleMap
             
             print("in acceptance, we are watching: \(cellInfo["uid"]!)")
-            
-            self.ref.child("users/\(cellInfo["uid"]!)/rider/accepted/immediate/rider/\(cellInfo["uid"]!)/origin").observe( .childChanged, with: { snapshot in
+            //made it origin/ instead of just origin might break things... or fix things.
+            self.ref.child("users/\(cellInfo["uid"]!)/rider/accepted/immediate/rider/\(cellInfo["uid"]!)/origin/").observe( .childChanged, with: { snapshot in
                 if(snapshot.key == "lat") {
                     marker.position.latitude = snapshot.value as! CLLocationDegrees
                     self.riderLat = snapshot.value as! CLLocationDegrees
