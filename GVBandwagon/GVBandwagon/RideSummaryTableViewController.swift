@@ -19,6 +19,7 @@ class RideSummaryTableViewController: UITableViewController {
     @IBOutlet var destStreetLabel: UILabel!
     @IBOutlet var rateLabel: UILabel!
     @IBOutlet var paymentButton: UIButton!
+    @IBOutlet var cancelRideButton: UIButton!
 
     var paymentText = "Request Payment"
     var informationDictionary: NSDictionary = [:]
@@ -33,11 +34,16 @@ class RideSummaryTableViewController: UITableViewController {
     
     var localAddress : String = ""
     
+    // For the Cancel button
+    var shadowLayer: CAShapeLayer!
+    var paymentShadowLayer: CAShapeLayer!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController?.navigationBar.isHidden = false
         
         self.paymentButton.setTitle(paymentText, for: .normal)
+        self.configureButtons()
         
         // If this is a summary for the driver:
         // name and rating are of Rider
@@ -197,8 +203,13 @@ class RideSummaryTableViewController: UITableViewController {
             // Driver clicked this
             
         }
-        
     }
+    
+    @IBAction func onCancelTapped(_ sender: Any) {
+        
+        // Cancel ride
+    }
+    
     
     func payDriver() {
         
@@ -211,5 +222,28 @@ class RideSummaryTableViewController: UITableViewController {
         
         //UIApplication.shared.open(NSURL(string:"https://venmo.com/?txn=pay&audience=private&recipients=@michael-christensen-20&amount=3&note=GVB") as! URL, options: [:], completionHandler: nil)
     }
-
+    
+    func configureButtons() {
+        // Custom button design. We should put this in its own class later.
+        if shadowLayer == nil {
+            shadowLayer = CAShapeLayer()
+            shadowLayer.path = UIBezierPath(roundedRect: self.cancelRideButton.bounds, cornerRadius: 5).cgPath
+            shadowLayer.fillColor = UIColor.red.cgColor
+            
+            self.cancelRideButton.layer.insertSublayer(shadowLayer, at: 0)
+            
+            self.cancelRideButton.setTitleColor(UIColor.white, for: .normal)
+        }
+        
+        // Payment Button
+        if paymentShadowLayer == nil {
+            paymentShadowLayer = CAShapeLayer()
+            paymentShadowLayer.path = UIBezierPath(roundedRect: self.paymentButton.bounds, cornerRadius: 5).cgPath
+            paymentShadowLayer.fillColor = UIColor.blue.cgColor
+            
+            self.paymentButton.layer.insertSublayer(paymentShadowLayer, at: 0)
+            
+            self.paymentButton.setTitleColor(UIColor.white, for: .normal)
+        }
+    }
 }

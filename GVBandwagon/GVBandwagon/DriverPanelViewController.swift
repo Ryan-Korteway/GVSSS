@@ -17,6 +17,7 @@ class DriverPanelViewController: UIViewController {
     @IBOutlet var goOnlineSwitch: UISwitch!
     @IBOutlet var activeTripLabel: UILabel!
     @IBOutlet var activeTripView: UIView!
+    @IBOutlet var scheduledRidesContainerView: UIView!
     
     @IBOutlet var ratingImageView: UIImageView!
     @IBOutlet var tripCounterLabel: UILabel!
@@ -142,9 +143,9 @@ class DriverPanelViewController: UIViewController {
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
         
-        if(segue.identifier == "riderAcceptsSegue") {
+        if (segue.identifier == "riderAcceptsSegue") {
             (segue.destination as! RideSummaryTableViewController).mode = "ride"
-        } else {
+        } else if (segue.identifier == "driverAcceptsSegue") {
             (segue.destination as! RideSummaryTableViewController).mode = "drive"
         }
     }
