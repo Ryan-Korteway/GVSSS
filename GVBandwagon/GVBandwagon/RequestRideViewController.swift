@@ -20,6 +20,7 @@ class RequestRideViewController: UIViewController, UISearchBarDelegate {
     var visibleRegion: GMSVisibleRegion!
     var coordLocation: CLLocationCoordinate2D!
     
+    @IBOutlet var scrollView: UIScrollView!
     var resultsViewController: GMSAutocompleteResultsViewController?
     var searchController: UISearchController?
     var resultView: UITextView?
@@ -135,6 +136,9 @@ class RequestRideViewController: UIViewController, UISearchBarDelegate {
             self.offerTextField.frame = CGRect(x: self.offerTextField.frame.origin.x, y: self.offerTextField.frame.origin.y + newY, width: self.offerTextField.frame.width, height: self.offerTextField.frame.height)
             
             self.freqView.alpha = newAlpha
+            
+            // Increase scroll view size so we can scroll
+            self.scrollView.contentSize = CGSize(width: self.scrollView.frame.width, height: self.scrollView.frame.height + newY)
             
         }, completion: { (Bool) -> Void in
             // Do nothing.
@@ -268,7 +272,6 @@ class RequestRideViewController: UIViewController, UISearchBarDelegate {
     }
     
     @IBAction func onDateViewTapped(_ sender: Any) {
-        
         // Create picker constraints and apply to date picker after the window opens
         
         // Open and close variable
@@ -298,17 +301,20 @@ class RequestRideViewController: UIViewController, UISearchBarDelegate {
             self.dollarSignLabel.frame = CGRect(x: self.dollarSignLabel.frame.origin.x, y: self.dollarSignLabel.frame.origin.y + newY, width: self.dollarSignLabel.frame.width, height: self.dollarSignLabel.frame.height)
             self.offerTextField.frame = CGRect(x: self.offerTextField.frame.origin.x, y: self.offerTextField.frame.origin.y + newY, width: self.offerTextField.frame.width, height: self.offerTextField.frame.height)
             
+            // Increase scroll view size so we can scroll
+            self.scrollView.contentSize = CGSize(width: self.scrollView.frame.width, height: self.scrollView.frame.height + newY)
+            
         }, completion: { (Bool) -> Void in
             // Do nothing.
             
             /*
-            UIView.animate(withDuration: 0.3, animations: {
-                self.datePicker.frame = CGRect(x: self.datePicker.frame.origin.x, y: self.datePicker.frame.origin.y + newY, width: self.datePicker.frame.width, height: self.datePicker.frame.height)
-                print("Frame y: \(self.datePicker.frame.origin.y)")
-            }, completion: { (Bool) -> Void in
-                // Do nothing
-            })
-            */
+             UIView.animate(withDuration: 0.3, animations: {
+             self.datePicker.frame = CGRect(x: self.datePicker.frame.origin.x, y: self.datePicker.frame.origin.y + newY, width: self.datePicker.frame.width, height: self.datePicker.frame.height)
+             print("Frame y: \(self.datePicker.frame.origin.y)")
+             }, completion: { (Bool) -> Void in
+             // Do nothing
+             })
+             */
             
         })
     }

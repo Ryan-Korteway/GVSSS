@@ -145,6 +145,7 @@ class DriverPanelViewController: UIViewController {
         
         if (segue.identifier == "riderAcceptsSegue") {
             (segue.destination as! RideSummaryTableViewController).mode = "ride"
+            (segue.destination as! RideSummaryTableViewController).localAddress = localDelegate.ourAddress as! String
         } else if (segue.identifier == "driverAcceptsSegue") {
             (segue.destination as! RideSummaryTableViewController).mode = "drive"
             (segue.destination as! RideSummaryTableViewController).localAddress = localDelegate.riderAddress

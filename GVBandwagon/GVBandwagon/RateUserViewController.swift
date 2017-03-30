@@ -11,15 +11,27 @@ import UIKit
 class RateUserViewController: UIViewController {
 
     @IBOutlet var ratingImageView: UIImageView!
+    @IBOutlet var submitButton: UIButton!
     
     var ratingWidth: CGFloat!
+    var newRating = 1
+    var shadowLayer: CAShapeLayer!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         ratingWidth = ratingImageView.frame.width
 
-        // Do any additional setup after loading the view.
+        // Submit Button
+        if shadowLayer == nil {
+            shadowLayer = CAShapeLayer()
+            shadowLayer.path = UIBezierPath(roundedRect: self.submitButton.bounds, cornerRadius: 5).cgPath
+            shadowLayer.fillColor = UIColor.blue.cgColor
+            
+            self.submitButton.layer.insertSublayer(self.shadowLayer, at: 0)
+            
+            self.submitButton.setTitleColor(UIColor.white, for: .normal)
+        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -37,22 +49,27 @@ class RateUserViewController: UIViewController {
         if (self.ratingWidth / x > 1) {
             // Two stars
             self.ratingImageView.image = #imageLiteral(resourceName: "fivestars")
+            self.newRating = 5
         }
         if (self.ratingWidth / x > 1.2) {
             // Two stars
             self.ratingImageView.image = #imageLiteral(resourceName: "fourstars")
+            self.newRating = 4
         }
         if (self.ratingWidth / x > 1.6) {
             // Three stars
             self.ratingImageView.image = #imageLiteral(resourceName: "threestars")
+            self.newRating = 3
         }
         if (self.ratingWidth / x > 2.5) {
             // Four stars
             self.ratingImageView.image = #imageLiteral(resourceName: "twostars")
+            self.newRating = 2
         }
         if (self.ratingWidth / x > 5) {
             // Five stars
             self.ratingImageView.image = #imageLiteral(resourceName: "onestar")
+            self.newRating = 1
         }
         
     }

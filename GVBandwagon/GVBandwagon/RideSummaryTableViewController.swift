@@ -11,6 +11,14 @@ import Firebase
 import GooglePlaces
 
 class RideSummaryTableViewController: UITableViewController {
+    
+    let COMPLETE_RIDE = 0
+    let USER = 1
+    let ORIGIN = 2
+    let DESTINATION = 3
+    let RATE = 4
+    let RATE_USER = 5
+    let BUTTONS = 6
 
     @IBOutlet var nameLabel: UILabel!
     @IBOutlet var phoneLabel: UILabel!
@@ -20,6 +28,7 @@ class RideSummaryTableViewController: UITableViewController {
     @IBOutlet var rateLabel: UILabel!
     @IBOutlet var paymentButton: UIButton!
     @IBOutlet var cancelRideButton: UIButton!
+    @IBOutlet var completeRideButton: UIButton!
 
     var paymentText = "Request Payment"
     var informationDictionary: NSDictionary = [:]
@@ -34,9 +43,10 @@ class RideSummaryTableViewController: UITableViewController {
     
     var localAddress : String = ""
     
-    // For the Cancel button
+    // For the buttons
     var shadowLayer: CAShapeLayer!
     var paymentShadowLayer: CAShapeLayer!
+    var completeShadowLayer: CAShapeLayer!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -104,17 +114,18 @@ class RideSummaryTableViewController: UITableViewController {
     // MARK: - Table view data source
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        if section == 0 {
+        if section == USER {
             if paymentText == "Request Payment" {
                 return "Rider"
             } else {
                 return "Driver"
             }
-        } else if section == 1 {
+        } else if section == ORIGIN {
             return "Origin"
-        } else if section == 2 {
+        } else if section == DESTINATION {
             return "Destination"
-        } else if section == 3 {
+        } else if section == RATE
+        {
             return "Rate"
         } else {
             return ""
@@ -244,6 +255,17 @@ class RideSummaryTableViewController: UITableViewController {
             self.paymentButton.layer.insertSublayer(paymentShadowLayer, at: 0)
             
             self.paymentButton.setTitleColor(UIColor.white, for: .normal)
+        }
+        
+        // Complete Ride Button
+        if completeShadowLayer == nil {
+            completeShadowLayer = CAShapeLayer()
+            completeShadowLayer.path = UIBezierPath(roundedRect: self.completeRideButton.bounds, cornerRadius: 5).cgPath
+            completeShadowLayer.fillColor = UIColor.blue.cgColor
+            
+            self.completeRideButton.layer.insertSublayer(self.completeShadowLayer, at: 0)
+            
+            self.completeRideButton.setTitleColor(UIColor.white, for: .normal)
         }
     }
 }
