@@ -161,7 +161,18 @@ class RequestRideViewController: UIViewController, UISearchBarDelegate {
         //all this to be moved into new view controller logic at some point.
         
         //SELF GOING TO NEED REPLACING WITH THE SEARCHING OF A DESTINATION FROM THE PAGE.
-
+        print("destName: \(self.destName?.length)")
+        if self.destName?.length == 0 || self.destName == nil {
+            print("empty destName")
+            //make an alert saying no offer there?
+            
+            let alert = UIAlertController(title: "Apologies", message: "Empty destination name, you must enter a valid destination name.", preferredStyle: .alert)
+            
+            alert.addAction(UIAlertAction(title: "Dismiss", style: .default, handler: {
+                (action) in print("dismissed")}))
+            self.present(alert, animated: true, completion: nil)
+            return
+        }
         sendRequestToFirebase()
         
         localDelegate.riderStatus = "request"
