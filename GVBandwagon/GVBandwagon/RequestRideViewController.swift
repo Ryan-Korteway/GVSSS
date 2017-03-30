@@ -11,6 +11,7 @@ import Firebase
 import GooglePlaces
 import GoogleMaps
 import GooglePlacePicker
+import UserNotifications
 
 class RequestRideViewController: UIViewController, UISearchBarDelegate {
     
@@ -23,6 +24,9 @@ class RequestRideViewController: UIViewController, UISearchBarDelegate {
     var resultsViewController: GMSAutocompleteResultsViewController?
     var searchController: UISearchController?
     var resultView: UITextView?
+    
+    let center = UNUserNotificationCenter.current()
+
     
     @IBOutlet var searchView: UIView!
     @IBOutlet var monSwitch: UISwitch!
@@ -62,7 +66,8 @@ class RequestRideViewController: UIViewController, UISearchBarDelegate {
         super.viewDidLoad()
         self.navigationController?.navigationBar.isHidden = false
         
-        self.offerTextField.text = "0"
+        self.offerTextField.text = "2"
+        self.offerTextField.keyboardType = UIKeyboardType.decimalPad
         
         placesClient = GMSPlacesClient.shared()
         
@@ -215,6 +220,11 @@ class RequestRideViewController: UIViewController, UISearchBarDelegate {
         // End get riders current place
         
         return addr
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?){
+        view.endEditing(true)
+        super.touchesBegan(touches, with: event)
     }
     
     /*

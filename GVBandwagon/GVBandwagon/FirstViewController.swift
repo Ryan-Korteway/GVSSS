@@ -173,6 +173,7 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
         let locationInfo: NSDictionary = cellInfo["origin"] as! NSDictionary
         
         let marker = GMSMarker()
+        marker.icon = UIImage(named: "iconmonstr-car-1-48")
         let lat = locationInfo.value(forKey: "lat") as! CLLocationDegrees
         let long = locationInfo.value(forKey: "long") as! CLLocationDegrees
         
@@ -264,6 +265,7 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
         let rate = "\(baseDictionary.value(forKey: "rate")!)"
         
         tappedMarker = marker
+        tappedMarker.icon = UIImage(named: "iconmonstr-car-1-48")
         infoWindow.removeFromSuperview()
         infoWindow = MapMarkerWindow(frame: CGRect(x: 0, y: 0, width: 200, height: 100), type: "Rider", name: name, dest: destination, rate: rate)
             
@@ -308,6 +310,7 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
             print("we have accepted")
             
             ref.child("offers/immediate/").removeValue() //remove the offers immediate branch from the riders account so that the drivers are able to observe the destruction and if they were selected or not.
+            
             
             self.googleMapsView.clear()
             
@@ -355,6 +358,7 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
         let locationInfo: NSDictionary = cellInfo["origin"] as! NSDictionary
         
         let marker = GMSMarker()
+        marker.icon = UIImage(named: "iconmonstr-car-1-48")
         let lat = locationInfo.value(forKey: "lat") as! CLLocationDegrees
         let long = locationInfo.value(forKey: "long") as! CLLocationDegrees
             
