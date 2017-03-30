@@ -147,6 +147,7 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
         self.googleMapsView.isMyLocationEnabled = true
         self.googleMapsView.settings.myLocationButton = true
         self.googleMapsView.settings.compassButton = true
+        
         self.googleMapsView.delegate = self
         
         if CLLocationManager.locationServicesEnabled() {
@@ -170,10 +171,13 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
         
         print("ride offer being made")
         
+        localDelegate.riderStatus = "offer"
+        
         let cellInfo: NSDictionary = item.toAnyObject() as! NSDictionary
         let locationInfo: NSDictionary = cellInfo["origin"] as! NSDictionary
         
         let marker = GMSMarker()
+        marker.icon = UIImage(named: "iconmonstr-car-1-48")
         let lat = locationInfo.value(forKey: "lat") as! CLLocationDegrees
         let long = locationInfo.value(forKey: "long") as! CLLocationDegrees
         
@@ -257,11 +261,15 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
         
         let location = CLLocationCoordinate2D(latitude: locationDictionary.value(forKey: "lat") as! CLLocationDegrees, longitude: locationDictionary.value(forKey: "long") as! CLLocationDegrees)
         
-        let name = (baseDictionary.value(forKey: "name") as! NSString) as String
+        let fullname = baseDictionary.value(forKey: "name") as? String ?? "no_name"
+        let nameArray = fullname.components(separatedBy: " ")
+        
+        let name = nameArray[0] // changes to name to make it only show first name.
         let destination = baseDictionary.value(forKey: "destinationName") as! String
         let rate = "\(baseDictionary.value(forKey: "rate")!)"
         
         tappedMarker = marker
+        tappedMarker.icon = UIImage(named: "iconmonstr-car-1-48")
         infoWindow.removeFromSuperview()
         infoWindow = MapMarkerWindow(frame: CGRect(x: 0, y: 0, width: 200, height: 100), type: "Rider", name: name, dest: destination, rate: rate)
             
@@ -298,7 +306,7 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
             let dictionary: NSDictionary = snapshot.value! as! NSDictionary
             ref.child("offers/accepted/immediate/driver/\(cellInfo.value(forKey: "uid")!)").setValue(dictionary) //create an accepted branch of the riders table
             
-            ref.child("offers/accepted/immediate/rider/\(user.uid)").setValue(["name": user.displayName!, "uid": user.uid, "venmoID": "none", "origin": ["lat": self.ourLat, "long": self.ourLong, "address": self.localDelegate.ourAddress], "destination": dictionary.value(forKey: "destination"), "rate" : dictionary.value(forKey: "rate"), "accepted": 1, "repeats": "none", "duration": dictionary.value(forKey: "duration"), "destinationName": dictionary.value(forKey: "destinationName")])
+            ref.child("offers/accepted/immediate/rider/\(user.uid)").setValue(["name": user.displayName!, "uid": user.uid, "venmoID": "none", "origin": ["lat": self.ourLat, "long": self.ourLong, "address": self.localDelegate.ourAddress!], "destination": dictionary.value(forKey: "destination")!, "rate" : dictionary.value(forKey: "rate"), "accepted": 1, "repeats": "none", "duration": dictionary.value(forKey: "duration"), "destinationName": dictionary.value(forKey: "destinationName")!])
             
             let localDelegate = UIApplication.shared.delegate as! AppDelegate
             localDelegate.riderStatus = "accepted"
@@ -306,6 +314,7 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
             print("we have accepted")
             
             ref.child("offers/immediate/").removeValue() //remove the offers immediate branch from the riders account so that the drivers are able to observe the destruction and if they were selected or not.
+            
             
             self.googleMapsView.clear()
             
@@ -353,6 +362,7 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
         let locationInfo: NSDictionary = cellInfo["origin"] as! NSDictionary
         
         let marker = GMSMarker()
+        marker.icon = UIImage(named: "iconmonstr-car-1-48")
         let lat = locationInfo.value(forKey: "lat") as! CLLocationDegrees
         let long = locationInfo.value(forKey: "long") as! CLLocationDegrees
             

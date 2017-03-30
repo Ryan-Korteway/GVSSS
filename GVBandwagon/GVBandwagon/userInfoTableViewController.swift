@@ -59,15 +59,23 @@ UINavigationControllerDelegate {
         self.ref.child("users").child(userID!).observeSingleEvent(of: .value, with: { (snapshot) in
             // Get user value
             let value = snapshot.value as? NSDictionary
-            let fname = value?["name"] as? String ?? ""
-            //let user = User.init(username: username)
+            
+            let driverInfo = value?["driver"] as? [String : Any]
+            self.venmoField.text = driverInfo?["venmoID"] as? String ?? ""
+            self.colorField.text = driverInfo?["color"] as? String ?? ""
+            self.makeField.text = driverInfo?["make"] as? String ?? ""
+            self.modelField.text = driverInfo?["model"] as? String ?? ""
+            
+            //NAME SPLITTING CODE RIGHT HERE!!!
+            let fullname = value?["name"] as? String ?? "no name"
+            let nameArray = fullname.components(separatedBy: " ")
+            self.fNameField.text = nameArray[0]
+            self.lNameField.text = nameArray[1]
+            
             let phone = value?["phone"] as? String ?? ""
             self.emailField.text = self.currentUser?.email
-            
-            self.fNameField.text = fname
             self.phoneField.text = phone
             
-            // ...
         }) { (error) in
             print(error.localizedDescription)
         }
@@ -109,6 +117,11 @@ UINavigationControllerDelegate {
             self.changingImage = "Vehicle"
             self.openPhotoLibrary()
         }
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event);
+        self.view.endEditing(true)
     }
     
     /*
@@ -169,15 +182,19 @@ UINavigationControllerDelegate {
     override func viewWillDisappear(_ animated : Bool) {
         super.viewWillDisappear(animated)
         
-        if (self.isMovingFromParentViewController) {
+        //if (self.isMovingFromParentViewController) {
             
             print("Updating...")
             
             self.ref.child("users/\(self.currentUser!.uid)/name").setValue(self.fNameField.text! + " " + self.lNameField.text!)
             self.ref.child("users/\(self.currentUser!.uid)/phone").setValue(self.phoneField.text)
             
-            //other values need updating too.
-        }
+            self.ref.child("users/\(self.currentUser!.uid)/driver/venmoID/").setValue(self.venmoField.text)
+            self.ref.child("users/\(self.currentUser!.uid)/driver/color/").setValue(self.colorField.text)
+            self.ref.child("users/\(self.currentUser!.uid)/driver/make/").setValue(self.makeField.text)
+            self.ref.child("users/\(self.currentUser!.uid)/driver/model/").setValue(self.modelField.text)
+        
+        //}
     }
     
     func openPhotoLibrary() {
