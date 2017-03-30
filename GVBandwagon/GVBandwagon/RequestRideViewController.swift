@@ -11,6 +11,7 @@ import Firebase
 import GooglePlaces
 import GoogleMaps
 import GooglePlacePicker
+import UserNotifications
 
 class RequestRideViewController: UIViewController, UISearchBarDelegate {
     
@@ -23,6 +24,9 @@ class RequestRideViewController: UIViewController, UISearchBarDelegate {
     var resultsViewController: GMSAutocompleteResultsViewController?
     var searchController: UISearchController?
     var resultView: UITextView?
+    
+    let center = UNUserNotificationCenter.current()
+
     
     @IBOutlet var searchView: UIView!
     @IBOutlet var monSwitch: UISwitch!
@@ -62,7 +66,8 @@ class RequestRideViewController: UIViewController, UISearchBarDelegate {
         super.viewDidLoad()
         self.navigationController?.navigationBar.isHidden = false
         
-        self.offerTextField.text = "0"
+        self.offerTextField.text = "2"
+        self.offerTextField.keyboardType = UIKeyboardType.decimalPad
         
         placesClient = GMSPlacesClient.shared()
         
@@ -151,8 +156,18 @@ class RequestRideViewController: UIViewController, UISearchBarDelegate {
         //all this to be moved into new view controller logic at some point.
         
         //SELF GOING TO NEED REPLACING WITH THE SEARCHING OF A DESTINATION FROM THE PAGE.
-
-        
+        print("destName: \(self.destName?.length)")
+        if self.destName?.length == 0 || self.destName == nil {
+            print("empty destName")
+            //make an alert saying no offer there?
+            
+            let alert = UIAlertController(title: "Apologies", message: "Empty destination name, you must enter a valid destination name.", preferredStyle: .alert)
+            
+            alert.addAction(UIAlertAction(title: "Dismiss", style: .default, handler: {
+                (action) in print("dismissed")}))
+            self.present(alert, animated: true, completion: nil)
+            return
+        }
         sendRequestToFirebase()
 
         //repeats, duration, and destination needs to be set dynamically!!!
@@ -213,6 +228,11 @@ class RequestRideViewController: UIViewController, UISearchBarDelegate {
         // End get riders current place
         
         return addr
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?){
+        view.endEditing(true)
+        super.touchesBegan(touches, with: event)
     }
     
     /*
