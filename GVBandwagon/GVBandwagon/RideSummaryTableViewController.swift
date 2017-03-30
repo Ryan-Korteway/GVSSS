@@ -209,19 +209,16 @@ class RideSummaryTableViewController: UITableViewController {
     @IBAction func onCancelTapped(_ sender: Any) {
         
         // Cancel ride
+        
+        //needs code changes, changing accepted values for the affected parties and the deleting the request,
+        //fill with acceptances in both VC's need updating to watch for the deletions and responding appropriately.
     }
     
     
     func payDriver() {
         
-        //TO DO PASS IN THE MARKERS USER DATA WHATEVER SO THAT THE VENMO ID AND RATE CAN BE PULLED OUT TO BE USED TO PAY THE DRIVER.
+        UIApplication.shared.open(NSURL(string:"https://venmo.com/?txn=pay&audience=private&recipients=@\(self.informationDictionary.value(forKey: "venmoID"))&amount=\(self.informationDictionary.value(forKey: "rate"))&note=GVB") as! URL, options: [:], completionHandler: nil)
         
-        //UIApplication.shared.open(NSURL(string:"https://venmo.com/?txn=pay&audience=private&recipients=@\(venmoID)&amount=\(rate)&note=GVB") as! URL, options: [:], completionHandler: nil)
-        
-        
-        // Static example (remove when no longer needed):
-        
-        //UIApplication.shared.open(NSURL(string:"https://venmo.com/?txn=pay&audience=private&recipients=@michael-christensen-20&amount=3&note=GVB") as! URL, options: [:], completionHandler: nil)
     }
     
     func configureButtons() {

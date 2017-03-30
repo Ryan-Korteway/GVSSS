@@ -141,6 +141,11 @@ class RequestRideViewController: UIViewController, UISearchBarDelegate {
         })
     }
     
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event);
+        self.view.endEditing(true)
+    }
+    
     @IBAction func onCancelTapped(_ sender: Any) {
         _ = self.navigationController?.popViewController(animated: true)
     }
@@ -152,13 +157,10 @@ class RequestRideViewController: UIViewController, UISearchBarDelegate {
         
         //SELF GOING TO NEED REPLACING WITH THE SEARCHING OF A DESTINATION FROM THE PAGE.
 
-        
         sendRequestToFirebase()
-
-        //repeats, duration, and destination needs to be set dynamically!!!
         
+        localDelegate.riderStatus = "request"
         localDelegate.startTimer();
-        //localDelegate.status = "offer"
         _ = self.navigationController?.popViewController(animated: true)
         
         for day in freqArray {
@@ -186,7 +188,7 @@ class RequestRideViewController: UIViewController, UISearchBarDelegate {
                     print("address: \(address)")
                     let addr = address as NSString
                     
-                    self.ref.child("requests/immediate/\(self.currentUser!.uid)/").setValue(["name": self.currentUser!.displayName!, "uid": self.currentUser!.uid, "venmoID": "none", "origin": ["lat": currentLat, "long": currentLong, "address": addr], "destination": ["latitude": self.destLat, "longitude" : self.destLong], "destinationName": self.destName, "rate" : (NSInteger.init(self.offerTextField.text!)), "accepted": 0, "repeats": self.freqArray.description, "duration": "none"]) //locations being sent here.
+                    self.ref.child("requests/immediate/\(self.currentUser!.uid)/").setValue(["name": self.currentUser!.displayName!, "uid": self.currentUser!.uid, "venmoID": "none", "origin": ["lat": currentLat, "long": currentLong, "address": addr], "destination": ["latitude": self.destLat, "longitude" : self.destLong], "destinationName": self.destName!, "rate" : (NSInteger.init(self.offerTextField.text!)) ?? 5, "accepted": 0, "repeats": self.freqArray.description, "duration": "none"]) //locations being sent here.
                 }
             }
         })

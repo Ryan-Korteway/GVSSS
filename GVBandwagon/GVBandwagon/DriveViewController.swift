@@ -456,7 +456,10 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
         
         let location = CLLocationCoordinate2D(latitude: locationDictionary.value(forKey: "lat") as! CLLocationDegrees, longitude: locationDictionary.value(forKey: "long") as! CLLocationDegrees)
         
-        let name = (baseDictionary.value(forKey: "name") as! NSString) as String
+        let fullname = baseDictionary.value(forKey: "name") as? String ?? "no_name"
+        let nameArray = fullname.components(separatedBy: " ")
+        
+        let name = nameArray[0] // changes to name to make it only show first name.
         let destination = baseDictionary.value(forKey: "destinationName") as! String //replaced destination with destinationName
         let rate = "\(baseDictionary.value(forKey: "rate")!)" //added ! here
         

@@ -143,6 +143,7 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
         self.googleMapsView.isMyLocationEnabled = true
         self.googleMapsView.settings.myLocationButton = true
         self.googleMapsView.settings.compassButton = true
+        
         self.googleMapsView.delegate = self
         
         if CLLocationManager.locationServicesEnabled() {
@@ -165,6 +166,8 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
     func ride_offer(item: cellItem) {
         
         print("ride offer being made")
+        
+        localDelegate.riderStatus = "offer"
         
         let cellInfo: NSDictionary = item.toAnyObject() as! NSDictionary
         let locationInfo: NSDictionary = cellInfo["origin"] as! NSDictionary
@@ -253,7 +256,10 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
         
         let location = CLLocationCoordinate2D(latitude: locationDictionary.value(forKey: "lat") as! CLLocationDegrees, longitude: locationDictionary.value(forKey: "long") as! CLLocationDegrees)
         
-        let name = (baseDictionary.value(forKey: "name") as! NSString) as String
+        let fullname = baseDictionary.value(forKey: "name") as? String ?? "no_name"
+        let nameArray = fullname.components(separatedBy: " ")
+        
+        let name = nameArray[0] // changes to name to make it only show first name.
         let destination = baseDictionary.value(forKey: "destinationName") as! String
         let rate = "\(baseDictionary.value(forKey: "rate")!)"
         
@@ -294,7 +300,7 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
             let dictionary: NSDictionary = snapshot.value! as! NSDictionary
             ref.child("offers/accepted/immediate/driver/\(cellInfo.value(forKey: "uid")!)").setValue(dictionary) //create an accepted branch of the riders table
             
-            ref.child("offers/accepted/immediate/rider/\(user.uid)").setValue(["name": user.displayName!, "uid": user.uid, "venmoID": "none", "origin": ["lat": self.ourLat, "long": self.ourLong, "address": self.localDelegate.ourAddress], "destination": dictionary.value(forKey: "destination"), "rate" : dictionary.value(forKey: "rate"), "accepted": 1, "repeats": "none", "duration": dictionary.value(forKey: "duration"), "destinationName": dictionary.value(forKey: "destinationName")])
+            ref.child("offers/accepted/immediate/rider/\(user.uid)").setValue(["name": user.displayName!, "uid": user.uid, "venmoID": "none", "origin": ["lat": self.ourLat, "long": self.ourLong, "address": self.localDelegate.ourAddress!], "destination": dictionary.value(forKey: "destination")!, "rate" : dictionary.value(forKey: "rate"), "accepted": 1, "repeats": "none", "duration": dictionary.value(forKey: "duration"), "destinationName": dictionary.value(forKey: "destinationName")!])
             
             let localDelegate = UIApplication.shared.delegate as! AppDelegate
             localDelegate.riderStatus = "accepted"

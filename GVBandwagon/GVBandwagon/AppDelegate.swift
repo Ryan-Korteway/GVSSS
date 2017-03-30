@@ -110,6 +110,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         super.init()
         
+        let date = Date() //THIS WORKS FOR TIME GRABBING.
+        print("\(date.description)")
+        
         FIRApp.configure()
         // not really needed unless you really need it 
         //FIRDatabase.database().persistenceEnabled = true;
