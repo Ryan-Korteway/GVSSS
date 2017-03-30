@@ -168,6 +168,7 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
     func createMap() {
         self.googleMap.isMyLocationEnabled = true
         self.googleMap.settings.myLocationButton = true
+        self.googleMap.settings.compassButton = true
         self.googleMap.delegate = self
     }
     
@@ -207,6 +208,7 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
             panelVC.goOnlineLabel.isHidden = false
             panelVC.goOnlineSwitch.isHidden = false
             panelVC.viewReload()
+            panelVC.getRating()
         }
     }
     
@@ -233,75 +235,77 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
                 print("we have been accepted")
             
                 localDelegate.driverStatus = "accepted"
-                let locationInfo: NSDictionary = cellInfo["origin"] as! NSDictionary
-            
                 print("we offered a ride to: \(self.localDelegate.offeredID)")
+ 
             
                 ref.child("/users/\(localDelegate.offeredID)/rider/offers/immediate").removeAllObservers()
                 
                 self.googleMap.clear()
-                
-                let marker = GMSMarker()
-                let lat = locationInfo.value(forKey: "lat") as! CLLocationDegrees
-                let long = locationInfo.value(forKey: "long") as! CLLocationDegrees
-                marker.position = CLLocationCoordinate2D(latitude: lat, longitude: long)
             
-                ref.child("users/\(self.localDelegate.offeredID)/rider/offers/accepted/immediate/rider/\(localDelegate.offeredID)/origin").observe(.childChanged, with: { snapshot in
-                    print("marker moving!!! \(snapshot.key)")
-                    if(snapshot.key == "lat") {
-                        marker.position.latitude = snapshot.value as! CLLocationDegrees
-                        self.riderLat = snapshot.value as! CLLocationDegrees
-                    } else if(snapshot.key == "long") {
-                        marker.position.longitude = snapshot.value as! CLLocationDegrees
-                        self.riderLong = snapshot.value as! CLLocationDegrees
-                    } else {
-                        self.localDelegate.ourAddress = snapshot.value as! NSString
-                    }
-                })
-                //do any of these matter thanks to the custom display window?...
-                marker.title = "Your Rider: \(cellInfo["name"])"
-                marker.snippet = "Close enough to Grand Valley."
-                marker.icon = GMSMarker.markerImage(with: .red)
-                marker.userData = cellInfo //giving each marker a dictionary of the info that set them up for future use.
-                marker.map = self.googleMap
-                
-                baseDictionary = marker.userData as! NSDictionary
+                localDelegate.startDriverMapObservers()
+            //commetting out most of ride accept because it should be being handled/covered by fillWithAcceptance
             
-                ref.child("users/\(self.localDelegate.offeredID)/rider/accepted/immediate/").observeSingleEvent(of: .childRemoved, with:{ snapshot in
-                    print("PIN BEING DELETED")
-                    marker.map = nil;
-                    self.ref.child("users/\(self.localDelegate.offeredID)/rider/accepted/immediate/rider/\(self.localDelegate.offeredID)/origin").removeAllObservers()
-                    
-                        //if deleted here, make sure it wasnt an early cancellation.
-                    
-                    let content = UNMutableNotificationContent()
-                    content.title = "Ride Event"
-                    
-                    let baseDictionary = snapshot.value as! NSDictionary
-                    
-                    if(baseDictionary.value(forKey: "accepted") as! NSInteger != 1) {
-                        content.body = "The ride request has been removed. You do not need to pick up this individual"
-                    } else {
-                        content.body = "Thank you for giving this user a ride."
-                    }
-                    content.sound = UNNotificationSound.default()
-                    content.categoryIdentifier = "nothing_category"
-                    
-                    let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
-                    
-                    let identifier = "ride acceptance"
-                    let request = UNNotificationRequest(identifier: identifier,
-                                                        content: content, trigger: trigger)
-                    self.center.add(request, withCompletionHandler: { (error) in
-                        
-                        if let error = error {
-                            
-                            print(error.localizedDescription)
-                        }
-                    })
-                    
-                    self.localDelegate.driverStatus = "request"
-                })
+//                let marker = GMSMarker()
+//                let lat = locationInfo.value(forKey: "lat") as! CLLocationDegrees
+//                let long = locationInfo.value(forKey: "long") as! CLLocationDegrees
+//                marker.position = CLLocationCoordinate2D(latitude: lat, longitude: long)
+//            
+//                ref.child("users/\(self.localDelegate.offeredID)/rider/offers/accepted/immediate/rider/\(localDelegate.offeredID)/origin").observe(.childChanged, with: { snapshot in
+//                    print("marker moving!!! \(snapshot.key)")
+//                    if(snapshot.key == "lat") {
+//                        marker.position.latitude = snapshot.value as! CLLocationDegrees
+//                        self.riderLat = snapshot.value as! CLLocationDegrees
+//                    } else if(snapshot.key == "long") {
+//                        marker.position.longitude = snapshot.value as! CLLocationDegrees
+//                        self.riderLong = snapshot.value as! CLLocationDegrees
+//                    } else {
+//                        self.localDelegate.ourAddress = snapshot.value as! NSString
+//                    }
+//                })
+//                //do any of these matter thanks to the custom display window?...
+////                marker.title = "Your Rider: \(cellInfo["name"])"
+////                marker.snippet = "Close enough to Grand Valley."
+//                marker.icon = GMSMarker.markerImage(with: .red)
+//                marker.userData = cellInfo //giving each marker a dictionary of the info that set them up for future use.
+//                marker.map = self.googleMap
+//                
+//                baseDictionary = marker.userData as! NSDictionary
+//            
+//                ref.child("users/\(self.localDelegate.offeredID)/rider/accepted/immediate/").observeSingleEvent(of: .childRemoved, with:{ snapshot in
+//                    print("PIN BEING DELETED")
+//                    marker.map = nil;
+//                    self.ref.child("users/\(self.localDelegate.offeredID)/rider/accepted/immediate/rider/\(self.localDelegate.offeredID)/origin").removeAllObservers()
+//                    
+//                        //if deleted here, make sure it wasnt an early cancellation.
+//                    
+//                    let content = UNMutableNotificationContent()
+//                    content.title = "Ride Event"
+//                    
+//                    let baseDictionary = snapshot.value as! NSDictionary
+//                    
+//                    if(baseDictionary.value(forKey: "accepted") as! NSInteger != 1) {
+//                        content.body = "The ride request has been removed. You do not need to pick up this individual"
+//                    } else {
+//                        content.body = "Thank you for giving this user a ride."
+//                    }
+//                    content.sound = UNNotificationSound.default()
+//                    content.categoryIdentifier = "nothing_category"
+//                    
+//                    let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
+//                    
+//                    let identifier = "ride acceptance"
+//                    let request = UNNotificationRequest(identifier: identifier,
+//                                                        content: content, trigger: trigger)
+//                    self.center.add(request, withCompletionHandler: { (error) in
+//                        
+//                        if let error = error {
+//                            
+//                            print(error.localizedDescription)
+//                        }
+//                    })
+//                    
+//                    self.localDelegate.driverStatus = "request"
+//                })
             
         } else {
             
@@ -453,8 +457,8 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
         let location = CLLocationCoordinate2D(latitude: locationDictionary.value(forKey: "lat") as! CLLocationDegrees, longitude: locationDictionary.value(forKey: "long") as! CLLocationDegrees)
         
         let name = (baseDictionary.value(forKey: "name") as! NSString) as String
-        let destination = baseDictionary.value(forKey: "destination").debugDescription
-        let rate = "\(baseDictionary.value(forKey: "rate"))"
+        let destination = baseDictionary.value(forKey: "destinationName") as! String //replaced destination with destinationName
+        let rate = "\(baseDictionary.value(forKey: "rate")!)" //added ! here
         
         tappedMarker = marker
         infoWindow.removeFromSuperview()
@@ -591,8 +595,10 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
             marker.map = self.googleMap
             
             print("in acceptance, we are watching: \(cellInfo["uid"]!)")
-            
+            //the origin in this line might need to be origin/ to allow for realtime pin tracking, play with this without me if you
+            //guys need to work it.
             self.ref.child("users/\(cellInfo["uid"]!)/rider/accepted/immediate/rider/\(cellInfo["uid"]!)/origin").observe( .childChanged, with: { snapshot in
+                print("watching marker moving!! \(snapshot.key)")
                 if(snapshot.key == "lat") {
                     marker.position.latitude = snapshot.value as! CLLocationDegrees
                     self.riderLat = snapshot.value as! CLLocationDegrees

@@ -134,6 +134,7 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
             panelVC.goOnlineSwitch.isHidden = true
             panelVC.goOnlineLabel.isHidden = true
             panelVC.viewReload()
+            panelVC.getRating()
         }
     }
     
@@ -141,6 +142,7 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
 
         self.googleMapsView.isMyLocationEnabled = true
         self.googleMapsView.settings.myLocationButton = true
+        self.googleMapsView.settings.compassButton = true
         self.googleMapsView.delegate = self
         
         if CLLocationManager.locationServicesEnabled() {
@@ -252,7 +254,7 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
         let location = CLLocationCoordinate2D(latitude: locationDictionary.value(forKey: "lat") as! CLLocationDegrees, longitude: locationDictionary.value(forKey: "long") as! CLLocationDegrees)
         
         let name = (baseDictionary.value(forKey: "name") as! NSString) as String
-        let destination = baseDictionary.value(forKey: "destination").debugDescription
+        let destination = baseDictionary.value(forKey: "destinationName") as! String
         let rate = "\(baseDictionary.value(forKey: "rate")!)"
         
         tappedMarker = marker

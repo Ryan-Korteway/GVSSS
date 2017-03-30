@@ -94,6 +94,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var firstSet = false
     var DriveViewController_AD = UIViewController()
     var DriveSet = false
+    var PanelViewController = UIViewController() 
     
     // Overriding init() and putting FIRApp.configure() here to ensure it's configured before
     // the first view controller tries to retreive a reference to it.
@@ -577,15 +578,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             
                 if(self.riderStatus == "request") {
                     
-                        ref.child("requests/immediate/\(ourID)/origin").setValue(["lat": self.ourlat, "long": self.ourlong, "address": self.ourAddress]);
+                        ref.child("requests/immediate/\(ourID)/origin").setValue(["lat": self.ourlat, "long": self.ourlong, "address": self.ourAddress!]);
                     
                 } else if (self.riderStatus == "offer") {
                     
-                        ref.child("users/\(ourID)/rider/offers/immediate/\(ourID)/origin").setValue(["lat": self.ourlat, "long": self.ourlong, "address": self.ourAddress]);
+                        ref.child("users/\(ourID)/rider/offers/immediate/\(ourID)/origin").setValue(["lat": self.ourlat, "long": self.ourlong, "address": self.ourAddress!]);
             
                 } else if (self.riderStatus == "accepted") {
                     
-                        ref.child("users/\(ourID)/rider/offers/accepted/immediate/rider/\(ourID)/origin").setValue(["lat": self.ourlat, "long": self.ourlong, "address": self.ourAddress]);
+                        ref.child("users/\(ourID)/rider/offers/accepted/immediate/rider/\(ourID)/origin").setValue(["lat": self.ourlat, "long": self.ourlong, "address": self.ourAddress!]);
                    
                 } else {
                     print("something up with timer")
@@ -663,7 +664,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             })
         } else if (self.driverStatus == "accepted"){
             ref.child("requests/immediate").removeAllObservers();
-            ref.child("users/\(self.offeredID)/rider/offers/accepted/immediate/rider").observeSingleEvent(of: .childChanged, with: { snapshot in
+            ref.child("users/\(self.offeredID)/rider/offers/accepted/immediate/rider/").observeSingleEvent(of: .childAdded, with: { snapshot in
                     (self.DriveViewController_AD as! DriveViewController).fillWithAcceptance(item: cellItem.init(snapshot: snapshot))
             })
         } else if (self.driverStatus == "offer"){
