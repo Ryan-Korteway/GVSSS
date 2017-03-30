@@ -142,6 +142,7 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
 
         self.googleMapsView.isMyLocationEnabled = true
         self.googleMapsView.settings.myLocationButton = true
+        self.googleMapsView.settings.compassButton = true
         self.googleMapsView.delegate = self
         
         if CLLocationManager.locationServicesEnabled() {

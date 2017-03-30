@@ -168,6 +168,7 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
     func createMap() {
         self.googleMap.isMyLocationEnabled = true
         self.googleMap.settings.myLocationButton = true
+        self.googleMap.settings.compassButton = true
         self.googleMap.delegate = self
     }
     
