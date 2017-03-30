@@ -94,6 +94,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var firstSet = false
     var DriveViewController_AD = UIViewController()
     var DriveSet = false
+    var PanelViewController = UIViewController() 
     
     // Overriding init() and putting FIRApp.configure() here to ensure it's configured before
     // the first view controller tries to retreive a reference to it.

@@ -207,6 +207,7 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
             panelVC.goOnlineLabel.isHidden = false
             panelVC.goOnlineSwitch.isHidden = false
             panelVC.viewReload()
+            panelVC.getRating()
         }
     }
     
@@ -233,10 +234,8 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
                 print("we have been accepted")
             
                 localDelegate.driverStatus = "accepted"
-                let locationInfo: NSDictionary = cellInfo["origin"] as! NSDictionary //PIN JUMPING ISSUES HERE BECAUSE
-                //WE USE MY OLD DATA HERE INSTEAD OF STARTING WITH MIKES INFO.!
-            
                 print("we offered a ride to: \(self.localDelegate.offeredID)")
+ 
             
                 ref.child("/users/\(localDelegate.offeredID)/rider/offers/immediate").removeAllObservers()
                 

@@ -134,6 +134,7 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
             panelVC.goOnlineSwitch.isHidden = true
             panelVC.goOnlineLabel.isHidden = true
             panelVC.viewReload()
+            panelVC.getRating()
         }
     }
     
