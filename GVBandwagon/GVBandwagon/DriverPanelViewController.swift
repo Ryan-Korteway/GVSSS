@@ -41,20 +41,14 @@ class DriverPanelViewController: UIViewController {
         self.goOnlineSwitch.setOn(false, animated: false)
         self.goOnlineSwitch.addTarget(self, action: #selector(switchIsChanged(mySwitch:)), for: .valueChanged)
         
-        self.ratingImageView.image = getRating()
+        getRating()
         getActiveTrip()
         viewReload()
+        localDelegate.PanelViewController = self
     }
     
     func viewReload() {
         if(mode == "Driver") {
-            
-            print("driver reload")
-            ref.child("users/\(ourid)/driver/rating").observeSingleEvent(of: .value, with: { snapshot in
-                //ratingLabel.text = snapshot.value as! String
-                
-                //based on the rating, update the stars picture here Nick
-            })
             
             ref.child("users/\(ourid)/driver/totalRiders/").observeSingleEvent(of: .value, with: { snapshot in
                 print("key " + snapshot.key)
@@ -64,15 +58,6 @@ class DriverPanelViewController: UIViewController {
             
         } else {
             
-            print("rider reload")
-            ref.child("users/\(ourid)/rider/rating").observeSingleEvent(of: .value, with: { snapshot in
-                //ratingLabel.text = snapshot.value as! String
-                
-                //based on the rating, update the stars picture here Nick
-            })
-            
-            
-            print("HERE \(ourid)")
             ref.child("users/\(ourid)/rider/totalRides/").observeSingleEvent(of: .value, with: { snapshot in
                 print("key " + snapshot.key)
                 print("value  \((snapshot.value as? NSInteger)!)")
@@ -157,30 +142,69 @@ class DriverPanelViewController: UIViewController {
     }
     
     // Get rating from FB. Return stars based on rounded to nearest whole number:
-    func getRating() -> UIImage {
+    func getRating(){
         
-        var rating = 0.0
+        var rating : Double = 0.0
         
         // Call to FB for rating and total riders/rides here
         
-        //also need to know here if we are on rider map vs driver map.
-        
-        if (rating >=  4.5) {
-            return #imageLiteral(resourceName: "fivestars")
-        } else if (rating >= 3.5) {
-            return #imageLiteral(resourceName: "fourstars")
-        } else if (rating >= 2.5) {
-            return #imageLiteral(resourceName: "threestars")
-        } else if (rating >= 1.5) {
-            return #imageLiteral(resourceName: "threestars")
-        } else if (rating >= 0.5) {
-            return #imageLiteral(resourceName: "onestar")
+        if(mode == "Driver") {
+            
+            ref.child("users/\(ourid)/driver/rating").observeSingleEvent(of: .value, with: { snapshot in
+                
+                let innerRating = snapshot.value! as! NSInteger
+                
+                self.ref.child("users/\(self.ourid)/driver/totalRiders/").observeSingleEvent(of: .value, with: { snapshot in
+                    rating = (Double) (innerRating)/(snapshot.value as! Double)
+                    
+                    print("our rating is \(rating)")
+                    
+                    if (rating >=  4.5) {
+                        self.ratingImageView.image = #imageLiteral(resourceName: "fivestars")
+                    } else if (rating >= 3.5) {
+                        self.ratingImageView.image = #imageLiteral(resourceName: "fourstars")
+                    } else if (rating >= 2.5) {
+                        self.ratingImageView.image =  #imageLiteral(resourceName: "threestars")
+                    } else if (rating >= 1.5) {
+                        self.ratingImageView.image =  #imageLiteral(resourceName: "threestars")
+                    } else if (rating >= 0.5) {
+                        self.ratingImageView.image =  #imageLiteral(resourceName: "onestar")
+                    } else {
+                        // Possibly post message saying "No ratings yet"
+                        self.ratingImageView.image =  #imageLiteral(resourceName: "zerostars")
+                    }
+
+                })
+            })
+            
         } else {
-            // Possibly post message saying "No ratings yet"
-            return #imageLiteral(resourceName: "zerostars")
+            
+            ref.child("users/\(ourid)/rider/rating").observeSingleEvent(of: .value, with: { snapshot in
+            
+                let innerRating2 = snapshot.value! as! NSInteger
+                self.ref.child("users/\(self.ourid)/rider/totalRides/").observeSingleEvent(of: .value, with: { snapshot in
+                    rating = (Double) (innerRating2)/(snapshot.value as! Double)
+                    print("our rating is \(rating)")
+                    
+                    if (rating >=  4.5) {
+                        self.ratingImageView.image =  #imageLiteral(resourceName: "fivestars")
+                    } else if (rating >= 3.5) {
+                        self.ratingImageView.image =  #imageLiteral(resourceName: "fourstars")
+                    } else if (rating >= 2.5) {
+                        self.ratingImageView.image =  #imageLiteral(resourceName: "threestars")
+                    } else if (rating >= 1.5) {
+                        self.ratingImageView.image =  #imageLiteral(resourceName: "threestars")
+                    } else if (rating >= 0.5) {
+                        self.ratingImageView.image =  #imageLiteral(resourceName: "onestar")
+                    } else {
+                        // Possibly post message saying "No ratings yet"
+                        self.ratingImageView.image =  #imageLiteral(resourceName: "zerostars")
+                    }
+
+                })
+            })
         }
     }
-
 }
 
 extension DriverPanelViewController: CLLocationManagerDelegate {

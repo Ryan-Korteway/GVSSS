@@ -94,6 +94,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var firstSet = false
     var DriveViewController_AD = UIViewController()
     var DriveSet = false
+    var PanelViewController = UIViewController() 
     
     // Overriding init() and putting FIRApp.configure() here to ensure it's configured before
     // the first view controller tries to retreive a reference to it.
@@ -663,7 +664,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             })
         } else if (self.driverStatus == "accepted"){
             ref.child("requests/immediate").removeAllObservers();
-            ref.child("users/\(self.offeredID)/rider/offers/accepted/immediate/rider/").observeSingleEvent(of: .value, with: { snapshot in
+            ref.child("users/\(self.offeredID)/rider/offers/accepted/immediate/rider/").observeSingleEvent(of: .childAdded, with: { snapshot in
                     (self.DriveViewController_AD as! DriveViewController).fillWithAcceptance(item: cellItem.init(snapshot: snapshot))
             })
         } else if (self.driverStatus == "offer"){
