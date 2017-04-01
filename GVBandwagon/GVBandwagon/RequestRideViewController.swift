@@ -163,8 +163,8 @@ class RequestRideViewController: UIViewController, UISearchBarDelegate {
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        super.touchesBegan(touches, with: event);
         self.view.endEditing(true)
+        super.touchesBegan(touches, with: event);
     }
     
     @IBAction func onCancelTapped(_ sender: Any) {
@@ -174,9 +174,6 @@ class RequestRideViewController: UIViewController, UISearchBarDelegate {
     @IBAction func onSubmitTapped(_ sender: Any) {
         self.getSwitchInfo()
         
-        //all this to be moved into new view controller logic at some point.
-        
-        //SELF GOING TO NEED REPLACING WITH THE SEARCHING OF A DESTINATION FROM THE PAGE.
         print("destName: \(self.destName?.length)")
         if self.destName?.length == 0 || self.destName == nil {
             print("empty destName")
@@ -189,6 +186,19 @@ class RequestRideViewController: UIViewController, UISearchBarDelegate {
             self.present(alert, animated: true, completion: nil)
             return
         }
+        
+        let userID = FIRAuth.auth()!.currentUser!.uid
+        
+        // make a history item here. destination name+time.
+        ref.child("users/\(userID)/rider/offers/accepted/immediate/driver/").observeSingleEvent(of: .value, with: { snapshot in
+            if(snapshot.value != nil) {
+                let dictionary = cellItem.init(snapshot: snapshot).toAnyObject() as! NSDictionary
+                let date = Date()
+                self.ref.child("users/\(userID)/history/\(dictionary.value(forKey: "destinationName")!)\(date.description)/").setValue(dictionary)
+            }
+        })
+
+        
         sendRequestToFirebase()
         
         localDelegate.riderStatus = "request"
@@ -219,8 +229,23 @@ class RequestRideViewController: UIViewController, UISearchBarDelegate {
                 if let address = place.formattedAddress {
                     print("address: \(address)")
                     let addr = address as NSString
+            
+                    var repeatsValue = "none"
                     
-                    self.ref.child("requests/immediate/\(self.currentUser!.uid)/").setValue(["name": self.currentUser!.displayName!, "uid": self.currentUser!.uid, "venmoID": "none", "origin": ["lat": currentLat, "long": currentLong, "address": addr], "destination": ["latitude": self.destLat, "longitude" : self.destLong], "destinationName": self.destName!, "rate" : (NSInteger.init(self.offerTextField.text!)) ?? 5, "accepted": 0, "repeats": self.freqArray.description, "duration": "none"]) //locations being sent here.
+                    if self.freqArray.count > 0 {
+                        repeatsValue = self.freqArray.description
+                    }
+//                    
+//                    if(self.offerTextField.text?.canBeConverted(to: NSInteger)) {
+//                        let rateValue = NSInteger.init(self.offerTextField.text?.
+//                    } else {
+//                        let rateValue =
+//                    }
+
+                    let rateValue = NSNumber.init(value: Float(self.offerTextField.text!)!)
+                    
+                    self.ref.child("requests/immediate/\(self.currentUser!.uid)/").setValue(["name": self.currentUser!.displayName!, "uid": self.currentUser!.uid, "venmoID": "none", "origin": ["lat": currentLat, "long": currentLong, "address": addr], "destination": ["latitude": self.destLat, "longitude" : self.destLong], "destinationName": self.destName!, "rate" : rateValue, "accepted": 0, "repeats": repeatsValue, "duration": "none"])
+                                                                                                        //TODO DYNAMIC DURATION!!!
                 }
             }
         })

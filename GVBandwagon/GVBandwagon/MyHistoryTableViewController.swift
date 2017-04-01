@@ -43,8 +43,11 @@ class MyHistoryTableViewController: UITableViewController {
     let ourId = FIRAuth.auth()!.currentUser!.uid
     
     var ourHistory: [cellItem] = []
+    var testDictionary : [String : cellItem] = [:]
+    var dictionaryKeys : [String] = []
     
     override func viewDidLoad() {
+        //testDictionary["filler"] = cellItem
         super.viewDidLoad()
 
         // Uncomment the following line to preserve selection between presentations
@@ -55,8 +58,17 @@ class MyHistoryTableViewController: UITableViewController {
         
         ref.child("users/\(ourId)/history/").observeSingleEvent(of: .value, with: { snapshot in
             for item in snapshot.children {
-                self.ourHistory.append(cellItem.init(snapshot: item as! FIRDataSnapshot))
+                
+                print("item keys: \((item as! FIRDataSnapshot).key)")
+                
+                
+                self.testDictionary[(item as! FIRDataSnapshot).key] = cellItem.init(snapshot: item as! FIRDataSnapshot)
+                
+                    //this is not going to work with destination names etc. need to go deeper with the item.key??? and then use that for an inner search that makes the cell item and appends that cell item to our history array?... a dictionary of destinations and cell items perhaps?...
             }
+            self.dictionaryKeys = [String](self.testDictionary.keys.sorted()) //make an array out of all the keys so they can be used for accesses.
+            print(self.dictionaryKeys.description)
+            
             self.tableView.reloadData()
         })
         
@@ -76,17 +88,24 @@ class MyHistoryTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return ourHistory.count
+        return testDictionary.count
     }
 
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
-
-        let cellItem = ourHistory[indexPath.row]
+        
+        print("keys as we make the cells \(dictionaryKeys[indexPath.row])" )
+        let cellItem = testDictionary[dictionaryKeys[indexPath.row]] //ourHistory[indexPath.row]
+        
         // Configure the cell...
-        cell.detailTextLabel?.text = (cellItem.destination.description);
-        cell.textLabel?.text = (cellItem.name) + "\t\t\t$\(cellItem.rate)"
+        print("destination Name \((cellItem?.destinationName as String?))")
+        print("Name and Rate \((cellItem?.name as String?)) \(cellItem!.rate)")
+        cell.textLabel?.text = (cellItem!.name) + "\t\t\t$\(cellItem!.rate)"
+        cell.detailTextLabel?.text = (cellItem?.uid as String?); //uid shows destination and
+        //time of trip but it gets cut off because the screen isnt wide enough. anyway to force
+        //text wrapping/newlines in storyboard?
+        
         return cell
     }
     

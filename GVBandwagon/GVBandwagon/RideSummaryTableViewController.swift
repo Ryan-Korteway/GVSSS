@@ -48,6 +48,8 @@ class RideSummaryTableViewController: UITableViewController {
     var paymentShadowLayer: CAShapeLayer!
     var completeShadowLayer: CAShapeLayer!
     
+    let localDelegate = UIApplication.shared.delegate as! AppDelegate
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController?.navigationBar.isHidden = false
@@ -92,13 +94,14 @@ class RideSummaryTableViewController: UITableViewController {
                 print("our phone: \(snapshot.value! as? NSString)")
                 self.phoneLabel.text = "\((snapshot.value! as? NSString)!)"
             })
+        
+            print("address \(localAddress)")
+            let originDict = informationDictionary.value(forKey: "origin") as! NSDictionary
+            originStreetLabel.text = originDict.value(forKey: "address") as! String!
+            
+            destStreetLabel.text = informationDictionary.value(forKey: "destinationName") as! String?
         }
         
-        print("address \(localAddress)")
-        let originDict = informationDictionary.value(forKey: "origin") as! NSDictionary
-        originStreetLabel.text = originDict.value(forKey: "address") as! String!
-        
-        destStreetLabel.text = informationDictionary.value(forKey: "destinationName") as! String?
         
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -217,12 +220,61 @@ class RideSummaryTableViewController: UITableViewController {
         }
     }
     
+    @IBAction func completeRideButton(_ sender: UIButton) {
+        if(informationDictionary.count > 0 ){
+            let ourID = FIRAuth.auth()!.currentUser!.uid
+            let date = Date()
+            ref.child("users/\(ourID)/history/\(informationDictionary.value(forKey: "destinationName")!)\(date.description)/").setValue(informationDictionary) //this does make duplicates at the moment.
+            
+            if(paymentText == "Request Payment"){ //driver side.
+                //set our accepted value to 0 and then delete our branch before removing the whole offer.
+                let uid = FIRAuth.auth()!.currentUser!.uid
+                ref.child("users/\(self.localDelegate.offeredID)/rider/offers/accepted/immediate/driver/\(uid)/accepted/").setValue(1);
+                sleep(1);
+                ref.child("users/\(self.localDelegate.offeredID)/rider/offers/accepted/immediate/driver/").removeValue()
+                ref.child("users/\(self.localDelegate.offeredID)/rider/offers/accepted/immediate/").removeValue()
+                localDelegate.driverStatus = "request"
+                localDelegate.timer.invalidate()
+            } else {
+                //set our accepted value to 0 and then delete our branch before removing the whole offer.
+                let uid = FIRAuth.auth()!.currentUser!.uid
+                ref.child("users/\(uid)/rider/offers/accepted/immediate/rider/\(uid)/accepted/").setValue(1);
+                sleep(1);
+                ref.child("users/\(uid)/rider/offers/accepted/immediate/rider/").removeValue()
+                ref.child("users/\(uid)/rider/offers/accepted/immediate/").removeValue()
+                self.localDelegate.driverStatus = "request"
+                self.localDelegate.offeredID = "none"
+                self.localDelegate.timer.invalidate()
+            }
+            
+        }
+    }
+    
     @IBAction func onCancelTapped(_ sender: Any) {
         
         // Cancel ride
         
-        //needs code changes, changing accepted values for the affected parties and the deleting the request,
-        //fill with acceptances in both VC's need updating to watch for the deletions and responding appropriately.
+        if(paymentText == "Request Payment"){ //driver side.
+            //set our accepted value to 0 and then delete our branch before removing the whole offer.
+            let uid = FIRAuth.auth()!.currentUser!.uid
+            ref.child("users/\(self.localDelegate.offeredID)/rider/offers/accepted/immediate/driver/\(uid)/accepted/").setValue(0);
+            sleep(1);
+            ref.child("users/\(self.localDelegate.offeredID)/rider/offers/accepted/immediate/driver/").removeValue()
+            ref.child("users/\(self.localDelegate.offeredID)/rider/offers/accepted/immediate/").removeValue()
+            localDelegate.driverStatus = "request"
+            localDelegate.timer.invalidate()
+        } else {
+            //set our accepted value to 0 and then delete our branch before removing the whole offer.
+            let uid = FIRAuth.auth()!.currentUser!.uid
+            ref.child("users/\(uid)/rider/offers/accepted/immediate/rider/\(uid)/accepted/").setValue(0);
+            sleep(1);
+            ref.child("users/\(uid)/rider/offers/accepted/immediate/rider/").removeValue()
+            ref.child("users/\(uid)/rider/offers/accepted/immediate/").removeValue()
+            self.localDelegate.driverStatus = "request"
+            self.localDelegate.offeredID = "none"
+            self.localDelegate.timer.invalidate()
+        }
+        
     }
     
     

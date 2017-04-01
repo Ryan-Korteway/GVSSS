@@ -10,6 +10,7 @@ import UIKit
 import Firebase
 import GoogleMaps
 import GooglePlaces
+import UserNotifications
 
 //TODO: Each viewDidLoad, check didLoadMapsYet and set googleMapsView = persisted map.  
 class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notifications {
@@ -35,6 +36,8 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
     
     var ourLat = 0.0
     var ourLong = 0.0
+    
+    let center = UNUserNotificationCenter.current()
     
     // For the Ride Now button
     var shadowLayer: CAShapeLayer!
@@ -170,8 +173,6 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
     func ride_offer(item: cellItem) {
         
         print("ride offer being made")
-        
-        localDelegate.riderStatus = "offer"
         
         let cellInfo: NSDictionary = item.toAnyObject() as! NSDictionary
         let locationInfo: NSDictionary = cellInfo["origin"] as! NSDictionary
@@ -315,6 +316,10 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
             
             ref.child("offers/immediate/").removeValue() //remove the offers immediate branch from the riders account so that the drivers are able to observe the destruction and if they were selected or not.
             
+            //history set up here.
+            let ourID = FIRAuth.auth()!.currentUser!.uid
+            let date = Date()
+            topRef.child("users/\(ourID)/history/\(dictionary.value(forKey: "destinationName")!)\(date.description)/").setValue(dictionary)
             
             self.googleMapsView.clear()
             
@@ -355,6 +360,16 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
     func declineTapped(button: UIButton) -> Void {
         print("Decline Tapped")
         infoWindow.removeFromSuperview()
+        if(localDelegate.riderStatus == "accepted"){
+            //set our accepted value to 0 and then delete our branch before removing the whole offer.
+            let uid = FIRAuth.auth()!.currentUser!.uid
+            ref.child("users/\(uid)/rider/offers/accepted/immediate/rider/\(uid)/accepted/").setValue(0);
+            sleep(1);
+            ref.child("users/\(uid)/rider/offers/accepted/immediate/rider/").removeValue()
+            ref.child("users/\(uid)/rider/offers/accepted/immediate/").removeValue()
+            localDelegate.riderStatus = "request"
+            localDelegate.timer.invalidate()
+        }
     }
         
     func fillWithAcceptance(item: cellItem) {
@@ -386,14 +401,42 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
                 } else if (snapshot.key == "long"){
                     marker.position.longitude = snapshot.value as! CLLocationDegrees
                 } else {
-                    self.localDelegate.ourAddress = snapshot.value as! NSString
+                    self.localDelegate.ourAddress = snapshot.value as! NSString?
                 }
             }) //hopefully this makes the pins update their locations and then its needed in the driver stuff to set up the driver to update these fields.
             
-            self.ref.child("users/\(currentUser!.uid)/rider/offers/accepted/immediate/driver/\(cellInfo["uid"]!)").observeSingleEvent(of: .childRemoved, with:{ snapshot in
+            self.ref.child("users/\(currentUser!.uid)/rider/offers/accepted/immediate/driver/").observeSingleEvent(of: .childRemoved, with:{ snapshot in
                 print("PIN BEING DELETED")
                 marker.map = nil;
                 self.ref.child("users/\(currentUser!.uid)/rider/offers/accepted/immediate/driver/\(cellInfo["uid"]!)/origin/").removeAllObservers()
+                
+                let content = UNMutableNotificationContent()
+                content.title = "Driver Event"
+                
+                let baseDictionary = snapshot.value as! NSDictionary
+                
+                if(baseDictionary.value(forKey: "accepted") as! NSInteger != 1) {
+                    content.body = "The Driver has had to cancel their offer. Please make another offer."
+                } else {
+                    content.body = "We hope the ride is enjoyable. Please remember to pay the driver and rate them."
+                }
+                content.sound = UNNotificationSound.default()
+                content.categoryIdentifier = "nothing_category"
+                
+                let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
+                
+                let identifier = "ride ending"
+                let request = UNNotificationRequest(identifier: identifier,
+                                                    content: content, trigger: trigger)
+                
+                self.center.add(request, withCompletionHandler: { (error) in
+                    if let error = error {
+                        print(error.localizedDescription)
+                    }
+                })
+                
+                self.localDelegate.riderStatus = "request"
+                self.localDelegate.timer.invalidate()
             })
     }
     
