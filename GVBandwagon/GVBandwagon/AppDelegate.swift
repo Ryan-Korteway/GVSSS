@@ -379,7 +379,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let firebaseAuth = FIRAuth.auth()
         do {
             let userID = FIRAuth.auth()!.currentUser!.uid
-            let ref = FIRDatabase.database().reference();
+            let ref = FIRDatabase.database().reference()
             ref.child("users/\(userID)/stateVars").setValue(["riderStatus" : riderStatus, "driverStatus" : driverStatus, "offeredID" : offeredID])
             
             try firebaseAuth!.signOut()

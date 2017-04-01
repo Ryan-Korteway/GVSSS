@@ -21,6 +21,7 @@ class RequestRideViewController: UIViewController, UISearchBarDelegate {
     var visibleRegion: GMSVisibleRegion!
     var coordLocation: CLLocationCoordinate2D!
     
+    @IBOutlet var scrollView: UIScrollView!
     var resultsViewController: GMSAutocompleteResultsViewController?
     var searchController: UISearchController?
     var resultView: UITextView?
@@ -80,11 +81,9 @@ class RequestRideViewController: UIViewController, UISearchBarDelegate {
         searchController?.searchBar.delegate = self
         searchController?.searchResultsUpdater = resultsViewController
         
-        //let subView = UIView(frame: CGRect(x: 0, y: 250, width: 350.0, height: 45.0)) // Remove?
+
         
         searchView.addSubview((searchController?.searchBar)!)
-        //subView.addSubview((searchController?.searchBar)!) // Remove?
-        //view.addSubview(subView) // Remove?
         searchController?.searchBar.sizeToFit()
         searchController?.hidesNavigationBarDuringPresentation = false
         
@@ -124,15 +123,29 @@ class RequestRideViewController: UIViewController, UISearchBarDelegate {
         
         var newHeight: CGFloat = 0
         var newY: CGFloat = -300
+        var switchViewY: CGFloat = 70
+        var dateViewHeight: CGFloat = 35
         var newAlpha: CGFloat = 0
+        var dateAlpha: CGFloat = 1
+        
         
         if (isOn) {
             newHeight = 300
             newY = 300
+            dateViewHeight = 0
+            switchViewY = -70
             newAlpha = 1
+            dateAlpha = 0
         }
         
         UIView.animate(withDuration: 0.3, animations: {
+            
+            //self.dateView.frame = CGRect(x: self.dateView.frame.origin.x, y: self.dateView.frame.origin.y, width: self.dateView.frame.width, height: dateViewHeight)
+            self.dateView.alpha = dateAlpha
+            
+            
+            self.freqSwitchView.frame = CGRect(x: self.freqSwitchView.frame.origin.x, y: self.freqSwitchView.frame.origin.y + switchViewY, width: self.freqSwitchView.frame.width, height: self.freqSwitchView.frame.height)
+            
             self.freqView.frame = CGRect(x: self.freqView.frame.origin.x, y: self.freqView.frame.origin.y, width: self.freqView.frame.width, height: newHeight)
             
             self.offerLabel.frame = CGRect(x: self.offerLabel.frame.origin.x, y: self.offerLabel.frame.origin.y + newY, width: self.offerLabel.frame.width, height: self.offerLabel.frame.height)
@@ -140,6 +153,9 @@ class RequestRideViewController: UIViewController, UISearchBarDelegate {
             self.offerTextField.frame = CGRect(x: self.offerTextField.frame.origin.x, y: self.offerTextField.frame.origin.y + newY, width: self.offerTextField.frame.width, height: self.offerTextField.frame.height)
             
             self.freqView.alpha = newAlpha
+            
+            // Increase scroll view size so we can scroll
+            self.scrollView.contentSize = CGSize(width: self.scrollView.frame.width, height: self.scrollView.frame.height + newY)
             
         }, completion: { (Bool) -> Void in
             // Do nothing.
@@ -291,17 +307,16 @@ class RequestRideViewController: UIViewController, UISearchBarDelegate {
     }
     
     @IBAction func onDateViewTapped(_ sender: Any) {
-        
         // Create picker constraints and apply to date picker after the window opens
         
         // Open and close variable
-        var newHeight: CGFloat = 200
-        var newY: CGFloat = 200
+        var newHeight: CGFloat = 150
+        var newY: CGFloat = 150
         var newAlpha: CGFloat = 1
         
         if (self.dateView.frame.height > 100) {
             newHeight = 35
-            newY = -200
+            newY = -150
             newAlpha = 0
         }
         print(newHeight)
@@ -321,17 +336,20 @@ class RequestRideViewController: UIViewController, UISearchBarDelegate {
             self.dollarSignLabel.frame = CGRect(x: self.dollarSignLabel.frame.origin.x, y: self.dollarSignLabel.frame.origin.y + newY, width: self.dollarSignLabel.frame.width, height: self.dollarSignLabel.frame.height)
             self.offerTextField.frame = CGRect(x: self.offerTextField.frame.origin.x, y: self.offerTextField.frame.origin.y + newY, width: self.offerTextField.frame.width, height: self.offerTextField.frame.height)
             
+            // Increase scroll view size so we can scroll
+            self.scrollView.contentSize = CGSize(width: self.scrollView.frame.width, height: self.scrollView.frame.height + newY)
+            
         }, completion: { (Bool) -> Void in
             // Do nothing.
             
             /*
-            UIView.animate(withDuration: 0.3, animations: {
-                self.datePicker.frame = CGRect(x: self.datePicker.frame.origin.x, y: self.datePicker.frame.origin.y + newY, width: self.datePicker.frame.width, height: self.datePicker.frame.height)
-                print("Frame y: \(self.datePicker.frame.origin.y)")
-            }, completion: { (Bool) -> Void in
-                // Do nothing
-            })
-            */
+             UIView.animate(withDuration: 0.3, animations: {
+             self.datePicker.frame = CGRect(x: self.datePicker.frame.origin.x, y: self.datePicker.frame.origin.y + newY, width: self.datePicker.frame.width, height: self.datePicker.frame.height)
+             print("Frame y: \(self.datePicker.frame.origin.y)")
+             }, completion: { (Bool) -> Void in
+             // Do nothing
+             })
+             */
             
         })
     }
@@ -345,7 +363,7 @@ class RequestRideViewController: UIViewController, UISearchBarDelegate {
             let viewport = GMSCoordinateBounds(coordinate: northEast, coordinate: southWest)
             let config = GMSPlacePickerConfig(viewport: viewport)
             let placePicker = GMSPlacePicker(config: config)
-            
+
             placePicker.pickPlace(callback: {(place, error) -> Void in
                 if let error = error {
                     print("Pick Place error: \(error.localizedDescription)")
@@ -356,6 +374,9 @@ class RequestRideViewController: UIViewController, UISearchBarDelegate {
                     //self.namelabel.text = place.name
                     //self.addrlabel.text = place.formattedAddress?.components(separatedBy: ", ")
                     //.joined(separator: "\n")
+                    self.setFirebaseRequest(destination: place)
+                    self.searchController?.searchBar.placeholder = place.name
+                    
                 } else {
                     //self.namelabel.text = "No place selected"
                     //self.addrlabel.text = ""
@@ -367,7 +388,6 @@ class RequestRideViewController: UIViewController, UISearchBarDelegate {
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String){
-        //let visibleRegion = rideVC.googleMapsView.projection.visibleRegion()
         let bounds = GMSCoordinateBounds(coordinate: self.visibleRegion.farLeft, coordinate: self.visibleRegion.nearRight)
         
         self.resultsViewController?.autocompleteBounds = bounds
@@ -388,6 +408,57 @@ class RequestRideViewController: UIViewController, UISearchBarDelegate {
         })
     }
     
+    /*
+    func getAddressFromCoordinates(coord: CLLocationCoordinate2D) -> GMSPlace {
+        let bounds = GMSCoordinateBounds(coordinate: coord, coordinate: coord)
+        
+        self.resultsViewController?.autocompleteBounds = bounds
+        
+        let filter = GMSAutocompleteFilter()
+        filter.type = .establishment
+        
+        var newPlace = GMSPlace()
+        
+        placesClient.autocompleteQuery("", bounds: bounds, filter: filter, callback: {
+            (results, error) -> Void in
+            guard error == nil else {
+                print("Autocomplete error \(error)")
+                return
+            }
+            if let results = results {
+                if let result = results.first {
+                    if let placeID = result.placeID {
+                        print("Place ID from coordinates found: \(placeID)")
+                        newPlace = self.getPlaceFromID(id: placeID)
+                    }
+                }
+            }
+        })
+        
+        return newPlace
+    }
+    
+    func getPlaceFromID(id: String) -> GMSPlace {
+        
+        var newPlace = GMSPlace()
+        
+        self.placesClient.lookUpPlaceID(id, callback: {
+            (results, error) -> Void in
+            guard error == nil else {
+                print("Autocomplete error \(error)")
+                return
+            }
+            
+            if let results = results {
+                print("Place found: \(results.formattedAddress)")
+                newPlace = results
+            }
+        })
+        
+        return newPlace
+    }
+    */
+    
     func setFirebaseRequest(destination: GMSPlace) {
         print("Send to FB: Place name: \(destination.name)")
         print("Send: Place address: \(destination.formattedAddress)")
@@ -407,6 +478,8 @@ extension RequestRideViewController: GMSAutocompleteResultsViewControllerDelegat
         print("Place address: \(place.formattedAddress)")
         print("Place attributions: \(place.attributions)")
         setFirebaseRequest(destination: place)
+        
+        searchController?.searchBar.placeholder = place.name
     }
     
     func resultsController(_ resultsController: GMSAutocompleteResultsViewController,

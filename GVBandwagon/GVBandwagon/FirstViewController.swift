@@ -45,6 +45,10 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Puts compass in right spot
+        let mapInsets = UIEdgeInsets(top: 100.0, left: 0.0, bottom: 0, right: 0)
+        self.googleMapsView.padding = mapInsets
+        
         placesClient = GMSPlacesClient.shared()
         
         // Custom button design. We should put this in its own class later.
