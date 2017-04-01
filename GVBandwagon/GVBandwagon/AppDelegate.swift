@@ -144,6 +144,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // OR
         // self.initiateDrawer()
         
+        center.requestAuthorization(options: options) {
+            (granted, error) in
+            if !granted {
+                print("Something went wrong with notifications")
+            }
+        }
+        
         window?.makeKeyAndVisible()
     
         return true
@@ -446,7 +453,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
             for local in snapshot.children { //grab venmo id.
                 self.driverVenmoID = (local as AnyObject).value;
-            }
+            } //this may not be working.
         })
         
     }

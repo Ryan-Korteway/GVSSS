@@ -239,16 +239,6 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
  
                 ref.child("/users/\(localDelegate.offeredID)/rider/offers/immediate").removeAllObservers()
             
-                // make a history item here. destination name+time.
-            ref.child("users/\(self.localDelegate.offeredID)/rider/offers/accepted/immediate/rider/").observeSingleEvent(of: .value, with: { snapshot in
-
-                let dictionary = cellItem.init(snapshot: snapshot).toAnyObject() as! NSDictionary
-                let ourID = FIRAuth.auth()!.currentUser!.uid
-                let date = Date()
-                self.ref.child("users/\(ourID)/history/\(dictionary.value(forKey: "destinationName")!)\(date.description)/").setValue(dictionary)
-            })
-            
-            
                 self.googleMap.clear()
             
                 localDelegate.startDriverMapObservers()
@@ -505,6 +495,20 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
     
     func acceptTapped(button: UIButton) -> Void {
         
+        if(localDelegate.offeredID != "none") {
+            // make a history item here. destination name+time.
+            let ref = FIRDatabase.database().reference()
+            
+            ref.child("users/\(self.localDelegate.offeredID)/rider/offers/accepted/immediate/rider/\(self.localDelegate.offeredID)/").observeSingleEvent(of: .value, with: { snapshot in
+                
+                let dictionary = cellItem.init(snapshot: snapshot).toAnyObject() as! NSDictionary
+                let ourID = FIRAuth.auth()!.currentUser!.uid
+                let date = Date()
+                self.ref.child("users/\(ourID)/history/\(dictionary.value(forKey: "destinationName")!)\(date.description)/").setValue(dictionary)
+            })
+
+        }
+        
         let originLocal: NSDictionary = baseDictionary.value(forKey: "origin") as! NSDictionary
         let ourAddress : NSString = originLocal.value(forKey: "address") as! NSString
         localDelegate.riderAddress = ourAddress as String
@@ -582,7 +586,9 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
             ref.child("users/\(self.localDelegate.offeredID)/rider/offers/accepted/immediate/driver/").removeValue()
             ref.child("users/\(self.localDelegate.offeredID)/rider/offers/accepted/immediate/").removeValue()
             localDelegate.driverStatus = "request"
+            localDelegate.offeredID = "none"
             localDelegate.timer.invalidate()
+            googleMap.clear()
         }
     }
     
@@ -621,7 +627,7 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
             print("in acceptance, we are watching: \(cellInfo["uid"]!)")
             //the origin in this line might need to be origin/ to allow for realtime pin tracking, play with this without me if you
             //guys need to work it.
-            self.ref.child("users/\(cellInfo["uid"]!)/rider/accepted/immediate/rider/\(cellInfo["uid"]!)/origin").observe( .childChanged, with: { snapshot in
+            self.ref.child("users/\(cellInfo["uid"]!)/rider/offers/accepted/immediate/rider/\(cellInfo["uid"]!)/origin/").observe( .childChanged, with: { snapshot in
                 print("watching marker moving!! \(snapshot.key)")
                 if(snapshot.key == "lat") {
                     marker.position.latitude = snapshot.value as! CLLocationDegrees
@@ -635,15 +641,15 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
             }) //hopefully this makes the pins update their locations and then its needed in the driver stuff to set up the driver to update these fields.
             //once we accept the offer, we will need a .value to get each key to remove each observer before we delete the whole section.
             
-            ref.child("users/\(cellInfo["uid"]!)/rider/accepted/immediate/rider/\(cellInfo["uid"]!)").observeSingleEvent(of: .childRemoved, with:{ snapshot in
+            ref.child("users/\(cellInfo["uid"]!)/rider/offers/accepted/immediate/rider/").observeSingleEvent(of: .childRemoved, with:{ snapshot in
                 print("PIN BEING DELETED")
                 marker.map = nil;
-                self.ref.child("users/\(cellInfo["uid"]!)/rider/accepted/immediate/rider/\(cellInfo["uid"]!)/origin").removeAllObservers()
+                self.ref.child("users/\(cellInfo["uid"]!)/rider/offers/accepted/immediate/rider/\(cellInfo["uid"]!)/origin/").removeAllObservers()
                 
                 let content = UNMutableNotificationContent()
                 content.title = "Ride Event"
 
-                let baseDictionary = snapshot.value as! NSDictionary
+                let baseDictionary = cellItem.init(snapshot: snapshot).toAnyObject() as! NSDictionary //need cell item before dictionary.
 
                 if(baseDictionary.value(forKey: "accepted") as! NSInteger != 1) {
                     content.body = "The ride request has been removed. You do not need to pick up this individual."

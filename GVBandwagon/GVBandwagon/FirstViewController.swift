@@ -174,8 +174,6 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
         
         print("ride offer being made")
         
-        localDelegate.riderStatus = "offer"
-        
         let cellInfo: NSDictionary = item.toAnyObject() as! NSDictionary
         let locationInfo: NSDictionary = cellInfo["origin"] as! NSDictionary
         
@@ -407,7 +405,7 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
                 }
             }) //hopefully this makes the pins update their locations and then its needed in the driver stuff to set up the driver to update these fields.
             
-            self.ref.child("users/\(currentUser!.uid)/rider/offers/accepted/immediate/driver/\(cellInfo["uid"]!)").observeSingleEvent(of: .childRemoved, with:{ snapshot in
+            self.ref.child("users/\(currentUser!.uid)/rider/offers/accepted/immediate/driver/").observeSingleEvent(of: .childRemoved, with:{ snapshot in
                 print("PIN BEING DELETED")
                 marker.map = nil;
                 self.ref.child("users/\(currentUser!.uid)/rider/offers/accepted/immediate/driver/\(cellInfo["uid"]!)/origin/").removeAllObservers()
@@ -430,10 +428,9 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
                 let identifier = "ride ending"
                 let request = UNNotificationRequest(identifier: identifier,
                                                     content: content, trigger: trigger)
+                
                 self.center.add(request, withCompletionHandler: { (error) in
-                    
                     if let error = error {
-                        
                         print(error.localizedDescription)
                     }
                 })
