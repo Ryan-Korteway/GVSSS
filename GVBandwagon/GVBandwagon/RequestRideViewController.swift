@@ -233,9 +233,9 @@ class RequestRideViewController: UIViewController, UISearchBarDelegate {
         return addr
     }
     
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?){
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         view.endEditing(true)
-        super.touchesBegan(touches, with: event)
+        super.touchesMoved(touches, with: event)
     }
     
     /*

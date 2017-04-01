@@ -43,8 +43,10 @@ class MyHistoryTableViewController: UITableViewController {
     let ourId = FIRAuth.auth()!.currentUser!.uid
     
     var ourHistory: [cellItem] = []
+    var testDictionary : [String : cellItem] = [:]
     
     override func viewDidLoad() {
+        //testDictionary["filler"] = cellItem
         super.viewDidLoad()
 
         // Uncomment the following line to preserve selection between presentations
@@ -55,7 +57,11 @@ class MyHistoryTableViewController: UITableViewController {
         
         ref.child("users/\(ourId)/history/").observeSingleEvent(of: .value, with: { snapshot in
             for item in snapshot.children {
-                self.ourHistory.append(cellItem.init(snapshot: item as! FIRDataSnapshot))
+                
+                self.ref.child("users/\(self.ourId)/history/\((item as! FIRDataSnapshot).key)/").observeSingleEvent(of: .value, with: { snapshot in
+                    self.testDictionary[(item as! FIRDataSnapshot).key] = cellItem.init(snapshot: snapshot)
+                })
+                    //this is not going to work with destination names etc. need to go deeper with the item.key??? and then use that for an inner search that makes the cell item and appends that cell item to our history array?... a dictionary of destinations and cell items perhaps?...
             }
             self.tableView.reloadData()
         })
@@ -76,17 +82,20 @@ class MyHistoryTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return ourHistory.count
+        return testDictionary.count
     }
 
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
-
-        let cellItem = ourHistory[indexPath.row]
+        
+        let dictionaryKeys = [String](testDictionary.keys.sorted()) //make an array out of all the keys so they can be used for accesses.
+        let cellItem = testDictionary[dictionaryKeys[indexPath.row]] //ourHistory[indexPath.row]
+        
         // Configure the cell...
-        cell.detailTextLabel?.text = (cellItem.destination.description);
-        cell.textLabel?.text = (cellItem.name) + "\t\t\t$\(cellItem.rate)"
+        cell.detailTextLabel?.text = (cellItem?.destinationName as String?);
+        cell.textLabel?.text = (cellItem!.name) + "\t\t\t$\(cellItem!.rate)"
+        
         return cell
     }
     

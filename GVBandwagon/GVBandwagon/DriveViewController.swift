@@ -237,9 +237,18 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
                 localDelegate.driverStatus = "accepted"
                 print("we offered a ride to: \(self.localDelegate.offeredID)")
  
-            
                 ref.child("/users/\(localDelegate.offeredID)/rider/offers/immediate").removeAllObservers()
-                
+            
+                // make a history item here. destination name+time.
+            ref.child("users/\(self.localDelegate.offeredID)/rider/offers/accepted/immediate/rider/").observeSingleEvent(of: .value, with: { snapshot in
+
+                let dictionary = cellItem.init(snapshot: snapshot).toAnyObject() as! NSDictionary
+                let ourID = FIRAuth.auth()!.currentUser!.uid
+                let date = Date()
+                self.ref.child("users/\(ourID)/history/\(dictionary.value(forKey: "destinationName")!)\(date.description)/").setValue(dictionary)
+            })
+            
+            
                 self.googleMap.clear()
             
                 localDelegate.startDriverMapObservers()
@@ -563,6 +572,18 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
     func declineTapped(button: UIButton) -> Void {
         print("Decline Tapped")
         infoWindow.removeFromSuperview()
+        
+        //driver could have same functionality, change his accepted value and remove it to warn the user that the driver had to cancel.
+        if(localDelegate.driverStatus == "accepted"){
+            //set our accepted value to 0 and then delete our branch before removing the whole offer.
+            let uid = FIRAuth.auth()!.currentUser!.uid
+            ref.child("users/\(self.localDelegate.offeredID)/rider/offers/accepted/immediate/driver/\(uid)/accepted/").setValue(0);
+            sleep(1);
+            ref.child("users/\(self.localDelegate.offeredID)/rider/offers/accepted/immediate/driver/").removeValue()
+            ref.child("users/\(self.localDelegate.offeredID)/rider/offers/accepted/immediate/").removeValue()
+            localDelegate.driverStatus = "request"
+            localDelegate.timer.invalidate()
+        }
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -618,6 +639,35 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
                 print("PIN BEING DELETED")
                 marker.map = nil;
                 self.ref.child("users/\(cellInfo["uid"]!)/rider/accepted/immediate/rider/\(cellInfo["uid"]!)/origin").removeAllObservers()
+                
+                let content = UNMutableNotificationContent()
+                content.title = "Ride Event"
+
+                let baseDictionary = snapshot.value as! NSDictionary
+
+                if(baseDictionary.value(forKey: "accepted") as! NSInteger != 1) {
+                    content.body = "The ride request has been removed. You do not need to pick up this individual."
+                } else {
+                    content.body = "Thank you for giving this user a ride."
+                }
+                content.sound = UNNotificationSound.default()
+                content.categoryIdentifier = "nothing_category"
+
+                let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
+
+                let identifier = "ride acceptance"
+                let request = UNNotificationRequest(identifier: identifier,
+                                                    content: content, trigger: trigger)
+                self.center.add(request, withCompletionHandler: { (error) in
+
+                    if let error = error {
+                        
+                        print(error.localizedDescription)
+                    }
+                })
+                
+                self.localDelegate.driverStatus = "request"
+                self.localDelegate.timer.invalidate()
             })
         }
     }
