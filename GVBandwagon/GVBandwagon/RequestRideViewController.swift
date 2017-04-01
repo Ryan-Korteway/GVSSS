@@ -163,8 +163,8 @@ class RequestRideViewController: UIViewController, UISearchBarDelegate {
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        super.touchesBegan(touches, with: event);
         self.view.endEditing(true)
+        super.touchesBegan(touches, with: event);
     }
     
     @IBAction func onCancelTapped(_ sender: Any) {
@@ -219,8 +219,15 @@ class RequestRideViewController: UIViewController, UISearchBarDelegate {
                 if let address = place.formattedAddress {
                     print("address: \(address)")
                     let addr = address as NSString
+            
+                    var repeatsValue = "none"
                     
-                    self.ref.child("requests/immediate/\(self.currentUser!.uid)/").setValue(["name": self.currentUser!.displayName!, "uid": self.currentUser!.uid, "venmoID": "none", "origin": ["lat": currentLat, "long": currentLong, "address": addr], "destination": ["latitude": self.destLat, "longitude" : self.destLong], "destinationName": self.destName!, "rate" : (NSInteger.init(self.offerTextField.text!)) ?? 5, "accepted": 0, "repeats": self.freqArray.description, "duration": "none"]) //locations being sent here.
+                    if self.freqArray.count > 0 {
+                        repeatsValue = self.freqArray.description
+                    }
+                    
+                    self.ref.child("requests/immediate/\(self.currentUser!.uid)/").setValue(["name": self.currentUser!.displayName!, "uid": self.currentUser!.uid, "venmoID": "none", "origin": ["lat": currentLat, "long": currentLong, "address": addr], "destination": ["latitude": self.destLat, "longitude" : self.destLong], "destinationName": self.destName!, "rate" : self.offerTextField.text!, "accepted": 0, "repeats": repeatsValue, "duration": "none"])
+                                                                                                        //TODO DYNAMIC DURATION!!!
                 }
             }
         })
@@ -249,11 +256,11 @@ class RequestRideViewController: UIViewController, UISearchBarDelegate {
         return addr
     }
     
-    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        view.endEditing(true)
-        super.touchesMoved(touches, with: event)
-    }
-    
+//    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+//        view.endEditing(true)
+//        super.touchesMoved(touches, with: event)
+//    }
+//    
     /*
     // MARK: - Navigation
 
