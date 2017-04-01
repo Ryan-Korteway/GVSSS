@@ -1855,6 +1855,7 @@
                                                     </constraints>
                                                     <state key="normal" title="Complete This Ride"/>
                                                     <connections>
+                                                        <action selector="completeRideButton:" destination="V9b-CB-B2E" eventType="touchUpInside" id="Dps-OS-5L0"/>
                                                         <action selector="onPaymentTapped:" destination="V9b-CB-B2E" eventType="touchUpInside" id="iRL-QU-CIK"/>
                                                     </connections>
                                                 </button>

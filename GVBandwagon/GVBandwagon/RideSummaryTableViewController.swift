@@ -220,6 +220,16 @@ class RideSummaryTableViewController: UITableViewController {
         }
     }
     
+    @IBAction func completeRideButton(_ sender: UIButton) {
+        if(informationDictionary.count > 0 ){
+            let ourID = FIRAuth.auth()!.currentUser!.uid
+            let date = Date()
+            ref.child("users/\(ourID)/history/\(informationDictionary.value(forKey: "destinationName")!)\(date.description)/").setValue(informationDictionary)
+            //TODO should be resetting statuses and ID's in app delegate as appropriate
+            //invalidate timer too.
+        }
+    }
+    
     @IBAction func onCancelTapped(_ sender: Any) {
         
         // Cancel ride
