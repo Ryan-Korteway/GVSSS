@@ -225,8 +225,16 @@ class RequestRideViewController: UIViewController, UISearchBarDelegate {
                     if self.freqArray.count > 0 {
                         repeatsValue = self.freqArray.description
                     }
+//                    
+//                    if(self.offerTextField.text?.canBeConverted(to: NSInteger)) {
+//                        let rateValue = NSInteger.init(self.offerTextField.text?.
+//                    } else {
+//                        let rateValue =
+//                    }
+
+                    let rateValue = NSNumber.init(value: Float(self.offerTextField.text!)!)
                     
-                    self.ref.child("requests/immediate/\(self.currentUser!.uid)/").setValue(["name": self.currentUser!.displayName!, "uid": self.currentUser!.uid, "venmoID": "none", "origin": ["lat": currentLat, "long": currentLong, "address": addr], "destination": ["latitude": self.destLat, "longitude" : self.destLong], "destinationName": self.destName!, "rate" : NSNumber.init(self.offerTextField.text!) ?? 5, "accepted": 0, "repeats": repeatsValue, "duration": "none"])
+                    self.ref.child("requests/immediate/\(self.currentUser!.uid)/").setValue(["name": self.currentUser!.displayName!, "uid": self.currentUser!.uid, "venmoID": "none", "origin": ["lat": currentLat, "long": currentLong, "address": addr], "destination": ["latitude": self.destLat, "longitude" : self.destLong], "destinationName": self.destName!, "rate" : rateValue, "accepted": 0, "repeats": repeatsValue, "duration": "none"])
                                                                                                         //TODO DYNAMIC DURATION!!!
                 }
             }
