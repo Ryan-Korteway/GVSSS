@@ -226,7 +226,7 @@ class RequestRideViewController: UIViewController, UISearchBarDelegate {
                         repeatsValue = self.freqArray.description
                     }
                     
-                    self.ref.child("requests/immediate/\(self.currentUser!.uid)/").setValue(["name": self.currentUser!.displayName!, "uid": self.currentUser!.uid, "venmoID": "none", "origin": ["lat": currentLat, "long": currentLong, "address": addr], "destination": ["latitude": self.destLat, "longitude" : self.destLong], "destinationName": self.destName!, "rate" : self.offerTextField.text!, "accepted": 0, "repeats": repeatsValue, "duration": "none"])
+                    self.ref.child("requests/immediate/\(self.currentUser!.uid)/").setValue(["name": self.currentUser!.displayName!, "uid": self.currentUser!.uid, "venmoID": "none", "origin": ["lat": currentLat, "long": currentLong, "address": addr], "destination": ["latitude": self.destLat, "longitude" : self.destLong], "destinationName": self.destName!, "rate" : NSNumber.init(self.offerTextField.text!) ?? 5, "accepted": 0, "repeats": repeatsValue, "duration": "none"])
                                                                                                         //TODO DYNAMIC DURATION!!!
                 }
             }

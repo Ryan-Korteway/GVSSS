@@ -47,7 +47,7 @@ struct cellItem {
     let origin: NSDictionary
     let destination: NSDictionary //going to need destination strings added to struct at some point.
     let destinationName: NSString
-    let rate: NSInteger
+    let rate: NSNumber
     var accepted: NSInteger
     var repeats: NSString
     var duration: NSString
@@ -57,7 +57,7 @@ struct cellItem {
         let snapshotValue = snapshot.value as! [String: AnyObject] // opening and closing the app causing crashes here for some reason.
         name = snapshotValue["name"] as! String
         venmoID = snapshotValue["venmoID"] as! String //needs to be added automatically with FIRAuth.auth().currentUser.email etc.
-        rate = snapshotValue["rate"] as! NSInteger
+        rate = snapshotValue["rate"] as! NSNumber
         origin = snapshotValue["origin"] as! NSDictionary //should be a dictionary of lats and longs
         destination = snapshotValue["destination"] as! NSDictionary //should be a dictionary of lats and longs
         destinationName = snapshotValue["destinationName"] as! NSString
@@ -70,7 +70,7 @@ struct cellItem {
         uid = start.value(forKey: "uid") as! String
         name = start.value(forKey: "name") as! String
         venmoID = start.value(forKey: "venmoID") as! String //needs to be added automatically with FIRAuth.auth().currentUser.email etc.
-        rate = start.value(forKey: "rate") as! NSInteger
+        rate = start.value(forKey: "rate") as! NSNumber
         origin = start.value(forKey: "origin") as! NSDictionary //should be a dictionary of lats and longs
         destination = start.value(forKey: "destination") as! NSDictionary //should be a dictionary of lats and longs
         accepted = start.value(forKey: "accepted") as! NSInteger //if its set to 0, its false/no ride acceptance, else it is 1 and ride accepted.
