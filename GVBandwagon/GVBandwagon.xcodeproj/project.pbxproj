@@ -19,6 +19,7 @@
 		0B3DE4FC1E3BB57C00733810 /* SignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B3DE4FB1E3BB57C00733810 /* SignInViewController.swift */; };
 		0B4BDD931E57DEFB005C186D /* imagicon.png in Resources */ = {isa = PBXBuildFile; fileRef = 0B4BDD921E57DEFB005C186D /* imagicon.png */; };
 		0B556BBF1E51390400EAE537 /* DriveViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B556BBE1E51390400EAE537 /* DriveViewController.swift */; };
+		0B5846D11E8F01920020BDBB /* RideRequestTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B5846D01E8F01920020BDBB /* RideRequestTableViewController.swift */; };
 		0B66273D1E8C0CC8004BACEB /* ScheduledRidesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B66273C1E8C0CC8004BACEB /* ScheduledRidesTableViewController.swift */; };
 		0B66273F1E8C0DC2004BACEB /* RideTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B66273E1E8C0DC2004BACEB /* RideTableViewCell.swift */; };
 		0B6627451E8C2EE4004BACEB /* RateUserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B6627441E8C2EE4004BACEB /* RateUserViewController.swift */; };
@@ -84,7 +85,8 @@
 		0B3DE4FB1E3BB57C00733810 /* SignInViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignInViewController.swift; sourceTree = "<group>"; };
 		0B4BDD921E57DEFB005C186D /* imagicon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = imagicon.png; path = GVBandwagon/Assets.xcassets/imagicon.png; sourceTree = "<group>"; };
 		0B556BBE1E51390400EAE537 /* DriveViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DriveViewController.swift; sourceTree = "<group>"; };
-		0B66273C1E8C0CC8004BACEB /* ScheduledRidesTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScheduledRidesTableViewController.swift; sourceTree = "<group>"; };
+		0B5846D01E8F01920020BDBB /* RideRequestTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RideRequestTableViewController.swift; path = ../RideRequestTableViewController.swift; sourceTree = "<group>"; };
+		0B66273C1E8C0CC8004BACEB /* ScheduledRidesTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ScheduledRidesTableViewController.swift; path = ../ScheduledRidesTableViewController.swift; sourceTree = "<group>"; };
 		0B66273E1E8C0DC2004BACEB /* RideTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RideTableViewCell.swift; sourceTree = "<group>"; };
 		0B6627441E8C2EE4004BACEB /* RateUserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RateUserViewController.swift; sourceTree = "<group>"; };
 		0B6935281E3CE6C300F551CB /* RegistrationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegistrationViewController.swift; sourceTree = "<group>"; };
@@ -145,7 +147,6 @@
 		0B197CD41E32815100392B40 = {
 			isa = PBXGroup;
 			children = (
-				0B66273C1E8C0CC8004BACEB /* ScheduledRidesTableViewController.swift */,
 				0B3DE4F81E3BB44200733810 /* Assets */,
 				0B197CDF1E32815200392B40 /* GVBandwagon */,
 				0B197CF61E32815200392B40 /* GVBandwagonTests */,
@@ -169,6 +170,8 @@
 		0B197CDF1E32815200392B40 /* GVBandwagon */ = {
 			isa = PBXGroup;
 			children = (
+				0B66273C1E8C0CC8004BACEB /* ScheduledRidesTableViewController.swift */,
+				0B5846D01E8F01920020BDBB /* RideRequestTableViewController.swift */,
 				852AD80B1E707B4F00155C24 /* GVBNotificationDelegate.swift */,
 				852AD8091E707B1A00155C24 /* cellFile.swift */,
 				0BC8F62D1E3A795A00E94F5B /* GVBandwagon.entitlements */,
@@ -560,6 +563,7 @@
 				0B66273D1E8C0CC8004BACEB /* ScheduledRidesTableViewController.swift in Sources */,
 				0B9583651E7C851800752DD5 /* RideSummaryTableViewController.swift in Sources */,
 				851AAD191E58C54B0023F0D7 /* findingRidersViewController.swift in Sources */,
+				0B5846D11E8F01920020BDBB /* RideRequestTableViewController.swift in Sources */,
 				0B6935291E3CE6C300F551CB /* RegistrationViewController.swift in Sources */,
 				0BABBF711E4A275F00108DC2 /* RideViewController.swift in Sources */,
 				0BABBF751E4A8F5F00108DC2 /* HelpViewController.swift in Sources */,

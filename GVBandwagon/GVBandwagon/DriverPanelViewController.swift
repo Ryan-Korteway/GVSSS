@@ -20,10 +20,10 @@ class DriverPanelViewController: UIViewController {
     @IBOutlet var scheduledRidesContainerView: UIView!
     
     @IBOutlet var ratingImageView: UIImageView!
-    @IBOutlet var tripCounterLabel: UILabel!
     var totalTrips = 0
     
     var mode = "Ride"
+    var activeTripExists = false
     
     var ourlat : CLLocationDegrees = 0.0
     var ourlong : CLLocationDegrees = 0.0
@@ -53,7 +53,7 @@ class DriverPanelViewController: UIViewController {
             ref.child("users/\(ourid)/driver/totalRiders/").observeSingleEvent(of: .value, with: { snapshot in
                 print("key " + snapshot.key)
                 print("value  \((snapshot.value as? NSInteger)!)")
-                self.tripCounterLabel.text = "\((snapshot.value as? NSInteger)!) trips."
+                //Removed//self.tripCounterLabel.text = "\((snapshot.value as? NSInteger)!) trips."
             })
             
         } else {
@@ -61,7 +61,7 @@ class DriverPanelViewController: UIViewController {
             ref.child("users/\(ourid)/rider/totalRides/").observeSingleEvent(of: .value, with: { snapshot in
                 print("key " + snapshot.key)
                 print("value  \((snapshot.value as? NSInteger)!)")
-                self.tripCounterLabel.text = "\((snapshot.value as? NSInteger)!) trips."
+                //Removed//self.tripCounterLabel.text = "\((snapshot.value as? NSInteger)!) trips."
             })
         }
     }
@@ -102,6 +102,10 @@ class DriverPanelViewController: UIViewController {
     @IBAction func activeTripTapped(_ sender: Any) {
         // Check if there is one, if not do nothing.
         
+        if (!activeTripExists) {
+            return
+        }
+        
         // If there is an active trip, load the summary.
         //self.performSegue(withIdentifier: "driverAcceptsRide", sender: self)
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
@@ -138,8 +142,15 @@ class DriverPanelViewController: UIViewController {
         }
     }
     
-    // Get active trip from FB
+    // Get active trip from FB?
     func getActiveTrip() {
+        // Get trip info from FB
+        
+        // If active trip exists then
+        self.activeTripExists = true
+        
+        // else
+        //self.activeTripExists = false
     }
     
     // Get rating from FB. Return stars based on rounded to nearest whole number:
