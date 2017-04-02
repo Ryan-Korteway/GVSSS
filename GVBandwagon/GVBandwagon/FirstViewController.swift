@@ -241,7 +241,7 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
                 
             }
         } else if segue.identifier == "toRequestRideSegue" {
-            if let nextVC = segue.destination as? RequestRideViewController {
+            if let nextVC = segue.destination as? RideRequestTableViewController {
                 nextVC.visibleRegion = self.googleMapsView.projection.visibleRegion()
                 nextVC.coordLocation = self.locationManager.location?.coordinate
             }

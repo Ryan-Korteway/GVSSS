@@ -140,12 +140,20 @@ class RideSummaryTableViewController: UITableViewController {
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 5
     }
+    */
 
+    /*
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if (section == 4) {
-            return 1
-        } else {
+        if (section == 1) {
+            if (self.paymentText == "Request Payment") {
+                return 3
+            } else {
+                return 4
+            }
+        } else if (section == 6) {
             return 2
+        } else {
+            return 1
         }
     }
     */
@@ -246,7 +254,6 @@ class RideSummaryTableViewController: UITableViewController {
                 self.localDelegate.offeredID = "none"
                 self.localDelegate.timer.invalidate()
             }
-            
         }
     }
     

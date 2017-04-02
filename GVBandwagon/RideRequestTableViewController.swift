@@ -39,7 +39,6 @@ class RideRequestTableViewController: UITableViewController, UISearchBarDelegate
     
     @IBOutlet var datePicker: UIDatePicker!
     @IBOutlet var freqPicker: UIPickerView!
-    @IBOutlet var freqPickerHeaderView: UIView!
     @IBOutlet weak var freqSwitch: UISwitch!
     
     // This is an optional because a cell is selected or isn't (this is nil)
@@ -47,13 +46,23 @@ class RideRequestTableViewController: UITableViewController, UISearchBarDelegate
     
     @IBOutlet var dateCell: UITableViewCell!
     @IBOutlet weak var dateTextField: UITextField!
+    @IBOutlet weak var offerTextField: UITextField!
     
-    var freqArray = [String]()
+    var freqArray = ["No", "No", "No", "No", "No", "No", "No"]
     
     var pickerViewDelegate: UIPickerViewDelegate?
     
     let pickerComponents = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
-    let pickerRows = ["No", "Yes"]
+    //let pickerRows = ["No", "Mon"]
+    let pickerRows = [
+        ["No", "Mon"],
+        ["No", "Tues"],
+        ["No", "Wed"],
+        ["No", "Thur"],
+        ["No", "Fri"],
+        ["No", "Sat"],
+        ["No", "Sun"]]
+        
     
     let ref = FIRDatabase.database().reference()
     let currentUser = FIRAuth.auth()!.currentUser
@@ -65,6 +74,8 @@ class RideRequestTableViewController: UITableViewController, UISearchBarDelegate
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.displayCurrentDate(mode: self.datePicker.datePickerMode)
 
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -75,12 +86,11 @@ class RideRequestTableViewController: UITableViewController, UISearchBarDelegate
         self.freqPicker.delegate = self
         self.freqPicker.dataSource = self
         self.freqPicker.alpha = 0
-        self.freqPickerHeaderView.alpha = 0
         
         self.navigationController?.navigationBar.isHidden = false
         
-        //self.offerTextField.text = "2"
-        //self.offerTextField.keyboardType = UIKeyboardType.decimalPad
+        self.offerTextField.text = "2"
+        self.offerTextField.keyboardType = UIKeyboardType.decimalPad
         
         placesClient = GMSPlacesClient.shared()
         
@@ -103,7 +113,6 @@ class RideRequestTableViewController: UITableViewController, UISearchBarDelegate
         
         // Google Places End
 
-        
         self.freqSwitch.setOn(false, animated: false)
         self.freqSwitch.addTarget(self, action: #selector(switchIsChanged(mySwitch:)), for: .valueChanged)
     }
@@ -111,10 +120,19 @@ class RideRequestTableViewController: UITableViewController, UISearchBarDelegate
     func switchIsChanged(mySwitch: UISwitch) {
         
         if mySwitch.isOn {
+            // Set only time available in date picker
+            self.datePicker.datePickerMode = UIDatePickerMode(rawValue: 0)!
             self.animateElements(isOn: true)
         } else {
+            // Set date and time available in date picker
+            self.datePicker.datePickerMode = UIDatePickerMode(rawValue: 2)!
             self.animateElements(isOn: false)
+            
+            // Frequency is set to no, so set array to all no's:
+            self.freqArray = ["No", "No", "No", "No", "No", "No", "No"]
         }
+        
+        self.displayCurrentDate(mode: self.datePicker.datePickerMode)
         
     }
     
@@ -142,15 +160,6 @@ class RideRequestTableViewController: UITableViewController, UISearchBarDelegate
                 if let address = place.formattedAddress {
                     print("address: \(address)")
                     let addr = address as NSString
-                    
-                    /*
-                    let rateValue = NSNumber.init(value: Float(self.offerTextField.text!)!)
-                    var repeatsValue = "none"
-                    
-                    if self.freqArray.count > 0 {
-                        repeatsValue = self.freqArray.description
-                    }
-                    */
                     
                     self.ref.child("requests/immediate/\(self.currentUser!.uid)/").setValue(["name": self.currentUser!.displayName!, "uid": self.currentUser!.uid, "venmoID": "none", "origin": ["lat": currentLat, "long": currentLong, "address": addr], "destination": ["latitude": self.destLat, "longitude" : self.destLong], "destinationName": self.destName!, "rate" : (NSInteger.init(self.offerTextField.text!)) ?? 5, "accepted": 0, "repeats": self.freqArray.description, "duration": "none"]) //locations being sent here.
                 }
@@ -190,7 +199,7 @@ class RideRequestTableViewController: UITableViewController, UISearchBarDelegate
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 3
+        return 5
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -232,12 +241,10 @@ class RideRequestTableViewController: UITableViewController, UISearchBarDelegate
         if indexPath.section == FREQ_CELL_SECTION && !self.isFreqCellSelected {
             self.isFreqCellSelected = true
             self.freqPicker.alpha = 1
-            self.freqPickerHeaderView.alpha = 1
             tableView.scrollToRow(at: indexPath, at: .none, animated: true)
         } else {
             self.isFreqCellSelected = false
             self.freqPicker.alpha = 0
-            self.freqPickerHeaderView.alpha = 0
         }
         */
         
@@ -257,12 +264,10 @@ class RideRequestTableViewController: UITableViewController, UISearchBarDelegate
         if (isOn) {
             self.isFreqCellSelected = true
             self.freqPicker.alpha = 1
-            self.freqPickerHeaderView.alpha = 1
             //tableView.scrollToRow(at: indexPath, at: .none, animated: true)
         } else {
             self.isFreqCellSelected = false
             self.freqPicker.alpha = 0
-            self.freqPickerHeaderView.alpha = 0
         }
         
         tableView.beginUpdates()
@@ -323,6 +328,20 @@ class RideRequestTableViewController: UITableViewController, UISearchBarDelegate
         // Pass the selected object to the new view controller.
     }
     */
+    
+    @IBAction func datePickerAction(_ sender: Any) {
+        
+        self.displayCurrentDate(mode: self.datePicker.datePickerMode)
+        
+        /*
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MMM d, h:mm a"
+        let strDate = dateFormatter.string(from: self.datePicker.date)
+        self.dateTextField.text = strDate
+        */
+        
+        // TODO: send date/time to FB too
+    }
     
     @IBAction func placesPicker(_ sender: Any) {
         if let center = self.coordLocation {
@@ -385,11 +404,64 @@ class RideRequestTableViewController: UITableViewController, UISearchBarDelegate
         self.destLong = destination.coordinate.longitude
         self.destName = destination.formattedAddress as NSString!
     }
+    
+    @IBAction func onSubmitTapped(_ sender: Any) {
+        
+        print("destName: \(self.destName?.length)")
+        if self.destName?.length == 0 || self.destName == nil {
+            print("empty destName")
+            //make an alert saying no offer there?
+            
+            let alert = UIAlertController(title: "Uh-oh!", message: "Empty destination. Please select a destination address.", preferredStyle: .alert)
+            
+            alert.addAction(UIAlertAction(title: "Dismiss", style: .default, handler: {
+                (action) in print("dismissed")}))
+            self.present(alert, animated: true, completion: nil)
+            return
+        }
+        
+        let userID = FIRAuth.auth()!.currentUser!.uid
+        
+        // make a history item here. destination name+time.
+        ref.child("users/\(userID)/rider/offers/accepted/immediate/driver/").observeSingleEvent(of: .value, with: { snapshot in
+            if(snapshot.value != nil) {
+                let dictionary = cellItem.init(snapshot: snapshot).toAnyObject() as! NSDictionary
+                let date = Date()
+                self.ref.child("users/\(userID)/history/\(dictionary.value(forKey: "destinationName")!)\(date.description)/").setValue(dictionary)
+            }
+        })
+        
+        
+        sendRequestToFirebase()
+        
+        localDelegate.riderStatus = "request"
+        localDelegate.startTimer();
+        _ = self.navigationController?.popViewController(animated: true)
+        
+        for day in freqArray {
+            print(day)
+        }
+    }
+    
+    func displayCurrentDate(mode: UIDatePickerMode) {
+        let formatter = DateFormatter()
+        if (mode.rawValue == 2) {
+            let formatter = DateFormatter()
+            formatter.dateFormat = "MMM d, h:mm a"
+            let strDate = formatter.string(from: self.datePicker.date)
+            self.dateTextField.text = strDate
+        } else {
+            let date = Date()
+            formatter.dateFormat = "h:mm a"
+            let result = formatter.string(from: date)
+            self.dateTextField.text = result
+        }
+    }
 }
 
 extension RideRequestTableViewController: UIPickerViewDelegate, UIPickerViewDataSource {
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return self.pickerRows[row]
+        return self.pickerRows[component][row]
     }
     
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
@@ -397,7 +469,7 @@ extension RideRequestTableViewController: UIPickerViewDelegate, UIPickerViewData
     }
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return self.pickerRows.count
+        return self.pickerRows[component].count
     }
     
     func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
@@ -406,11 +478,41 @@ extension RideRequestTableViewController: UIPickerViewDelegate, UIPickerViewData
             label = UILabel()
         }
         
-        let data = self.pickerRows[row]
-        let title = NSAttributedString(string: data, attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 15.0, weight: UIFontWeightRegular)])
+        let data = self.pickerRows[component][row]
+        let title = NSAttributedString(string: data, attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 19.0, weight: UIFontWeightRegular)])
         label?.attributedText = title
         label?.textAlignment = .center
         return label!
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        
+        // If the row is the day and not "No":
+        if (row == 1) {
+            self.freqArray[component] = self.pickerComponents[component]
+        } else {
+            self.freqArray[component] = "No"
+        }
+        
+        print("Selected: \(self.freqArray[component])")
+        
+        /*
+        if (row == 0) {
+            self.freqArray[row] = "Monday"
+        } else if (row == 1) {
+            
+        } else if (row == 2) {
+            
+        } else if (row == 3) {
+            
+        } else if (row == 4) {
+            
+        } else if (row == 5) {
+            
+        } else {
+            
+        }
+        */
     }
 }
 
