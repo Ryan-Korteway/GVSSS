@@ -174,8 +174,6 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
     
     func displayOnlineMessage() -> Void {
         
-        print("isMessageDisplayed before: \(isMessageDisplayed)")
-        
         var animateDirection: CGFloat = -125
         var shadowOpacity: Float = 0.6
         if (!isMessageDisplayed) {
@@ -186,11 +184,9 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
             shadowOpacity = 1.0
         }
         
-        print("isMessageDisplayed after: \(isMessageDisplayed)")
-        print("Animate direction: \(animateDirection)\n")
-        
         UIView.animate(withDuration: 0.3, animations: {
             self.onlineMessageView.frame = CGRect(x: self.onlineMessageView.frame.origin.x, y: self.onlineMessageView.frame.origin.y + animateDirection, width: self.onlineMessageView.frame.width, height: self.onlineMessageView.frame.height)
+            
             
             self.view.layer.shadowOpacity = shadowOpacity
         }, completion: { (Bool) -> Void in

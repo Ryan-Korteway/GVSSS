@@ -17,22 +17,25 @@ class RideRequestTableViewController: UITableViewController, UISearchBarDelegate
     
     var placesClient: GMSPlacesClient!
     
-    let DATE_CELL_SECTION = 1
-    let FREQ_CELL_SECTION = 2
+    let DATE_CELL_SECTION = 2
+    let FREQ_CELL_SECTION = 3
     
     // Passed from previous (Ride) view controller:
     var visibleRegion: GMSVisibleRegion!
     var coordLocation: CLLocationCoordinate2D!
 
     @IBOutlet weak var searchView: UIView!
+    @IBOutlet weak var originSearchView: UIView!
+    
     var resultsViewController: GMSAutocompleteResultsViewController?
+    var originResultsViewController: GMSAutocompleteResultsViewController?
     var searchController: UISearchController?
-    var resultView: UITextView?
+    var originSearchController: UISearchController?
     
     let center = UNUserNotificationCenter.current()
 
     let selectedDateHeight: CGFloat = 180
-    let selectedFreqHeight: CGFloat = 200
+    let selectedFreqHeight: CGFloat = 150
     
     var isDateCellSelected = false
     var isFreqCellSelected = false
@@ -40,7 +43,6 @@ class RideRequestTableViewController: UITableViewController, UISearchBarDelegate
     @IBOutlet var datePicker: UIDatePicker!
     @IBOutlet var freqPicker: UIPickerView!
     @IBOutlet weak var freqSwitch: UISwitch!
-    @IBOutlet weak var notesTextView: UITextView!
     
     // This is an optional because a cell is selected or isn't (this is nil)
     var selectedCellIndexPath: IndexPath?
@@ -48,6 +50,7 @@ class RideRequestTableViewController: UITableViewController, UISearchBarDelegate
     @IBOutlet var dateCell: UITableViewCell!
     @IBOutlet weak var dateTextField: UITextField!
     @IBOutlet weak var offerTextField: UITextField!
+    @IBOutlet weak var originTextField: UITextField!
     
     var freqArray = ["No", "No", "No", "No", "No", "No", "No"]
     
@@ -63,7 +66,6 @@ class RideRequestTableViewController: UITableViewController, UISearchBarDelegate
         ["No", "Fri"],
         ["No", "Sat"],
         ["No", "Sun"]]
-        
     
     let ref = FIRDatabase.database().reference()
     let currentUser = FIRAuth.auth()!.currentUser
@@ -73,15 +75,14 @@ class RideRequestTableViewController: UITableViewController, UISearchBarDelegate
     var destLong : Double = 0.0
     var destName: NSString? = ""
     var freqNotes: String = ""
+    var didSelectOrigin = false
+    var originPlace: GMSPlace?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        self.notesTextView.text = "Give your driver some info about your origin location for this recurring trip."
-        self.notesTextView.layer.borderWidth = 0.5
-        self.notesTextView.layer.borderColor = UIColor.black.cgColor
-        self.notesTextView.alpha = 0
+
         self.displayCurrentDate(mode: self.datePicker.datePickerMode)
+        self.originTextField.placeholder = "Using Current Location"
 
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -101,10 +102,13 @@ class RideRequestTableViewController: UITableViewController, UISearchBarDelegate
         placesClient = GMSPlacesClient.shared()
         
         // Google Places
-        
         resultsViewController = GMSAutocompleteResultsViewController()
         resultsViewController?.delegate = self
         
+        originResultsViewController = GMSAutocompleteResultsViewController()
+        originResultsViewController?.delegate = self
+        
+        // Search View
         searchController = UISearchController(searchResultsController: resultsViewController)
         searchController?.searchBar.delegate = self
         searchController?.searchResultsUpdater = resultsViewController
@@ -112,6 +116,15 @@ class RideRequestTableViewController: UITableViewController, UISearchBarDelegate
         searchView.addSubview((searchController?.searchBar)!)
         searchController?.searchBar.sizeToFit()
         searchController?.hidesNavigationBarDuringPresentation = false
+        
+        // Origin Search View
+        originSearchController = UISearchController(searchResultsController: originResultsViewController)
+        originSearchController?.searchBar.delegate = self
+        originSearchController?.searchResultsUpdater = originResultsViewController
+        
+        originSearchView.addSubview((originSearchController?.searchBar)!)
+        originSearchController?.searchBar.sizeToFit()
+        originSearchController?.hidesNavigationBarDuringPresentation = false
         
         // When UISearchController presents the results view, present it in
         // this view controller, not one further up the chain.
@@ -121,6 +134,11 @@ class RideRequestTableViewController: UITableViewController, UISearchBarDelegate
 
         self.freqSwitch.setOn(false, animated: false)
         self.freqSwitch.addTarget(self, action: #selector(switchIsChanged(mySwitch:)), for: .valueChanged)
+        
+        // For dismissing keyboard when view tapped:
+        let tap = UITapGestureRecognizer(target: self.view, action: #selector(UIView.endEditing(_:)))
+        tap.cancelsTouchesInView = false
+        self.view.addGestureRecognizer(tap)
     }
     
     func switchIsChanged(mySwitch: UISwitch) {
@@ -138,22 +156,33 @@ class RideRequestTableViewController: UITableViewController, UISearchBarDelegate
             self.freqArray = ["No", "No", "No", "No", "No", "No", "No"]
         }
         
+        self.datePicker.minuteInterval = 5
         self.displayCurrentDate(mode: self.datePicker.datePickerMode)
         
     }
     
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        super.touchesBegan(touches, with: event);
+    func endEditing() {
         self.view.endEditing(true)
     }
     
     func sendRequestToFirebase() -> Void {
         
-        let currentLat = self.localDelegate.locationManager.location!.coordinate.latitude
-        let currentLong = self.localDelegate.locationManager.location!.coordinate.longitude
+        let currentLat: CLLocationDegrees?
+        let currentLong: CLLocationDegrees?
+        
+        // Get from places picker:
+        if (self.didSelectOrigin) {
+            currentLat = self.originPlace?.coordinate.latitude
+            currentLong = self.originPlace?.coordinate.longitude
+        } else {
+            currentLat = self.localDelegate.locationManager.location!.coordinate.latitude
+            currentLong = self.localDelegate.locationManager.location!.coordinate.longitude
+        }
         
         print("Current lat and long: \(currentLat) \(currentLong)")
         
+        
+        // TODO: Only use current place if user HAS NOT selected a place!
         // Get riders current place, in completion send to Firebase
         placesClient.currentPlace(callback: { (placeLikelihoodList, error) -> Void in
             if let error = error {
@@ -205,13 +234,13 @@ class RideRequestTableViewController: UITableViewController, UISearchBarDelegate
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 5
+        return 6
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
         if section == 0 {
-            return 2
+            return 1
         } else {
             return 1
         }
@@ -229,6 +258,10 @@ class RideRequestTableViewController: UITableViewController, UISearchBarDelegate
         
         if isFreqCellSelected && indexPath.section == FREQ_CELL_SECTION {
             return self.selectedFreqHeight
+        }
+        
+        if (indexPath.section == 0) {
+            return 75
         }
         return 50
     }
@@ -270,12 +303,10 @@ class RideRequestTableViewController: UITableViewController, UISearchBarDelegate
         if (isOn) {
             self.isFreqCellSelected = true
             self.freqPicker.alpha = 1
-            self.notesTextView.alpha = 1
             //tableView.scrollToRow(at: indexPath, at: .none, animated: true)
         } else {
             self.isFreqCellSelected = false
             self.freqPicker.alpha = 0
-            self.notesTextView.alpha = 0
         }
         
         tableView.beginUpdates()
@@ -367,11 +398,11 @@ class RideRequestTableViewController: UITableViewController, UISearchBarDelegate
                 }
                 
                 if let place = place {
-                    //self.namelabel.text = place.name
                     //self.addrlabel.text = place.formattedAddress?.components(separatedBy: ", ")
                     //.joined(separator: "\n")
-                    self.setFirebaseRequest(destination: place)
-                    self.searchController?.searchBar.placeholder = place.name
+                    self.originTextField.placeholder = "\(place.formattedAddress!)"
+                    self.didSelectOrigin = true
+                    self.originPlace = place
                     
                 } else {
                     //self.namelabel.text = "No place selected"
@@ -428,19 +459,7 @@ class RideRequestTableViewController: UITableViewController, UISearchBarDelegate
             return
         }
         
-        if (self.freqSwitch.isOn && self.notesTextView.text.isEmpty) {
-            let alert = UIAlertController(title: "Uh-oh!", message: "Please provide notes for a recurring ride.", preferredStyle: .alert)
-            
-            alert.addAction(UIAlertAction(title: "Dismiss", style: .default, handler: {
-                (action) in print("dismissed")}))
-            self.present(alert, animated: true, completion: nil)
-            return
-        }
-        
         let userID = FIRAuth.auth()!.currentUser!.uid
-        
-        // Populate necessary variables:
-        self.freqNotes = self.notesTextView.text!
         
         // make a history item here. destination name+time.
         ref.child("users/\(userID)/rider/offers/accepted/immediate/driver/").observeSingleEvent(of: .value, with: { snapshot in
@@ -473,7 +492,7 @@ class RideRequestTableViewController: UITableViewController, UISearchBarDelegate
         } else {
             let date = Date()
             formatter.dateFormat = "h:mm a"
-            let result = formatter.string(from: date)
+            let result = formatter.string(from: self.datePicker.date)
             self.dateTextField.text = result
         }
     }
@@ -521,14 +540,21 @@ extension RideRequestTableViewController: UIPickerViewDelegate, UIPickerViewData
 extension RideRequestTableViewController: GMSAutocompleteResultsViewControllerDelegate {
     func resultsController(_ resultsController: GMSAutocompleteResultsViewController,
                            didAutocompleteWith place: GMSPlace) {
-        searchController?.isActive = false
+        if (resultsController == self.resultsViewController) {
+            searchController?.isActive = false
+            searchController?.searchBar.placeholder = "\(place.name) \(place.formattedAddress!)"
+        } else {
+            // It's originResultsViewController
+            originSearchController?.isActive = false
+            originSearchController?.searchBar.placeholder = "\(place.name) \(place.formattedAddress!)"
+        }
+        
         // Do something with the selected place.
         print("Place name: \(place.name)")
         print("Place address: \(place.formattedAddress)")
         print("Place attributions: \(place.attributions)")
-        setFirebaseRequest(destination: place)
         
-        searchController?.searchBar.placeholder = "\(place.name) \(place.formattedAddress!)"
+        setFirebaseRequest(destination: place)
     }
     
     func resultsController(_ resultsController: GMSAutocompleteResultsViewController,

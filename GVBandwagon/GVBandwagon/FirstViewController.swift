@@ -22,6 +22,7 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
     @IBOutlet var rideNowButton: UIButton!
     @IBOutlet var superViewTapGesture: UITapGestureRecognizer!
     @IBOutlet var googleMapsView: GMSMapView!
+    @IBOutlet weak var submitMessageView: UIView!
     
     // initialize and keep a marker and a custom infowindow
     var tappedMarker = GMSMarker()
@@ -36,6 +37,7 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
     
     var ourLat = 0.0
     var ourLong = 0.0
+    var isMessageDisplayed = false
     
     let center = UNUserNotificationCenter.current()
     
@@ -438,6 +440,32 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
                 self.localDelegate.riderStatus = "request"
                 self.localDelegate.timer.invalidate()
             })
+    }
+    
+    @IBAction func onDismissTapped(_ sender: Any) {
+        self.displaySubmitMessage()
+    }
+    
+    func displaySubmitMessage() {
+        
+        var animateDirection: CGFloat = -125
+        var shadowOpacity: Float = 0.6
+        
+        if (!isMessageDisplayed) {
+            isMessageDisplayed = true
+        } else {
+            isMessageDisplayed = false
+            animateDirection = 125
+            shadowOpacity = 1.0
+        }
+        
+        UIView.animate(withDuration: 0.3, animations: {
+            self.submitMessageView.frame = CGRect(x: self.submitMessageView.frame.origin.x, y: self.submitMessageView.frame.origin.y + animateDirection, width: self.submitMessageView.frame.width, height: self.submitMessageView.frame.height)
+            
+            self.view.layer.shadowOpacity = shadowOpacity
+        }, completion: { (Bool) -> Void in
+            // Do nothing.
+        })
     }
     
 }

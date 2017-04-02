@@ -81,8 +81,23 @@ UINavigationControllerDelegate {
         }) { (error) in
             print(error.localizedDescription)
         }
+        
+        // For dismissing keyboard when view tapped:
+        let tap = UITapGestureRecognizer(target: self.view, action: #selector(UIView.endEditing(_:)))
+        tap.cancelsTouchesInView = false
+        self.view.addGestureRecognizer(tap)
     }
 
+    @IBAction func onProfilePicTapped(_ sender: Any) {
+        self.changingImage = "Profile"
+        self.openPhotoLibrary()
+    }
+    
+    @IBAction func onVehiclePicTapped(_ sender: Any) {
+        self.changingImage = "Vehicle"
+        self.openPhotoLibrary()
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -101,29 +116,29 @@ UINavigationControllerDelegate {
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if (indexPath.section == 0 || indexPath.section == 6 || indexPath.section == 7) {
+        if (indexPath.section == 0 || indexPath.section == 6) {
             return 150
+        } else if (indexPath.section == 7) {
+            return 100
         } else {
             return 44
         }
     }
 
+    /*
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if (indexPath.section == 0) {
-            
-            // Open the photo library
-            self.changingImage = "Profile"
-            self.openPhotoLibrary()
-            
-        } else if (indexPath.section == 7) {
-            self.changingImage = "Vehicle"
-            self.openPhotoLibrary()
-        }
+        
+    }
+    */
+    
+    func endEditing() {
+        self.view.endEditing(true)
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesBegan(touches, with: event);
-        self.view.endEditing(true)
+        //self.view.endEditing(true)
+        //self.tableView.endEditing(true)
     }
     
     /*
