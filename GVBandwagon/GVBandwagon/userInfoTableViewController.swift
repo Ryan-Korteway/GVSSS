@@ -214,14 +214,17 @@ UINavigationControllerDelegate {
         picker.dismiss(animated: true, completion: nil)
         
         var type: String
+        var selectedImage = UIImage()
         
         // If user is updating their proifle pic:
         if (self.changingImage == "Profile") {
             if let image = info[UIImagePickerControllerEditedImage] as? UIImage {
                 self.profilePicView.image = image
+                selectedImage = image
                 self.setMenuProfilePic(image: image)
             } else if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
                 self.profilePicView.image = image
+                selectedImage = image
             } else {
                 self.profilePicView.image = nil
             }
@@ -236,8 +239,10 @@ UINavigationControllerDelegate {
         } else {
             if let image = info[UIImagePickerControllerEditedImage] as? UIImage {
                 self.vehiclePhotoImageView.image = image
+                selectedImage = image
             } else if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
                 self.vehiclePhotoImageView.image = image
+                selectedImage = image
             } else {
                 self.vehiclePhotoImageView.image = nil
             }
@@ -248,11 +253,11 @@ UINavigationControllerDelegate {
             type = "Vehicle"
         }
         
-        self.updatePic(info: info, type: type)
+        self.updatePic(info: info, type: type, image: selectedImage)
         
     }
     
-    func updatePic(info: [String : Any], type: String) {
+    func updatePic(info: [String : Any], type: String, image: UIImage) {
         
         let storage = FIRStorage.storage()
         let storageRef = storage.reference()
@@ -262,9 +267,8 @@ UINavigationControllerDelegate {
         let documentDirectory = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first!
         let photoURL          = NSURL(fileURLWithPath: documentDirectory)
         let localPath         = photoURL.appendingPathComponent(imageName!)
-        let image             = info[UIImagePickerControllerOriginalImage]as! UIImage
+        //let image             = info[UIImagePickerControllerOriginalImage]as! UIImage
         let data              = UIImageJPEGRepresentation(image, 0.0)
-        
         
         var imageRef: FIRStorageReference
         

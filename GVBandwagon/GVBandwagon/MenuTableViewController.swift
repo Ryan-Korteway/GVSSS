@@ -219,7 +219,9 @@ class MenuTableViewController: UITableViewController {
             // Get user value
             let value = snapshot.value as? NSDictionary
             let name = value?["name"] as? String ?? ""
-            self.firstNameLabel.text = name
+            let names = name.components(separatedBy: " ")
+            let fname = names[0]
+            self.firstNameLabel.text = fname
             
             // ...
         }) { (error) in

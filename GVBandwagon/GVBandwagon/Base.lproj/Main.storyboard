@@ -175,11 +175,11 @@
                                                     </constraints>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="First Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DMx-BF-rWe">
-                                                    <rect key="frame" x="130" y="12" width="104" height="20"/>
+                                                    <rect key="frame" x="115" y="12" width="113.5" height="20"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="20" id="pFg-OM-e00"/>
                                                     </constraints>
-                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
+                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="22"/>
                                                     <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
                                                     <color key="shadowColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
@@ -187,7 +187,7 @@
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="DMx-BF-rWe" firstAttribute="centerY" secondItem="way-JJ-tV9" secondAttribute="centerY" id="B22-gR-hKS"/>
-                                                <constraint firstItem="DMx-BF-rWe" firstAttribute="leading" secondItem="ru3-th-MUL" secondAttribute="trailing" constant="30" id="dDL-VZ-8bA"/>
+                                                <constraint firstItem="DMx-BF-rWe" firstAttribute="leading" secondItem="ru3-th-MUL" secondAttribute="trailing" constant="15" id="dDL-VZ-8bA"/>
                                                 <constraint firstItem="ru3-th-MUL" firstAttribute="leading" secondItem="way-JJ-tV9" secondAttribute="leading" constant="20" symbolic="YES" id="gn0-bn-08Z"/>
                                                 <constraint firstItem="ru3-th-MUL" firstAttribute="centerY" secondItem="way-JJ-tV9" secondAttribute="centerY" id="xt4-JV-4JF"/>
                                             </constraints>
