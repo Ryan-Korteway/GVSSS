@@ -44,6 +44,8 @@ UINavigationControllerDelegate {
         if let image = self.vehicleImage {
             self.vehiclePhotoImageView.image = image
         }
+        
+        self.configureImages()
 
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -100,7 +102,7 @@ UINavigationControllerDelegate {
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if (indexPath.section == 0 || indexPath.section == 6 || indexPath.section == 7) {
-            return 100
+            return 150
         } else {
             return 44
         }
@@ -215,10 +217,10 @@ UINavigationControllerDelegate {
         
         // If user is updating their proifle pic:
         if (self.changingImage == "Profile") {
-            if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
+            if let image = info[UIImagePickerControllerEditedImage] as? UIImage {
                 self.profilePicView.image = image
                 self.setMenuProfilePic(image: image)
-            } else if let image = info[UIImagePickerControllerEditedImage] as? UIImage {
+            } else if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
                 self.profilePicView.image = image
             } else {
                 self.profilePicView.image = nil
@@ -232,9 +234,9 @@ UINavigationControllerDelegate {
             
         // If user is updating their vehicle pic:
         } else {
-            if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
+            if let image = info[UIImagePickerControllerEditedImage] as? UIImage {
                 self.vehiclePhotoImageView.image = image
-            } else if let image = info[UIImagePickerControllerEditedImage] as? UIImage {
+            } else if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
                 self.vehiclePhotoImageView.image = image
             } else {
                 self.vehiclePhotoImageView.image = nil
@@ -296,6 +298,21 @@ UINavigationControllerDelegate {
     @IBAction func onDoneTapped(_ sender: Any) {
         //dismiss(animated: true, completion: nil)
         self.navigationController?.dismiss(animated: true, completion: nil)
+    }
+    
+    func configureImages() {
+        self.profilePicView.layer.borderWidth = 3.0
+        self.profilePicView.layer.masksToBounds = false
+        self.profilePicView.layer.borderColor = UIColor.white.cgColor
+        self.profilePicView.layer.cornerRadius = self.profilePicView.frame.height/2
+        self.profilePicView.clipsToBounds = true
+        
+        
+        self.vehiclePhotoImageView.layer.borderWidth = 3.0
+        self.vehiclePhotoImageView.layer.masksToBounds = false
+        self.vehiclePhotoImageView.layer.borderColor = UIColor.white.cgColor
+        self.vehiclePhotoImageView.layer.cornerRadius = 5
+        self.vehiclePhotoImageView.clipsToBounds = true
     }
     
 }

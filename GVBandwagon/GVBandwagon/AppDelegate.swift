@@ -391,9 +391,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             
             try firebaseAuth!.signOut()
             print("Successfully signed out user.")
+            
+            
             //performSegue(withIdentifier: "signOutSegue", sender: self)
-            let signInVC = viewControllerForStoryboardId(storyboardId: signInViewControllerStoryboardId)
-            window?.rootViewController = signInVC //i think its this transfer back that is preventing our signing out and back in...
+            //let signInVC = viewControllerForStoryboardId(storyboardId: signInViewControllerStoryboardId)
+            
+            //window?.rootViewController = signInVC //i think its this transfer back that is preventing our signing out and back in...
         } catch let signOutError as NSError {
             print ("Error signing out: %@", signOutError)
         }
@@ -401,6 +404,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func initiateDrawer() {
         window?.rootViewController = drawerViewController
+        window?.makeKeyAndVisible()
     }
     
     //RYAN'S ADDITIONS TO APP DELEGATE TO GET READY FOR THE LISTS OF REQUESTS AND OFFERS AND THE
