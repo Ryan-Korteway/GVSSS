@@ -18,6 +18,8 @@ class DriverPanelViewController: UIViewController {
     @IBOutlet var activeTripLabel: UILabel!
     @IBOutlet var activeTripView: UIView!
     @IBOutlet var scheduledRidesContainerView: UIView!
+    @IBOutlet var yourRatingLabel: UILabel!
+    @IBOutlet var contentsView: UIView!
     
     @IBOutlet var ratingImageView: UIImageView!
     var totalTrips = 0

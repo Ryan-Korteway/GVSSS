@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0B0B66E51E91869D00B686C7 /* HelpPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B0B66E41E91869D00B686C7 /* HelpPageViewController.swift */; };
 		0B197CE11E32815200392B40 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B197CE01E32815200392B40 /* AppDelegate.swift */; };
 		0B197CE31E32815200392B40 /* FirstViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B197CE21E32815200392B40 /* FirstViewController.swift */; };
 		0B197CE81E32815200392B40 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0B197CE61E32815200392B40 /* Main.storyboard */; };
@@ -68,6 +69,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0B0B66E41E91869D00B686C7 /* HelpPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HelpPageViewController.swift; sourceTree = "<group>"; };
 		0B197CDD1E32815200392B40 /* GVBandwagon.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GVBandwagon.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0B197CE01E32815200392B40 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0B197CE21E32815200392B40 /* FirstViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstViewController.swift; sourceTree = "<group>"; };
@@ -172,6 +174,7 @@
 		0B197CDF1E32815200392B40 /* GVBandwagon */ = {
 			isa = PBXGroup;
 			children = (
+				0B0B66E41E91869D00B686C7 /* HelpPageViewController.swift */,
 				0B9830491E909A9C000EEFE4 /* VehicleDataTableViewController.swift */,
 				0B66273C1E8C0CC8004BACEB /* ScheduledRidesTableViewController.swift */,
 				0B5846D01E8F01920020BDBB /* RideRequestTableViewController.swift */,
@@ -549,6 +552,7 @@
 			files = (
 				852AD80C1E707B4F00155C24 /* GVBNotificationDelegate.swift in Sources */,
 				0B3DE4FC1E3BB57C00733810 /* SignInViewController.swift in Sources */,
+				0B0B66E51E91869D00B686C7 /* HelpPageViewController.swift in Sources */,
 				0BF1B4FA1E79C92F0062739B /* RequestRideViewController.swift in Sources */,
 				852AD80A1E707B1A00155C24 /* cellFile.swift in Sources */,
 				0B944AAD1E6BB0D800A856DE /* FutureRidesTableViewController.swift in Sources */,

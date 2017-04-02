@@ -175,20 +175,16 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
     func displayOnlineMessage() -> Void {
         
         var animateDirection: CGFloat = -125
-        var shadowOpacity: Float = 0.6
         if (!isMessageDisplayed) {
             isMessageDisplayed = true
         } else {
             isMessageDisplayed = false
             animateDirection = 125
-            shadowOpacity = 1.0
         }
         
         UIView.animate(withDuration: 0.3, animations: {
             self.onlineMessageView.frame = CGRect(x: self.onlineMessageView.frame.origin.x, y: self.onlineMessageView.frame.origin.y + animateDirection, width: self.onlineMessageView.frame.width, height: self.onlineMessageView.frame.height)
             
-            
-            self.view.layer.shadowOpacity = shadowOpacity
         }, completion: { (Bool) -> Void in
             // Do nothing.
         })
@@ -205,6 +201,12 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
             panelVC.goOnlineSwitch.isHidden = false
             panelVC.viewReload()
             panelVC.getRating()
+            
+            // Reposition contents to revel space where "Go Online" switch is:
+            // Notice the hard-coded 220:
+            
+            //panelVC.contentsView.frame = panelVC.contentsView.frame.offsetBy(dx: 0, dy: -60)
+            panelVC.contentsView.frame = CGRect(x: panelVC.contentsView.frame.origin.x, y: 220, width: panelVC.contentsView.frame.width, height: panelVC.contentsView.frame.height)
         }
     }
     
