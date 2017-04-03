@@ -27,6 +27,7 @@ class MenuTableViewController: UITableViewController {
         
         // Gets the user's name, profile image, AND vehicle image:
         self.getProfilePicFromFB()
+        self.configureImages()
         
         /*
         appDelegate = UIApplication.shared.delegate as! AppDelegate
@@ -121,6 +122,7 @@ class MenuTableViewController: UITableViewController {
         } else if (indexPath.section == 5) {
             //sign out
             appDelegate.firebaseSignOut()
+            appDelegate.toggleLeftDrawer(sender: self, animated: true)
         }
     }
     
@@ -217,11 +219,21 @@ class MenuTableViewController: UITableViewController {
             // Get user value
             let value = snapshot.value as? NSDictionary
             let name = value?["name"] as? String ?? ""
-            self.firstNameLabel.text = name
+            let names = name.components(separatedBy: " ")
+            let fname = names[0]
+            self.firstNameLabel.text = fname
             
             // ...
         }) { (error) in
             print(error.localizedDescription)
         }
+    }
+    
+    func configureImages() {
+        self.profilePicImageView.layer.borderWidth = 2.0
+        self.profilePicImageView.layer.masksToBounds = false
+        self.profilePicImageView.layer.borderColor = UIColor.white.cgColor
+        self.profilePicImageView.layer.cornerRadius = self.profilePicImageView.frame.height/2
+        self.profilePicImageView.clipsToBounds = true
     }
 }

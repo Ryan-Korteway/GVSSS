@@ -20,6 +20,7 @@ class SignInViewController: UIViewController, GIDSignInDelegate, GIDSignInUIDele
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         print("\nSIGNIN viewDidLoad called.\n")
         self.googleSignInButton.isEnabled = true
         
@@ -162,15 +163,19 @@ class SignInViewController: UIViewController, GIDSignInDelegate, GIDSignInUIDele
             // Load up the drawer from AppDelegate:
 //            let appDelegate = UIApplication.shared.delegate as! AppDelegate // could it be this redeclaration be the issue?
             self.appDelegate.initiateDrawer()
-            self.appDelegate.setUpOpenObservers();
+            self.appDelegate.setUpOpenObservers()
+            
+            self.dismiss(animated: true, completion: nil)
             
             //self.performSegue(withIdentifier: "signInApproved", sender: self)
             
-            /* if(ref.child("users").child("\(userID)").) {
+            /*
+            if(ref.child("users").child("\(userID)").) {
                 self.performSegue(withIdentifier: "signInApproved", sender: self)
             } else {
                 self.performSegue(withIdentifier: "needsToRegister", sender: self)
-            } */
+            }
+            */
             
         }) { (error) in //hopefully them not being found in userstate will return an error that can then be used to allow the person to register.
             print("directUser ERROR: \(error.localizedDescription)")

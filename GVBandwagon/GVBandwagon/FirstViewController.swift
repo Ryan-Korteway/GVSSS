@@ -22,6 +22,7 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
     @IBOutlet var rideNowButton: UIButton!
     @IBOutlet var superViewTapGesture: UITapGestureRecognizer!
     @IBOutlet var googleMapsView: GMSMapView!
+    @IBOutlet weak var submitMessageView: UIView!
     
     // initialize and keep a marker and a custom infowindow
     var tappedMarker = GMSMarker()
@@ -36,6 +37,7 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
     
     var ourLat = 0.0
     var ourLong = 0.0
+    var isMessageDisplayed = false
     
     let center = UNUserNotificationCenter.current()
     
@@ -142,6 +144,11 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
             panelVC.goOnlineLabel.isHidden = true
             panelVC.viewReload()
             panelVC.getRating()
+            
+            // Reposition contents to fill space where "Go Online" button would be.
+            // Note the hard-coded 220-60 (220 original y position):
+            
+            panelVC.contentsView.frame = CGRect(x: panelVC.contentsView.frame.origin.x, y: 220-60, width: panelVC.contentsView.frame.width, height: panelVC.contentsView.frame.height)
         }
     }
     
@@ -241,7 +248,7 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
                 
             }
         } else if segue.identifier == "toRequestRideSegue" {
-            if let nextVC = segue.destination as? RequestRideViewController {
+            if let nextVC = segue.destination as? RideRequestTableViewController {
                 nextVC.visibleRegion = self.googleMapsView.projection.visibleRegion()
                 nextVC.coordLocation = self.locationManager.location?.coordinate
             }
@@ -438,6 +445,29 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
                 self.localDelegate.riderStatus = "request"
                 self.localDelegate.timer.invalidate()
             })
+    }
+    
+    @IBAction func onDismissTapped(_ sender: Any) {
+        self.displaySubmitMessage()
+    }
+    
+    func displaySubmitMessage() {
+        
+        var animateDirection: CGFloat = -125
+        
+        if (!isMessageDisplayed) {
+            isMessageDisplayed = true
+        } else {
+            isMessageDisplayed = false
+            animateDirection = 125
+        }
+        
+        UIView.animate(withDuration: 0.3, animations: {
+            self.submitMessageView.frame = CGRect(x: self.submitMessageView.frame.origin.x, y: self.submitMessageView.frame.origin.y + animateDirection, width: self.submitMessageView.frame.width, height: self.submitMessageView.frame.height)
+
+        }, completion: { (Bool) -> Void in
+            // Do nothing.
+        })
     }
     
 }

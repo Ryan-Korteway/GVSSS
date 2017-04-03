@@ -274,11 +274,6 @@ class RequestRideViewController: UIViewController, UISearchBarDelegate {
         return addr
     }
     
-//    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-//        view.endEditing(true)
-//        super.touchesMoved(touches, with: event)
-//    }
-//    
     /*
     // MARK: - Navigation
 

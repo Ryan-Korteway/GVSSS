@@ -9,16 +9,20 @@
 import UIKit
 import Firebase
 import GooglePlaces
+import FirebaseStorage
 
 class RideSummaryTableViewController: UITableViewController {
     
-    let COMPLETE_RIDE = 0
+    let storage = FIRStorage.storage()
+    
+    let PROFILE_IMAGE = 0
     let USER = 1
     let ORIGIN = 2
     let DESTINATION = 3
     let RATE = 4
     let RATE_USER = 5
-    let BUTTONS = 6
+    let COMPLETE_RIDE = 6
+    let BUTTONS = 7
 
     @IBOutlet var nameLabel: UILabel!
     @IBOutlet var phoneLabel: UILabel!
@@ -29,7 +33,12 @@ class RideSummaryTableViewController: UITableViewController {
     @IBOutlet var paymentButton: UIButton!
     @IBOutlet var cancelRideButton: UIButton!
     @IBOutlet var completeRideButton: UIButton!
-
+    @IBOutlet weak var profileImageView: UIImageView!
+    @IBOutlet weak var vehicleDataLabel: UILabel!
+    @IBOutlet weak var rateUserLabel: UILabel!
+    
+    var vehicleImage: UIImage?
+    
     var paymentText = "Request Payment"
     var informationDictionary: NSDictionary = [:]
     
@@ -56,6 +65,12 @@ class RideSummaryTableViewController: UITableViewController {
         
         self.paymentButton.setTitle(paymentText, for: .normal)
         self.configureButtons()
+        self.configureProfileImage()
+        
+        if (self.paymentText == "Request Payment") {
+            self.vehicleDataLabel.alpha = 0
+            self.rateUserLabel.text = "Rate Your Rider!"
+        }
         
         // If this is a summary for the driver:
         // name and rating are of Rider
@@ -68,7 +83,7 @@ class RideSummaryTableViewController: UITableViewController {
         // Need to pull and fill all information from firebase. Use self.paymentText for check if here from Ride or Drive.
         // We can use UID of driver/rider in the users profile to pull the appropriate information for this view controller.
         
-        
+        // TODO: pull drivers make/model/color and pass to next VC in prepareForSegue
         
         if(informationDictionary.count > 0 ) {
         
@@ -140,12 +155,20 @@ class RideSummaryTableViewController: UITableViewController {
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 5
     }
+    */
 
+    /*
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if (section == 4) {
-            return 1
-        } else {
+        if (section == 1) {
+            if (self.paymentText == "Request Payment") {
+                return 3
+            } else {
+                return 4
+            }
+        } else if (section == 6) {
             return 2
+        } else {
+            return 1
         }
     }
     */
@@ -246,7 +269,6 @@ class RideSummaryTableViewController: UITableViewController {
                 self.localDelegate.offeredID = "none"
                 self.localDelegate.timer.invalidate()
             }
-            
         }
     }
     
@@ -318,4 +340,63 @@ class RideSummaryTableViewController: UITableViewController {
             self.completeRideButton.setTitleColor(UIColor.white, for: .normal)
         }
     }
+    
+    func configureProfileImage() {
+        self.profileImageView.layer.borderWidth = 3.0
+        self.profileImageView.image = #imageLiteral(resourceName: "defaultUserPhoto")
+        
+        profileImageView.layer.masksToBounds = false
+        profileImageView.layer.borderColor = UIColor.white.cgColor
+        profileImageView.layer.cornerRadius = profileImageView.frame.height/2
+        profileImageView.clipsToBounds = true
+        
+        // Get image from FB if it exists:
+    }
+    
+    func getProfilePicFromFB() {
+        
+        // Will get driver or riders UID and store here depending who's watching this VC:
+        var userID: String?
+        
+        // TODO: Right way to get UIDs? What happens if there's no vehicle photo at this FB location? (For riders).
+        
+        // riders side so pull drivers photos
+        self.ref.child("users/\(informationDictionary.value(forKey: "uid")!)/driver/uid").observeSingleEvent(of: .value, with: { snapshot in
+            //self.ratingLabel.text = "\((snapshot.value! as? NSInteger)!)"
+            userID = snapshot.value as? String
+        })
+        
+        // Image references
+        let storageRef = storage.reference()
+        
+        // Create a reference to 'images/profilepic.jpg'
+        let profileImageRef = storageRef.child("images/\(userID)/profilepic.jpg")
+        let vehicleImageRef = storageRef.child("images/\(userID)/vehiclepic.jpg")
+        
+        // Download in memory with a maximum allowed size of 1MB (1 * 1024 * 1024 bytes)
+        profileImageRef.data(withMaxSize: 1 * 1024 * 1024) { data, error in
+            if let error = error {
+                print("Error occurred: \(error.localizedDescription)")
+            } else {
+                // Data for "images/profilepic.jpg" is returned
+                let image = UIImage(data: data!)
+                self.profileImageView.image = image
+                
+            }
+        }
+        
+        vehicleImageRef.data(withMaxSize: 1 * 1024 * 1024) { data, error in
+            if let error = error {
+                print("Error occurred: \(error.localizedDescription)")
+            } else {
+                let image = UIImage(data: data!)
+                self.vehicleImage = image
+            }
+        }
+    }
+    
+    @IBAction func onVehicleDataTapped(_ sender: Any) {
+        self.performSegue(withIdentifier: "toVehicleDataSegue", sender: self)
+    }
+    
 }

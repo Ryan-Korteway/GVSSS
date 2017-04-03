@@ -44,6 +44,8 @@ UINavigationControllerDelegate {
         if let image = self.vehicleImage {
             self.vehiclePhotoImageView.image = image
         }
+        
+        self.configureImages()
 
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -79,8 +81,23 @@ UINavigationControllerDelegate {
         }) { (error) in
             print(error.localizedDescription)
         }
+        
+        // For dismissing keyboard when view tapped:
+        let tap = UITapGestureRecognizer(target: self.view, action: #selector(UIView.endEditing(_:)))
+        tap.cancelsTouchesInView = false
+        self.view.addGestureRecognizer(tap)
     }
 
+    @IBAction func onProfilePicTapped(_ sender: Any) {
+        self.changingImage = "Profile"
+        self.openPhotoLibrary()
+    }
+    
+    @IBAction func onVehiclePicTapped(_ sender: Any) {
+        self.changingImage = "Vehicle"
+        self.openPhotoLibrary()
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -99,29 +116,29 @@ UINavigationControllerDelegate {
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if (indexPath.section == 0 || indexPath.section == 6 || indexPath.section == 7) {
+        if (indexPath.section == 0 || indexPath.section == 6) {
+            return 150
+        } else if (indexPath.section == 7) {
             return 100
         } else {
             return 44
         }
     }
 
+    /*
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if (indexPath.section == 0) {
-            
-            // Open the photo library
-            self.changingImage = "Profile"
-            self.openPhotoLibrary()
-            
-        } else if (indexPath.section == 7) {
-            self.changingImage = "Vehicle"
-            self.openPhotoLibrary()
-        }
+        
+    }
+    */
+    
+    func endEditing() {
+        self.view.endEditing(true)
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesBegan(touches, with: event);
-        self.view.endEditing(true)
+        //self.view.endEditing(true)
+        //self.tableView.endEditing(true)
     }
     
     /*
@@ -212,14 +229,17 @@ UINavigationControllerDelegate {
         picker.dismiss(animated: true, completion: nil)
         
         var type: String
+        var selectedImage = UIImage()
         
         // If user is updating their proifle pic:
         if (self.changingImage == "Profile") {
-            if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
+            if let image = info[UIImagePickerControllerEditedImage] as? UIImage {
                 self.profilePicView.image = image
+                selectedImage = image
                 self.setMenuProfilePic(image: image)
-            } else if let image = info[UIImagePickerControllerEditedImage] as? UIImage {
+            } else if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
                 self.profilePicView.image = image
+                selectedImage = image
             } else {
                 self.profilePicView.image = nil
             }
@@ -232,10 +252,12 @@ UINavigationControllerDelegate {
             
         // If user is updating their vehicle pic:
         } else {
-            if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
+            if let image = info[UIImagePickerControllerEditedImage] as? UIImage {
                 self.vehiclePhotoImageView.image = image
-            } else if let image = info[UIImagePickerControllerEditedImage] as? UIImage {
+                selectedImage = image
+            } else if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
                 self.vehiclePhotoImageView.image = image
+                selectedImage = image
             } else {
                 self.vehiclePhotoImageView.image = nil
             }
@@ -246,11 +268,11 @@ UINavigationControllerDelegate {
             type = "Vehicle"
         }
         
-        self.updatePic(info: info, type: type)
+        self.updatePic(info: info, type: type, image: selectedImage)
         
     }
     
-    func updatePic(info: [String : Any], type: String) {
+    func updatePic(info: [String : Any], type: String, image: UIImage) {
         
         let storage = FIRStorage.storage()
         let storageRef = storage.reference()
@@ -260,9 +282,8 @@ UINavigationControllerDelegate {
         let documentDirectory = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first!
         let photoURL          = NSURL(fileURLWithPath: documentDirectory)
         let localPath         = photoURL.appendingPathComponent(imageName!)
-        let image             = info[UIImagePickerControllerOriginalImage]as! UIImage
+        //let image             = info[UIImagePickerControllerOriginalImage]as! UIImage
         let data              = UIImageJPEGRepresentation(image, 0.0)
-        
         
         var imageRef: FIRStorageReference
         
@@ -296,6 +317,21 @@ UINavigationControllerDelegate {
     @IBAction func onDoneTapped(_ sender: Any) {
         //dismiss(animated: true, completion: nil)
         self.navigationController?.dismiss(animated: true, completion: nil)
+    }
+    
+    func configureImages() {
+        self.profilePicView.layer.borderWidth = 3.0
+        self.profilePicView.layer.masksToBounds = false
+        self.profilePicView.layer.borderColor = UIColor.white.cgColor
+        self.profilePicView.layer.cornerRadius = self.profilePicView.frame.height/2
+        self.profilePicView.clipsToBounds = true
+        
+        
+        self.vehiclePhotoImageView.layer.borderWidth = 3.0
+        self.vehiclePhotoImageView.layer.masksToBounds = false
+        self.vehiclePhotoImageView.layer.borderColor = UIColor.white.cgColor
+        self.vehiclePhotoImageView.layer.cornerRadius = 5
+        self.vehiclePhotoImageView.clipsToBounds = true
     }
     
 }
