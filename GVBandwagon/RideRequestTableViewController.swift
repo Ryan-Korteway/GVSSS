@@ -463,7 +463,9 @@ class RideRequestTableViewController: UITableViewController, UISearchBarDelegate
         
         // make a history item here. destination name+time.
         ref.child("users/\(userID)/rider/offers/accepted/immediate/driver/").observeSingleEvent(of: .value, with: { snapshot in
-            if(snapshot.value != nil) {
+            if(snapshot.value! is NSNull) {
+                print("no history to save")
+            } else {
                 let dictionary = cellItem.init(snapshot: snapshot).toAnyObject() as! NSDictionary
                 let date = Date()
                 self.ref.child("users/\(userID)/history/\(dictionary.value(forKey: "destinationName")!)\(date.description)/").setValue(dictionary)

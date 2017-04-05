@@ -525,7 +525,15 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
                           "address": ourAddress ] as [String : Any]
         
         ref.observeSingleEvent(of: .value, with: { snapshot in
-            if(snapshot.value != nil) { //i think the origin base dictionary usage here is the cause of the pins starting in the wrong placees. try experimenting with just putting in our own lats and longs later.
+            if(snapshot.value! is NSNull) {
+                print("null offer, no saves")
+                
+                let alert = UIAlertController(title: "Apologies", message: "But this rider is no longer looking for offers.", preferredStyle: .alert)
+                
+                alert.addAction(UIAlertAction(title: "Dismiss", style: .default, handler: {
+                    (action) in print("No offer")}))
+
+            } else { 
                 ref.child("\(user.uid)").setValue(
                     ["name": user.displayName!,
                      "uid": user.uid,
@@ -546,13 +554,6 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
             
             //make the pin with only the riders info.
             //make tracker observers etc from only the baseDictionaries uid etc?...
-            } else {
-                //make an alert saying no offer there?
-                
-                let alert = UIAlertController(title: "Apologies", message: "But this rider is no longer looking for offers.", preferredStyle: .alert)
-                
-                alert.addAction(UIAlertAction(title: "Dismiss", style: .default, handler: {
-                    (action) in print("No offer")}))
             }
         })
         
