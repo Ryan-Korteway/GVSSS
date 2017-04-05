@@ -516,6 +516,7 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
         
         print("Accept Tapped but it is really an offer.")
         
+        let checkRef = FIRDatabase.database().reference().child("requests/immediate/\(baseDictionary.value(forKey: "uid")!)/")
         let ref = FIRDatabase.database().reference().child("users/\(baseDictionary.value(forKey: "uid")!)/rider/offers/immediate/")
         
         let user = FIRAuth.auth()!.currentUser!
@@ -524,7 +525,7 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
                           "long": self.localDelegate.ourlong,
                           "address": ourAddress ] as [String : Any]
         
-        ref.observeSingleEvent(of: .value, with: { snapshot in
+        checkRef.observeSingleEvent(of: .value, with: { snapshot in
             if(snapshot.value! is NSNull) {
                 print("null offer, no saves")
                 
