@@ -207,6 +207,12 @@ class RequestRideViewController: UIViewController, UISearchBarDelegate {
         localDelegate.startTimer();
         _ = self.navigationController?.popViewController(animated: true)
         
+        if let drawerVC = localDelegate.drawerViewController as? CustomKGDrawerViewController {
+            if let rideVC = drawerVC.centerViewController as? FirstViewController {
+                rideVC.displaySubmitMessage()
+            }
+        }
+        
         for day in freqArray {
             print(day)
         }
