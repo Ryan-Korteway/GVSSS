@@ -50,7 +50,7 @@ struct cellItem {
     let rate: NSNumber
     var accepted: NSInteger
     var repeats: NSString
-    var duration: NSString
+    var date: NSString
     
     init(snapshot: FIRDataSnapshot) {
         uid = snapshot.key
@@ -63,7 +63,7 @@ struct cellItem {
         destinationName = snapshotValue["destinationName"] as! NSString
         accepted = snapshotValue["accepted"] as! NSInteger //if its set to 0, its false/no ride acceptance, else it is 1 and ride accepted.
         repeats = snapshotValue["repeats"] as! NSString
-        duration = snapshotValue["duration"] as! NSString
+        date = snapshotValue["date"] as! NSString
     }
     
     init(start: NSDictionary) {
@@ -76,7 +76,7 @@ struct cellItem {
         accepted = start.value(forKey: "accepted") as! NSInteger //if its set to 0, its false/no ride acceptance, else it is 1 and ride accepted.
         destinationName = start.value(forKey: "destinationName") as! NSString
         repeats = start.value(forKey: "repeats") as! NSString
-        duration = start.value(forKey: "duration") as! NSString
+        date = start.value(forKey: "date") as! NSString
     }
     
     // removed duplicate key: "rate": rate,
@@ -91,7 +91,7 @@ struct cellItem {
             "destinationName": destinationName,
             "accepted" : accepted,
             "repeats": repeats,
-            "duration": duration
+            "date": date
         ]
     }
     

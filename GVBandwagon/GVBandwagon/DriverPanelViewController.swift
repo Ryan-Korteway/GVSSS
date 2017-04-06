@@ -81,7 +81,7 @@ class DriverPanelViewController: UIViewController {
             ref.child("/activedrivers/\(ourid)").setValue(["name": FIRAuth.auth()!.currentUser!.displayName! as NSString,
                                                            "uid": ourid, "venmoID": localDelegate.getVenmoID(), "origin": ["lat": ourlat, "long": ourlong],
                                                         "destination": ["latitude": "none", "longitude": "none"],
-                                                           "rate" : 0, "accepted": 0, "repeats": "none", "duration": "none"]) //need protections of if destination is none, dont make a pin.
+                                                           "rate" : 0, "accepted": 0, "repeats": "none", "date": "none"]) //need protections of if destination is none, dont make a pin.
         
             localDelegate.changeMode(mode: "driver")
             localDelegate.changeDriverStatus(status: "request")

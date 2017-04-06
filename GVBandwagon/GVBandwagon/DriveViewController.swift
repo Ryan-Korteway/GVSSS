@@ -550,7 +550,7 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
                      "rate": self.baseDictionary.value(forKey: "rate"),
                      "accepted" : 0,
                      "repeats": self.baseDictionary.value(forKey: "repeats"),
-                     "duration": self.baseDictionary.value(forKey: "duration"),
+                     "date": self.baseDictionary.value(forKey: "date"),
                      "destinationName": self.baseDictionary.value(forKey: "destinationName")
                     ]) //value set needs to be all of our info for the snapshot.
             

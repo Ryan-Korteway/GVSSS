@@ -246,8 +246,8 @@ class RequestRideViewController: UIViewController, UISearchBarDelegate {
 
                     let rateValue = NSNumber.init(value: Float(self.offerTextField.text!)!)
                     
-                    self.ref.child("requests/immediate/\(self.currentUser!.uid)/").setValue(["name": self.currentUser!.displayName!, "uid": self.currentUser!.uid, "venmoID": "none", "origin": ["lat": currentLat, "long": currentLong, "address": addr], "destination": ["latitude": self.destLat, "longitude" : self.destLong], "destinationName": self.destName!, "rate" : rateValue, "accepted": 0, "repeats": repeatsValue, "duration": "none"])
-                                                                                                        //TODO DYNAMIC DURATION!!!
+                    self.ref.child("requests/immediate/\(self.currentUser!.uid)/").setValue(["name": self.currentUser!.displayName!, "uid": self.currentUser!.uid, "venmoID": "none", "origin": ["lat": currentLat, "long": currentLong, "address": addr], "destination": ["latitude": self.destLat, "longitude" : self.destLong], "destinationName": self.destName!, "rate" : rateValue, "accepted": 0, "repeats": repeatsValue, "date": "date"])
+                                                                                                        //TODO DYNAMIC DATE!!!
                 }
             }
         })

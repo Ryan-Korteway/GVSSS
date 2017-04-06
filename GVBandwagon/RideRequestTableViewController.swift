@@ -181,9 +181,6 @@ class RideRequestTableViewController: UITableViewController, UISearchBarDelegate
         
         print("Current lat and long: \(currentLat) \(currentLong)")
         
-        
-        // TODO: Only use current place if user HAS NOT selected a place!
-        // Get riders current place, in completion send to Firebase
         placesClient.currentPlace(callback: { (placeLikelihoodList, error) -> Void in
             if let error = error {
                 print("Pick Place error: \(error.localizedDescription)")
@@ -196,7 +193,7 @@ class RideRequestTableViewController: UITableViewController, UISearchBarDelegate
                     print("address: \(address)")
                     let addr = address as NSString
                     
-                    self.ref.child("requests/immediate/\(self.currentUser!.uid)/").setValue(["name": self.currentUser!.displayName!, "uid": self.currentUser!.uid, "venmoID": "none", "origin": ["lat": currentLat, "long": currentLong, "address": addr], "destination": ["latitude": self.destLat, "longitude" : self.destLong], "destinationName": self.destName!, "rate" : (NSInteger.init(self.offerTextField.text!)) ?? 5, "accepted": 0, "repeats": self.freqArray.description, "duration": "none"]) //locations being sent here.
+                    self.ref.child("requests/immediate/\(self.currentUser!.uid)/").setValue(["name": self.currentUser!.displayName!, "uid": self.currentUser!.uid, "venmoID": "none", "origin": ["lat": currentLat, "long": currentLong, "address": addr], "destination": ["latitude": self.destLat, "longitude" : self.destLong], "destinationName": self.destName!, "rate" : (NSInteger.init(self.offerTextField.text!)) ?? 5, "accepted": 0, "repeats": self.freqArray.description, "date": "date"]) //TODO still need dynamic date here.
                 }
             }
         })
