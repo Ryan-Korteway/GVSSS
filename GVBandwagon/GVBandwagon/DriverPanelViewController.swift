@@ -84,6 +84,7 @@ class DriverPanelViewController: UIViewController {
                                                            "rate" : 0, "accepted": 0, "repeats": "none", "duration": "none"]) //need protections of if destination is none, dont make a pin.
         
             localDelegate.changeMode(mode: "driver")
+            localDelegate.changeDriverStatus(status: "request")
             localDelegate.isSwitched = true
             localDelegate.startTimer()
             localDelegate.startDriverMapObservers()
@@ -91,6 +92,8 @@ class DriverPanelViewController: UIViewController {
             // Remove driver from active driver list
             ref.child("/activedrivers/\(ourid)").removeValue();
             localDelegate.changeMode(mode: "rider")
+            localDelegate.changeDriverStatus(status: "none")
+            (localDelegate.DriveViewController_AD as! DriveViewController).googleMap.clear()
             localDelegate.isSwitched = false
             localDelegate.timer.invalidate() //stop the timer.
         }
