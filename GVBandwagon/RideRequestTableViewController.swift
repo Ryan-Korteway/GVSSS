@@ -200,7 +200,11 @@ class RideRequestTableViewController: UITableViewController, UISearchBarDelegate
                     
                     // If the rider selected a custom origin.
                     if (self.didSelectOrigin) {
-                        stringAddr = (self.originPlace?.formattedAddress)!
+                        if (self.originPlace?.formattedAddress != nil) {
+                            stringAddr = (self.originPlace?.formattedAddress)!
+                        } else {
+                            stringAddr = (self.originPlace?.name)!
+                        }
                     }
                     
                     let addr = stringAddr as NSString
@@ -427,7 +431,14 @@ class RideRequestTableViewController: UITableViewController, UISearchBarDelegate
                 if let place = place {
                     //self.addrlabel.text = place.formattedAddress?.components(separatedBy: ", ")
                     //.joined(separator: "\n")
-                    self.originTextField.placeholder = "\(place.formattedAddress!)"
+                    
+                    // If the rider selected a coordinate as a place:
+                    if (place.formattedAddress != nil) {
+                        self.originTextField.placeholder = "\(place.formattedAddress)"
+                    } else {
+                        self.originTextField.placeholder = "\(place.name)"
+                    }
+ 
                     self.didSelectOrigin = true
                     self.originPlace = place
                     
