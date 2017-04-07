@@ -1549,7 +1549,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="3741.5999999999999" y="-1404.6476761619192"/>
+            <point key="canvasLocation" x="3516" y="-1409"/>
         </scene>
         <!--Scheduled Rides Table View Controller-->
         <scene sceneID="0dI-mL-QSr">
@@ -1594,7 +1594,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="aNe-NX-2My" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4502" y="-1246"/>
+            <point key="canvasLocation" x="4276" y="-1251"/>
         </scene>
         <!--Ride Summary-->
         <scene sceneID="doC-82-JO4">
@@ -2455,7 +2455,7 @@
         <!--RideUpdateTableViewController-->
         <scene sceneID="AVG-dC-uio">
             <objects>
-                <tableViewController title="RideUpdateTableViewController" id="FHP-Gq-byE" customClass="RideRequestTableViewController" customModule="GVBandwagon" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="rideHistoryDetails?" title="RideUpdateTableViewController" id="FHP-Gq-byE" customClass="RideRequestTableViewController" customModule="GVBandwagon" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="EYm-P6-znG">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -2732,7 +2732,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eYL-Mq-WER" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5348" y="-1405"/>
+            <point key="canvasLocation" x="5122" y="-1410"/>
         </scene>
     </scenes>
     <resources>
