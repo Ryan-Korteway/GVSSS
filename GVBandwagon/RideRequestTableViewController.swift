@@ -15,6 +15,8 @@ import UserNotifications
 
 class RideRequestTableViewController: UITableViewController, UISearchBarDelegate {
     
+    var rideViewDelegate: RideViewDelegate?
+    
     var placesClient: GMSPlacesClient!
     
     let DATE_CELL_SECTION = 2
@@ -24,13 +26,10 @@ class RideRequestTableViewController: UITableViewController, UISearchBarDelegate
     var visibleRegion: GMSVisibleRegion!
     var coordLocation: CLLocationCoordinate2D!
 
-    @IBOutlet weak var searchView: UIView!
-    @IBOutlet weak var originSearchView: UIView!
+    @IBOutlet var searchView: UIView!
     
     var resultsViewController: GMSAutocompleteResultsViewController?
-    var originResultsViewController: GMSAutocompleteResultsViewController?
     var searchController: UISearchController?
-    var originSearchController: UISearchController?
     
     let center = UNUserNotificationCenter.current()
 
@@ -42,15 +41,18 @@ class RideRequestTableViewController: UITableViewController, UISearchBarDelegate
     
     @IBOutlet var datePicker: UIDatePicker!
     @IBOutlet var freqPicker: UIPickerView!
-    @IBOutlet weak var freqSwitch: UISwitch!
+    @IBOutlet var freqSwitch: UISwitch!
     
     // This is an optional because a cell is selected or isn't (this is nil)
     var selectedCellIndexPath: IndexPath?
     
+    @IBOutlet var cancelFutureRideButton: UIButton!
+    @IBOutlet var scheduleRideButton: UIButton!
+    @IBOutlet var dateLabel: UILabel!
     @IBOutlet var dateCell: UITableViewCell!
-    @IBOutlet weak var dateTextField: UITextField!
-    @IBOutlet weak var offerTextField: UITextField!
-    @IBOutlet weak var originTextField: UITextField!
+    @IBOutlet var dateTextField: UITextField!
+    @IBOutlet var offerTextField: UITextField!
+    @IBOutlet var originTextField: UITextField!
     
     var freqArray = ["No", "No", "No", "No", "No", "No", "No"]
     
@@ -80,6 +82,10 @@ class RideRequestTableViewController: UITableViewController, UISearchBarDelegate
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.dateLabel.alpha = 0
+        self.dateTextField.alpha = 0
+        self.cancelFutureRideButton.alpha = 0
 
         self.displayCurrentDate(mode: self.datePicker.datePickerMode)
         self.originTextField.placeholder = "Using Current Location"
@@ -105,9 +111,6 @@ class RideRequestTableViewController: UITableViewController, UISearchBarDelegate
         resultsViewController = GMSAutocompleteResultsViewController()
         resultsViewController?.delegate = self
         
-        originResultsViewController = GMSAutocompleteResultsViewController()
-        originResultsViewController?.delegate = self
-        
         // Search View
         searchController = UISearchController(searchResultsController: resultsViewController)
         searchController?.searchBar.delegate = self
@@ -116,15 +119,6 @@ class RideRequestTableViewController: UITableViewController, UISearchBarDelegate
         searchView.addSubview((searchController?.searchBar)!)
         searchController?.searchBar.sizeToFit()
         searchController?.hidesNavigationBarDuringPresentation = false
-        
-        // Origin Search View
-        originSearchController = UISearchController(searchResultsController: originResultsViewController)
-        originSearchController?.searchBar.delegate = self
-        originSearchController?.searchResultsUpdater = originResultsViewController
-        
-        originSearchView.addSubview((originSearchController?.searchBar)!)
-        originSearchController?.searchBar.sizeToFit()
-        originSearchController?.hidesNavigationBarDuringPresentation = false
         
         // When UISearchController presents the results view, present it in
         // this view controller, not one further up the chain.
@@ -170,10 +164,20 @@ class RideRequestTableViewController: UITableViewController, UISearchBarDelegate
         let currentLat: CLLocationDegrees?
         let currentLong: CLLocationDegrees?
         
+        // If date label is visible, then they are scheduling a future ride
+        // or recurring ride:
+        var date = "None"
+        if (self.dateLabel.alpha == 1) {
+            let formatter = DateFormatter()
+            formatter.dateFormat = "MMM d, h:mm a"
+            date = formatter.string(from: self.datePicker.date)
+        }
+        
         // Get from places picker:
         if (self.didSelectOrigin) {
             currentLat = self.originPlace?.coordinate.latitude
             currentLong = self.originPlace?.coordinate.longitude
+            print("User selected a new origin. Reset lat/long.")
         } else {
             currentLat = self.localDelegate.locationManager.location!.coordinate.latitude
             currentLong = self.localDelegate.locationManager.location!.coordinate.longitude
@@ -181,9 +185,6 @@ class RideRequestTableViewController: UITableViewController, UISearchBarDelegate
         
         print("Current lat and long: \(currentLat) \(currentLong)")
         
-        
-        // TODO: Only use current place if user HAS NOT selected a place!
-        // Get riders current place, in completion send to Firebase
         placesClient.currentPlace(callback: { (placeLikelihoodList, error) -> Void in
             if let error = error {
                 print("Pick Place error: \(error.localizedDescription)")
@@ -196,7 +197,8 @@ class RideRequestTableViewController: UITableViewController, UISearchBarDelegate
                     print("address: \(address)")
                     let addr = address as NSString
                     
-                    self.ref.child("requests/immediate/\(self.currentUser!.uid)/").setValue(["name": self.currentUser!.displayName!, "uid": self.currentUser!.uid, "venmoID": "none", "origin": ["lat": currentLat, "long": currentLong, "address": addr], "destination": ["latitude": self.destLat, "longitude" : self.destLong], "destinationName": self.destName!, "rate" : (NSInteger.init(self.offerTextField.text!)) ?? 5, "accepted": 0, "repeats": self.freqArray.description, "duration": "none"]) //locations being sent here.
+                    self.ref.child("requests/immediate/\(self.currentUser!.uid)/").setValue(["name": self.currentUser!.displayName!, "uid": self.currentUser!.uid, "venmoID": "none", "origin": ["lat": currentLat, "long": currentLong, "address": addr], "destination": ["latitude": self.destLat, "longitude" : self.destLong], "destinationName": self.destName!, "rate" : (NSInteger.init(self.offerTextField.text!)) ?? 5, "accepted": 0, "repeats": self.freqArray.description, "date": date]) //TODO still need dynamic date here.
+                    
                 }
             }
         })
@@ -247,11 +249,7 @@ class RideRequestTableViewController: UITableViewController, UISearchBarDelegate
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        /*
-        if self.selectedCellIndexPath == indexPath {
-            return self.selectedDateHeight
-        }
-        */
+
         if isDateCellSelected && indexPath.section == DATE_CELL_SECTION {
             return self.selectedDateHeight
         }
@@ -267,7 +265,13 @@ class RideRequestTableViewController: UITableViewController, UISearchBarDelegate
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
         if indexPath.section == DATE_CELL_SECTION && !self.isDateCellSelected {
+            
+            // If the user hasn't tapped "schedule ride" then do nothing
+            if (self.scheduleRideButton.alpha == 1) {
+                return
+            }
             self.isDateCellSelected = true
             self.datePicker.alpha = 1
             tableView.scrollToRow(at: indexPath, at: .none, animated: true)
@@ -300,13 +304,26 @@ class RideRequestTableViewController: UITableViewController, UISearchBarDelegate
     
     func animateElements(isOn: Bool) {
         
+        // TODO: Figure out how to treat cancel button!
+        // if date label is not visible, don't set alpha to 1
+        // also when x is hit, animate elements to close date picker
+        
         if (isOn) {
             self.isFreqCellSelected = true
+            self.cancelFutureRideButton.alpha = 0
             self.freqPicker.alpha = 1
-            //tableView.scrollToRow(at: indexPath, at: .none, animated: true)
+            
+            // Reveals date for selecting time but hides cancel button
+            // because time is required in a recurring ride:
+            self.onScheduleRideTapped(self)
+            self.cancelFutureRideButton.alpha = 0
         } else {
             self.isFreqCellSelected = false
             self.freqPicker.alpha = 0
+            
+            // If user cancels a recurring ride, take them back
+            // to "ride now" config:
+            self.onCancelRideTapped(self)
         }
         
         tableView.beginUpdates()
@@ -358,9 +375,9 @@ class RideRequestTableViewController: UITableViewController, UISearchBarDelegate
     }
     */
 
-    /*
+    
     // MARK: - Navigation
-
+    /*
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destinationViewController.
@@ -472,31 +489,51 @@ class RideRequestTableViewController: UITableViewController, UISearchBarDelegate
             }
         })
         
-        
         sendRequestToFirebase()
         
-        localDelegate.riderStatus = "request"
-        localDelegate.startTimer();
-        _ = self.navigationController?.popViewController(animated: true)
-        
         // Display a message to the user:
-        if let centerVC = localDelegate.centerViewController as? UINavigationController {
-            if let rideVC = centerVC.childViewControllers[0] as? FirstViewController {
-                print("Displaying rider message.")
-                rideVC.displaySubmitMessage()
-            }
+        if (self.rideViewDelegate != nil) {
+            print("rideVC del is not nil")
+            self.rideViewDelegate!.displaySubmitMessage()
         }
         
         // TODO: This for testing?
         for day in freqArray {
             print(day)
         }
+        
+        localDelegate.riderStatus = "request"
+        localDelegate.startTimer();
+        self.searchController?.view.removeFromSuperview() // A bug in Swift that requires this.
+        _ = self.navigationController?.popViewController(animated: true)
+    }
+    
+    @IBAction func onCancelRideTapped(_ sender: Any) {
+        self.dateLabel.alpha = 0
+        self.dateTextField.alpha = 0
+        self.cancelFutureRideButton.alpha = 0
+        self.scheduleRideButton.alpha = 1
+        
+        // Calls didSelectRowAt using index path of date cell
+        // and self.tableView as parameters. This will "close"
+        // the date cell (if it's open) when cancel is tapped.
+        if (self.datePicker.alpha == 1) {
+            if let dateIndexPath = self.tableView.indexPath(for: self.dateCell) {
+                self.tableView(self.tableView, didSelectRowAt: dateIndexPath)
+            }
+        }
+    }
+    
+    @IBAction func onScheduleRideTapped(_ sender: Any) {
+        self.dateTextField.alpha = 1
+        self.dateLabel.alpha = 1
+        self.cancelFutureRideButton.alpha = 1
+        self.scheduleRideButton.alpha = 0
     }
     
     func displayCurrentDate(mode: UIDatePickerMode) {
         let formatter = DateFormatter()
         if (mode.rawValue == 2) {
-            let formatter = DateFormatter()
             formatter.dateFormat = "MMM d, h:mm a"
             let strDate = formatter.string(from: self.datePicker.date)
             self.dateTextField.text = strDate
@@ -551,14 +588,9 @@ extension RideRequestTableViewController: UIPickerViewDelegate, UIPickerViewData
 extension RideRequestTableViewController: GMSAutocompleteResultsViewControllerDelegate {
     func resultsController(_ resultsController: GMSAutocompleteResultsViewController,
                            didAutocompleteWith place: GMSPlace) {
-        if (resultsController == self.resultsViewController) {
-            searchController?.isActive = false
-            searchController?.searchBar.placeholder = "\(place.name) \(place.formattedAddress!)"
-        } else {
-            // It's originResultsViewController
-            originSearchController?.isActive = false
-            originSearchController?.searchBar.placeholder = "\(place.name) \(place.formattedAddress!)"
-        }
+        
+        searchController?.isActive = false
+        searchController?.searchBar.placeholder = "\(place.name) \(place.formattedAddress!)"
         
         // Do something with the selected place.
         print("Place name: \(place.name)")

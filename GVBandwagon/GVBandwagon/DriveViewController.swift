@@ -492,10 +492,11 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
     
     func acceptTapped(button: UIButton) -> Void {
         
-        if(localDelegate.offeredID != "none") {
+        if(localDelegate.offeredID != "none") { // CHECK ON OFFER DOUBLE TAP CRASH!! COULD BE OFFERED ID BEING EMPTY ETC.
             // make a history item here. destination name+time.
             let ref = FIRDatabase.database().reference()
             
+            //history saving done here.
             ref.child("users/\(self.localDelegate.offeredID)/rider/offers/accepted/immediate/rider/\(self.localDelegate.offeredID)/").observeSingleEvent(of: .value, with: { snapshot in
                 
                 let dictionary = cellItem.init(snapshot: snapshot).toAnyObject() as! NSDictionary
@@ -533,6 +534,10 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
                 alert.addAction(UIAlertAction(title: "Dismiss", style: .default, handler: {
                     (action) in print("No offer")}))
 
+                self.present(alert, animated: true, completion: {
+                    print("preseting alert")
+                })
+                
             } else { 
                 ref.child("\(user.uid)").setValue(
                     ["name": user.displayName!,
@@ -544,7 +549,7 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
                      "rate": self.baseDictionary.value(forKey: "rate"),
                      "accepted" : 0,
                      "repeats": self.baseDictionary.value(forKey: "repeats"),
-                     "duration": self.baseDictionary.value(forKey: "duration"),
+                     "date": self.baseDictionary.value(forKey: "date"),
                      "destinationName": self.baseDictionary.value(forKey: "destinationName")
                     ]) //value set needs to be all of our info for the snapshot.
             
@@ -671,6 +676,7 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
                     }
                 })
                 
+                self.localDelegate.offeredID = "none"
                 self.localDelegate.driverStatus = "request"
                 self.localDelegate.timer.invalidate()
             })

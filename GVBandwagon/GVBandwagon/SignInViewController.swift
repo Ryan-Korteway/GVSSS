@@ -125,6 +125,10 @@ class SignInViewController: UIViewController, GIDSignInDelegate, GIDSignInUIDele
                     (action) in print("No offer")
                 }))
                 
+                self.present(alert, animated: true, completion: {
+                    print("PRINTING BAD SIGN IN WARNING.")
+                })
+                
                 return
             }
             self.directUserToCorrectView()
@@ -153,31 +157,20 @@ class SignInViewController: UIViewController, GIDSignInDelegate, GIDSignInUIDele
             //if the user is found in user state, then they are signInApproved, otherwise they need to register to add themselves to users or drivers and either way get an entry with their UID and a 
             //boolean value based on their choice into the database.
             
-            guard snapshot.value! is Bool else { //this was working at one point and now isnt. not sure what happened...
-                print("our value: \(snapshot.value!)") //might need to work on this....
+            guard snapshot.value! is Bool else {
+                print("our value: \(snapshot.value!)")
                     self.performSegue(withIdentifier: "needsToRegister", sender: self)
-                    return //not sure if necessary but it silences the auto compilier.
+                    return
                 }
             print("our value \(snapshot.value!)")
             
-            // Load up the drawer from AppDelegate:
-//            let appDelegate = UIApplication.shared.delegate as! AppDelegate // could it be this redeclaration be the issue?
+            // Load up the drawer from AppDelegate
             self.appDelegate.initiateDrawer()
             self.appDelegate.setUpOpenObservers()
             
             self.dismiss(animated: true, completion: nil)
             
-            //self.performSegue(withIdentifier: "signInApproved", sender: self)
-            
-            /*
-            if(ref.child("users").child("\(userID)").) {
-                self.performSegue(withIdentifier: "signInApproved", sender: self)
-            } else {
-                self.performSegue(withIdentifier: "needsToRegister", sender: self)
-            }
-            */
-            
-        }) { (error) in //hopefully them not being found in userstate will return an error that can then be used to allow the person to register.
+        }) { (error) in 
             print("directUser ERROR: \(error.localizedDescription)")
             
             self.performSegue(withIdentifier: "needsToRegister", sender: self)
