@@ -195,7 +195,15 @@ class RideRequestTableViewController: UITableViewController, UISearchBarDelegate
             if let place = placeLikelihoodList?.likelihoods.first?.place {
                 if let address = place.formattedAddress {
                     print("address: \(address)")
-                    let addr = address as NSString
+                    
+                    var stringAddr = address
+                    
+                    // If the rider selected a custom origin.
+                    if (self.didSelectOrigin) {
+                        stringAddr = (self.originPlace?.formattedAddress)!
+                    }
+                    
+                    let addr = stringAddr as NSString
                     
                     let newRate = NSNumber.init(value: Float.init(self.offerTextField.text!)!)
                     
