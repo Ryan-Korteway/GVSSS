@@ -464,6 +464,10 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
         
         // TODO: Trying to reuse same infoWindow so we disable "offer" button.
         // TODO: Where does code for disable button go? Ride_accept? Request???
+        infoWindow.destLabel.text = destination
+        infoWindow.rateLabel.text = rate
+        infoWindow.windowType = "Accept"
+        infoWindow.nameLabel.text = name
         
         //infoWindow = MapMarkerWindow(frame: CGRect(x: 0, y: 0, width: 200, height: 100), type: "Driver", name: name, dest: destination, rate: rate)
         
