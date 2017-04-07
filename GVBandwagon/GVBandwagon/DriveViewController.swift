@@ -461,7 +461,11 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
         
         tappedMarker = marker
         infoWindow.removeFromSuperview()
-        infoWindow = MapMarkerWindow(frame: CGRect(x: 0, y: 0, width: 200, height: 100), type: "Driver", name: name, dest: destination, rate: rate)
+        
+        // TODO: Trying to reuse same infoWindow so we disable "offer" button.
+        // TODO: Where does code for disable button go? Ride_accept? Request???
+        
+        //infoWindow = MapMarkerWindow(frame: CGRect(x: 0, y: 0, width: 200, height: 100), type: "Driver", name: name, dest: destination, rate: rate)
         
         infoWindow.center = mapView.projection.point(for: location)
         infoWindow.center.y -= 90
