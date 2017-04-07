@@ -462,11 +462,10 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
         tappedMarker = marker
         infoWindow.removeFromSuperview()
         
-        // TODO: Trying to reuse same infoWindow so we disable "offer" button.
-        // TODO: Where does code for disable button go? Ride_accept? Request???
+        // Reuse same infoWindow so we can disable "offer" button.
         infoWindow.destLabel.text = destination
         infoWindow.rateLabel.text = rate
-        infoWindow.windowType = "Accept"
+        infoWindow.windowType = "Offer"
         infoWindow.nameLabel.text = name
         
         //infoWindow = MapMarkerWindow(frame: CGRect(x: 0, y: 0, width: 200, height: 100), type: "Driver", name: name, dest: destination, rate: rate)
@@ -522,7 +521,7 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
         localDelegate.changeDriverStatus(status: "offer")
         localDelegate.offeredID = baseDictionary.value(forKey: "uid")! as! String
         
-        print("Accept Tapped but it is really an offer.")
+        print("Offer Tapped.")
         
         let checkRef = FIRDatabase.database().reference().child("requests/immediate/\(baseDictionary.value(forKey: "uid")!)/")
         let ref = FIRDatabase.database().reference().child("users/\(baseDictionary.value(forKey: "uid")!)/rider/offers/immediate/")
@@ -582,6 +581,7 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
         print("end of ride accept")
         localDelegate.driverStatus = "offer"
         localDelegate.startDriverMapObservers()
+        infoWindow.acceptButton.alpha = 0
         infoWindow.removeFromSuperview()
     }
     

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="15G1217" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="8Mm-Jt-Bul">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="15G31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="8Mm-Jt-Bul">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -2038,7 +2038,7 @@
             <objects>
                 <navigationController storyboardIdentifier="helpNavControllerStoryboardId" automaticallyAdjustsScrollViewInsets="NO" id="310-Ue-cRZ" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="jCp-Y1-93A">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="jCp-Y1-93A">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -2122,7 +2122,7 @@
                             <tableViewSection headerTitle="Destination" id="9kj-zY-fPD" userLabel="Search Dest Section">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" rowHeight="50" id="ZGR-Hn-Jzh">
-                                        <rect key="frame" x="0.0" y="179" width="375" height="50"/>
+                                        <rect key="frame" x="0.0" y="180" width="375" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ZGR-Hn-Jzh" id="fqO-PE-QeA">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="50"/>
@@ -2150,7 +2150,7 @@
                             <tableViewSection id="fZ5-X7-lIf" userLabel="Date Section">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" rowHeight="50" id="h3P-2a-jpe">
-                                        <rect key="frame" x="0.0" y="249" width="375" height="50"/>
+                                        <rect key="frame" x="0.0" y="250" width="375" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="h3P-2a-jpe" id="fJq-PN-s7h">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="50"/>
@@ -2224,7 +2224,7 @@
                             <tableViewSection id="wlN-9w-b73" userLabel="Freq Section">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" rowHeight="150" id="Pi0-tK-3L9">
-                                        <rect key="frame" x="0.0" y="319" width="375" height="150"/>
+                                        <rect key="frame" x="0.0" y="320" width="375" height="150"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Pi0-tK-3L9" id="k5L-F7-b8v">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="150"/>
@@ -2278,7 +2278,7 @@
                             <tableViewSection id="0hh-m8-zml" userLabel="Offer Section">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" rowHeight="50" id="Hy8-wn-XwQ">
-                                        <rect key="frame" x="0.0" y="489" width="375" height="50"/>
+                                        <rect key="frame" x="0.0" y="490" width="375" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Hy8-wn-XwQ" id="331-Ki-xhY">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="50"/>
@@ -2321,7 +2321,7 @@
                             <tableViewSection id="QiE-GK-G5i" userLabel="Submit Section">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" rowHeight="50" id="u1W-hW-Hci">
-                                        <rect key="frame" x="0.0" y="559" width="375" height="50"/>
+                                        <rect key="frame" x="0.0" y="560" width="375" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="u1W-hW-Hci" id="8Y5-81-1rG">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="50"/>
@@ -2770,7 +2770,7 @@
         <image name="yellowstar" width="240" height="240"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="gXi-1e-BDf"/>
+        <segue reference="qU9-iD-UHd"/>
         <segue reference="W9u-9l-6Si"/>
     </inferredMetricsTieBreakers>
 </document>
