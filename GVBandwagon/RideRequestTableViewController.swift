@@ -479,6 +479,15 @@ class RideRequestTableViewController: UITableViewController, UISearchBarDelegate
         localDelegate.startTimer();
         _ = self.navigationController?.popViewController(animated: true)
         
+        // Display a message to the user:
+        if let centerVC = localDelegate.centerViewController as? UINavigationController {
+            if let rideVC = centerVC.childViewControllers[0] as? FirstViewController {
+                print("Displaying rider message.")
+                rideVC.displaySubmitMessage()
+            }
+        }
+        
+        // TODO: This for testing?
         for day in freqArray {
             print(day)
         }
@@ -492,7 +501,7 @@ class RideRequestTableViewController: UITableViewController, UISearchBarDelegate
             let strDate = formatter.string(from: self.datePicker.date)
             self.dateTextField.text = strDate
         } else {
-            let date = Date()
+            //let date = Date()
             formatter.dateFormat = "h:mm a"
             let result = formatter.string(from: self.datePicker.date)
             self.dateTextField.text = result

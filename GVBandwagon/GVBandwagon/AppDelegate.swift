@@ -287,6 +287,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     // We do not have one of these in our storyboard, so this could crash:
+    // Nick: I changed the function that calls this to just return the rider VC instead.
     // -------------------
     func drawerSettingsViewController() -> UIViewController {
         let viewController = viewControllerForStoryboardId(storyboardId: kKGDrawerSettingsViewControllerStoryboardId)
@@ -369,7 +370,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             if let viewController = _centerViewController {
                 return viewController
             }
-            return drawerSettingsViewController()
+            //return drawerSettingsViewController()
+            return rideViewController()
         }
         set {
             if let drawerViewController = _drawerViewController {

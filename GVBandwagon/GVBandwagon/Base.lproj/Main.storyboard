@@ -168,7 +168,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="defaultUserPhoto" translatesAutoresizingMaskIntoConstraints="NO" id="ru3-th-MUL">
-                                                    <rect key="frame" x="20" y="-19" width="80" height="81"/>
+                                                    <rect key="frame" x="20" y="-18.5" width="80" height="80"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="80" id="Arw-Ry-iWh"/>
                                                         <constraint firstAttribute="width" constant="80" id="BBA-Ch-qxQ"/>
@@ -2000,7 +2000,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fUn-gQ-xY5" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1034" y="-1719"/>
+            <point key="canvasLocation" x="-196" y="-1783"/>
         </scene>
         <!--Urgent Rides-->
         <scene sceneID="9jN-4P-GcB">

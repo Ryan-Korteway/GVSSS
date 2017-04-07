@@ -22,7 +22,7 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
     @IBOutlet var rideNowButton: UIButton!
     @IBOutlet var superViewTapGesture: UITapGestureRecognizer!
     @IBOutlet var googleMapsView: GMSMapView!
-    @IBOutlet weak var submitMessageView: UIView!
+    @IBOutlet var submitMessageView: UIView!
     
     // initialize and keep a marker and a custom infowindow
     var tappedMarker = GMSMarker()
@@ -451,7 +451,7 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
         self.displaySubmitMessage()
     }
     
-    func displaySubmitMessage() {
+    func displaySubmitMessage() -> Void {
         
         var animateDirection: CGFloat = -125
         

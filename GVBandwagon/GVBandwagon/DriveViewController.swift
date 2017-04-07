@@ -188,7 +188,6 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
         }, completion: { (Bool) -> Void in
             // Do nothing.
         })
-        
     }
     
     
