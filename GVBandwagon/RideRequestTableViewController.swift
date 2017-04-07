@@ -199,6 +199,9 @@ class RideRequestTableViewController: UITableViewController, UISearchBarDelegate
                     
                     let newRate = NSNumber.init(value: Float.init(self.offerTextField.text!)!)
                     
+                    //added line to handle rerequest data sync issues.
+                    self.ref.child("requests/immediate/\(self.currentUser!.uid)/").removeValue()
+                    
                     self.ref.child("requests/immediate/\(self.currentUser!.uid)/").setValue(["name": self.currentUser!.displayName!, "uid": self.currentUser!.uid, "venmoID": "none", "origin": ["lat": currentLat, "long": currentLong, "address": addr], "destination": ["latitude": self.destLat, "longitude" : self.destLong], "destinationName": self.destName!, "rate" : newRate, "accepted": 0, "repeats": self.freqArray.description, "date": date]) //TODO still need dynamic date here.
                     
                 }
