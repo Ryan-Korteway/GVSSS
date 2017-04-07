@@ -197,7 +197,9 @@ class RideRequestTableViewController: UITableViewController, UISearchBarDelegate
                     print("address: \(address)")
                     let addr = address as NSString
                     
-                    self.ref.child("requests/immediate/\(self.currentUser!.uid)/").setValue(["name": self.currentUser!.displayName!, "uid": self.currentUser!.uid, "venmoID": "none", "origin": ["lat": currentLat, "long": currentLong, "address": addr], "destination": ["latitude": self.destLat, "longitude" : self.destLong], "destinationName": self.destName!, "rate" : (NSInteger.init(self.offerTextField.text!)) ?? 5, "accepted": 0, "repeats": self.freqArray.description, "date": date]) //TODO still need dynamic date here.
+                    let newRate = NSNumber.init(value: Float.init(self.offerTextField.text!)!)
+                    
+                    self.ref.child("requests/immediate/\(self.currentUser!.uid)/").setValue(["name": self.currentUser!.displayName!, "uid": self.currentUser!.uid, "venmoID": "none", "origin": ["lat": currentLat, "long": currentLong, "address": addr], "destination": ["latitude": self.destLat, "longitude" : self.destLong], "destinationName": self.destName!, "rate" : newRate, "accepted": 0, "repeats": self.freqArray.description, "date": date]) //TODO still need dynamic date here.
                     
                 }
             }
@@ -483,9 +485,12 @@ class RideRequestTableViewController: UITableViewController, UISearchBarDelegate
             if(snapshot.value! is NSNull) {
                 print("no history to save")
             } else {
-                let dictionary = cellItem.init(snapshot: snapshot).toAnyObject() as! NSDictionary
+                for item in snapshot.children {
+                    print((item as! FIRDataSnapshot).key)
+                let dictionary = cellItem.init(snapshot: item as! FIRDataSnapshot).toAnyObject() as! NSDictionary
                 let date = Date()
                 self.ref.child("users/\(userID)/history/\(dictionary.value(forKey: "destinationName")!)\(date.description)/").setValue(dictionary)
+                }
             }
         })
         
