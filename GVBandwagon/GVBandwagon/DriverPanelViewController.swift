@@ -49,6 +49,21 @@ class DriverPanelViewController: UIViewController {
         localDelegate.PanelViewController = self
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        //let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        let centerVC = localDelegate.drawerViewController.centerViewController
+        if let rideVC = centerVC?.childViewControllers[0] as? FirstViewController {
+            if (rideVC.baseDictionary != nil) {
+                let activeTrip = rideVC.baseDictionary["destination"]
+                self.activeTripLabel.text = activeTrip as! String?
+            } else {
+                self.activeTripLabel.text = "No active trip"
+            }
+        }
+    }
+    
     func viewReload() {
         if(mode == "Driver") {
             
