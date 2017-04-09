@@ -360,11 +360,13 @@ class RideSummaryTableViewController: UITableViewController {
         
         // TODO: Right way to get UIDs? What happens if there's no vehicle photo at this FB location? (For riders).
         
-        // riders side so pull drivers photos
+        // If rider's side drivers photos
         self.ref.child("users/\(informationDictionary.value(forKey: "uid")!)/driver/uid").observeSingleEvent(of: .value, with: { snapshot in
             //self.ratingLabel.text = "\((snapshot.value! as? NSInteger)!)"
             userID = snapshot.value as? String
         })
+        
+        // else pull Rider's photo
         
         // Image references
         let storageRef = storage.reference()

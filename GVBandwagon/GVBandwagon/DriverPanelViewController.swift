@@ -37,8 +37,12 @@ class DriverPanelViewController: UIViewController {
     let ref = FIRDatabase.database().reference()
     let ourid = FIRAuth.auth()!.currentUser!.uid
     
+    var scheduledRidesTableVC: ScheduledRidesTableViewController?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        print("view will called")
         
         self.goOnlineSwitch.setOn(false, animated: false)
         self.goOnlineSwitch.addTarget(self, action: #selector(switchIsChanged(mySwitch:)), for: .valueChanged)
@@ -52,16 +56,7 @@ class DriverPanelViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        //let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        let centerVC = localDelegate.drawerViewController.centerViewController
-        if let rideVC = centerVC?.childViewControllers[0] as? FirstViewController {
-            if (rideVC.baseDictionary != nil) {
-                let activeTrip = rideVC.baseDictionary["destination"]
-                self.activeTripLabel.text = activeTrip as! String?
-            } else {
-                self.activeTripLabel.text = "No active trip"
-            }
-        }
+        self.getActiveTrip()
     }
     
     func viewReload() {
@@ -81,6 +76,8 @@ class DriverPanelViewController: UIViewController {
                 //Removed//self.tripCounterLabel.text = "\((snapshot.value as? NSInteger)!) trips."
             })
         }
+        
+        self.getActiveTrip()
     }
     
     func switchIsChanged(mySwitch: UISwitch) {
@@ -158,19 +155,39 @@ class DriverPanelViewController: UIViewController {
         } else if (segue.identifier == "driverAcceptsSegue") {
             (segue.destination as! RideSummaryTableViewController).mode = "drive"
             (segue.destination as! RideSummaryTableViewController).localAddress = localDelegate.riderAddress
-            
+        } else if(segue.identifier == "embedSegue") {
+            if let srcv = segue.destination as? ScheduledRidesTableViewController {
+                self.scheduledRidesTableVC = srcv
+                print("\nPREPARE FOR SEG CALLED\n")
+            }
         }
+        
     }
     
-    // Get active trip from FB?
     func getActiveTrip() {
         // Get trip info from FB
+        var dest = "No active trip"
+        
+        self.ref.child("users/\(self.ourid)/rider/offers/accepted/immediate/driver/").observeSingleEvent(of: .value, with:{ snapshot in
+            
+            var baseDictionary: NSDictionary?
+            
+            for uid in snapshot.children {
+                baseDictionary = cellItem.init(snapshot: uid as! FIRDataSnapshot).toAnyObject() as? NSDictionary
+            }
+            
+            dest = baseDictionary?.value(forKey: "destinationName") as? String ?? "No active trip"
+            self.activeTripLabel.text = dest
+            
+            print("Dest for label: \(dest)")
+        })
         
         // If active trip exists then
-        self.activeTripExists = true
-        
-        // else
-        //self.activeTripExists = false
+        if (dest != "No active trip" && dest != "") {
+            self.activeTripExists = true
+        } else {
+            self.activeTripExists = false
+        }
     }
     
     // Get rating from FB. Return stars based on rounded to nearest whole number:

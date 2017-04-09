@@ -327,6 +327,9 @@
 		0B197CD51E32815100392B40 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				KnownAssetTags = (
+					embeddedFutureRidesVC,
+				);
 				LastSwiftUpdateCheck = 0820;
 				LastUpgradeCheck = 0820;
 				ORGANIZATIONNAME = "Nicolas Heady";

@@ -7,10 +7,19 @@
 //
 
 import UIKit
+import Firebase
+
+protocol ScheduledRidesTableViewDelegate {
+    func getFutureRies()
+}
 
 class ScheduledRidesTableViewController: UITableViewController {
     
+    let ref = FIRDatabase.database().reference()
+    let ourid = FIRAuth.auth()!.currentUser!.uid
+    
     var scheduledRides = ["Allendale", "Downtown", "Meijer"]
+    var futureRides = [NSDictionary]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,11 +29,32 @@ class ScheduledRidesTableViewController: UITableViewController {
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+        
+        self.getFutureRides()
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    func getFutureRides() {
+        
+        self.ref.child("users/\(self.ourid)/rider/scheduled/").observeSingleEvent(of: .value, with:{ snapshot in
+            
+            self.futureRides.removeAll()
+            
+            for uid in snapshot.children {
+                if let baseDictionary = cellItem.init(snapshot: uid as! FIRDataSnapshot).toAnyObject() as? NSDictionary {
+                    
+                    self.futureRides.append(baseDictionary)
+                }
+            }
+            
+            self.tableView.reloadData()
+
+        })
+        
     }
 
     // MARK: - Table view data source
@@ -36,15 +66,16 @@ class ScheduledRidesTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return self.scheduledRides.count
+        return self.futureRides.count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "scheduledRidesCellId", for: indexPath)
 
         // Configure the cell...
-        cell.textLabel?.text = self.scheduledRides[indexPath.row]
-        cell.detailTextLabel?.text = "02-14-2017"
+        let trip = self.futureRides[indexPath.row]
+        cell.textLabel?.text = trip.value(forKey: "destinationName") as! String?
+        cell.detailTextLabel?.text = trip.value(forKey: "date") as! String?
 
         return cell
     }
