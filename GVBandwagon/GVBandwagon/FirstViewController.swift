@@ -283,9 +283,13 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
         
         tappedMarker = marker
         tappedMarker.icon = UIImage(named: "iconmonstr-car-1-48")
+        
         infoWindow.removeFromSuperview()
-        infoWindow = MapMarkerWindow(frame: CGRect(x: 0, y: 0, width: 200, height: 100), type: "Rider", name: name, dest: destination, rate: rate)
-            
+        infoWindow.destLabel.text = destination
+        infoWindow.rateLabel.text = rate
+        infoWindow.windowType = "Accept"
+        infoWindow.nameLabel.text = name
+        
         infoWindow.center = mapView.projection.point(for: location)
         infoWindow.center.y -= 90
         
@@ -365,7 +369,7 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
         ride_accept(item: baseDictionary) //local cell assignment might be bad/fail here.
         infoWindow.removeFromSuperview()
         
-        // TODO: Disable infoWindow now, or just show the info, not the buttons.
+        self.infoWindow.acceptButton.alpha = 0
     }
     
     func declineTapped(button: UIButton) -> Void {
