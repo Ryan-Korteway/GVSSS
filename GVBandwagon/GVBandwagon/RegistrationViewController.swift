@@ -52,6 +52,12 @@ class RegistrationViewController: UIViewController {
             self.makeField.isHidden = true
             self.modelField.isHidden = true
             self.vehicleImageView.isHidden = true
+        } else {
+            self.venmoField.isUserInteractionEnabled = true
+            self.makeField.isUserInteractionEnabled = true
+            self.modelField.isUserInteractionEnabled = true
+            self.vehicleImageView.isUserInteractionEnabled = true
+
         }
         
     }
@@ -96,8 +102,10 @@ class RegistrationViewController: UIViewController {
             // and data successfully transferred before segue.
             
             if(self.registeringAs == "Driver"){
-                self.ref.child("userStates").child("\(self.currentUser!.uid)/driver/venmoID").setValue(self.venmoField.text!)
-                self.ref.child("users/\(self.currentUser!.uid)/totalRides").setValue(1)
+                self.ref.child("userStates").child("\(self.currentUser!.uid)").setValue(true)
+                self.ref.child("users/\(self.currentUser!.uid)/driver/venmoID").setValue(self.venmoField.text)
+                self.ref.child("users/\(self.currentUser!.uid)/driver/make").setValue(self.makeField.text)
+                self.ref.child("users/\(self.currentUser!.uid)/driver/model").setValue(self.modelField.text)
             } else {
                 self.ref.child("userStates").child("\(self.currentUser!.uid)").setValue(false)
             }

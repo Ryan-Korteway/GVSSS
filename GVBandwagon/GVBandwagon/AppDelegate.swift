@@ -455,11 +455,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             self.driverBlackList = localList;
         })
         
-        ref.child("users/\(userID)/driver/venmoID").observeSingleEvent(of: .value, with: { snapshot in
-        
-            for local in snapshot.children { //grab venmo id.
-                self.driverVenmoID = (local as AnyObject).value;
-            } //this may not be working.
+        ref.child("users/\(userID)/driver/venmoID/").observeSingleEvent(of: .value, with: { snapshot in
+                self.driverVenmoID = (snapshot.value! as! NSString) as String;
+                print(self.driverVenmoID)
         })
         
     }
