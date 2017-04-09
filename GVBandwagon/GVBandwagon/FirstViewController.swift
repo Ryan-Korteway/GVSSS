@@ -215,7 +215,7 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
             } else if (snapshot.key == "long") {
                 marker.position.longitude = snapshot.value as! CLLocationDegrees
             } else {
-                self.localDelegate.ourAddress = snapshot.value as! NSString
+                self.localDelegate.ourAddress = snapshot.value as? NSString
             }
         }) //hopefully this makes the pins update their locations and then its needed in the driver stuff to set up the driver to update these fields.
         //once we accept the offer, we will need a .value to get each key to remove each observer before we delete the whole section.
@@ -337,8 +337,7 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
             
             //history set up here.
             let ourID = FIRAuth.auth()!.currentUser!.uid
-            let date = Date()
-            topRef.child("users/\(ourID)/history/\(dictionary.value(forKey: "destinationName")!)\(date.description)/").setValue(dictionary)
+            topRef.child("users/\(ourID)/history/\(dictionary.value(forKey: "destinationName")!)\(dictionary.value(forKey: "date"))/").setValue(dictionary)
             
             self.googleMapsView.clear()
             
