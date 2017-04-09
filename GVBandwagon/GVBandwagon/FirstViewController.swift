@@ -445,6 +445,7 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
                                                     content: content, trigger: trigger)
                 
                 self.center.add(request, withCompletionHandler: { (error) in
+                    print("adding rider notification")
                     if let error = error {
                         print(error.localizedDescription)
                     }

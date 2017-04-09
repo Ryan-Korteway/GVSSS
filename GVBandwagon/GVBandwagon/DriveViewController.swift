@@ -239,69 +239,6 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
                 self.googleMap.clear()
             
                 localDelegate.startDriverMapObservers()
-            //commetting out most of ride accept because it should be being handled/covered by fillWithAcceptance
-            
-//                let marker = GMSMarker()
-//                let lat = locationInfo.value(forKey: "lat") as! CLLocationDegrees
-//                let long = locationInfo.value(forKey: "long") as! CLLocationDegrees
-//                marker.position = CLLocationCoordinate2D(latitude: lat, longitude: long)
-//            
-//                ref.child("users/\(self.localDelegate.offeredID)/rider/offers/accepted/immediate/rider/\(localDelegate.offeredID)/origin").observe(.childChanged, with: { snapshot in
-//                    print("marker moving!!! \(snapshot.key)")
-//                    if(snapshot.key == "lat") {
-//                        marker.position.latitude = snapshot.value as! CLLocationDegrees
-//                        self.riderLat = snapshot.value as! CLLocationDegrees
-//                    } else if(snapshot.key == "long") {
-//                        marker.position.longitude = snapshot.value as! CLLocationDegrees
-//                        self.riderLong = snapshot.value as! CLLocationDegrees
-//                    } else {
-//                        self.localDelegate.ourAddress = snapshot.value as! NSString
-//                    }
-//                })
-//                //do any of these matter thanks to the custom display window?...
-////                marker.title = "Your Rider: \(cellInfo["name"])"
-////                marker.snippet = "Close enough to Grand Valley."
-//                marker.icon = GMSMarker.markerImage(with: .red)
-//                marker.userData = cellInfo //giving each marker a dictionary of the info that set them up for future use.
-//                marker.map = self.googleMap
-//                
-//                baseDictionary = marker.userData as! NSDictionary
-//            
-//                ref.child("users/\(self.localDelegate.offeredID)/rider/accepted/immediate/").observeSingleEvent(of: .childRemoved, with:{ snapshot in
-//                    print("PIN BEING DELETED")
-//                    marker.map = nil;
-//                    self.ref.child("users/\(self.localDelegate.offeredID)/rider/accepted/immediate/rider/\(self.localDelegate.offeredID)/origin").removeAllObservers()
-//                    
-//                        //if deleted here, make sure it wasnt an early cancellation.
-//                    
-//                    let content = UNMutableNotificationContent()
-//                    content.title = "Ride Event"
-//                    
-//                    let baseDictionary = snapshot.value as! NSDictionary
-//                    
-//                    if(baseDictionary.value(forKey: "accepted") as! NSInteger != 1) {
-//                        content.body = "The ride request has been removed. You do not need to pick up this individual"
-//                    } else {
-//                        content.body = "Thank you for giving this user a ride."
-//                    }
-//                    content.sound = UNNotificationSound.default()
-//                    content.categoryIdentifier = "nothing_category"
-//                    
-//                    let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
-//                    
-//                    let identifier = "ride acceptance"
-//                    let request = UNNotificationRequest(identifier: identifier,
-//                                                        content: content, trigger: trigger)
-//                    self.center.add(request, withCompletionHandler: { (error) in
-//                        
-//                        if let error = error {
-//                            
-//                            print(error.localizedDescription)
-//                        }
-//                    })
-//                    
-//                    self.localDelegate.driverStatus = "request"
-//                })
             
         } else {
             
@@ -676,8 +613,9 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
                 let identifier = "ride acceptance"
                 let request = UNNotificationRequest(identifier: identifier,
                                                     content: content, trigger: trigger)
+                
                 self.center.add(request, withCompletionHandler: { (error) in
-
+                    print("adding driver notification")
                     if let error = error {
                         
                         print(error.localizedDescription)
