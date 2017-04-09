@@ -510,8 +510,7 @@ class RideRequestTableViewController: UITableViewController, UISearchBarDelegate
                 for item in snapshot.children {
                     print((item as! FIRDataSnapshot).key)
                 let dictionary = cellItem.init(snapshot: item as! FIRDataSnapshot).toAnyObject() as! NSDictionary
-                let date = Date()
-                self.ref.child("users/\(userID)/history/\(dictionary.value(forKey: "destinationName")!)\(date.description)/").setValue(dictionary)
+                self.ref.child("users/\(userID)/history/\(dictionary.value(forKey: "destinationName")!)\(dictionary.value(forKey: "date"))/").setValue(dictionary)
                 }
             }
         })

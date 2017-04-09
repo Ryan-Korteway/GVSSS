@@ -246,8 +246,7 @@ class RideSummaryTableViewController: UITableViewController {
     @IBAction func completeRideButton(_ sender: UIButton) {
         if(informationDictionary.count > 0 ){
             let ourID = FIRAuth.auth()!.currentUser!.uid
-            let date = Date()
-            ref.child("users/\(ourID)/history/\(informationDictionary.value(forKey: "destinationName")!)\(date.description)/").setValue(informationDictionary) //this does make duplicates at the moment.
+            ref.child("users/\(ourID)/history/\(informationDictionary.value(forKey: "destinationName")!)\(informationDictionary.value(forKey: "date"))/").setValue(informationDictionary) //this does make duplicates at the moment.
             
             if(paymentText == "Request Payment"){ //driver side.
                 //set our accepted value to 0 and then delete our branch before removing the whole offer.

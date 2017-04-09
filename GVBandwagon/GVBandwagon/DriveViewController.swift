@@ -438,15 +438,17 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
         
         if(localDelegate.offeredID != "none") { // CHECK ON OFFER DOUBLE TAP CRASH!! COULD BE OFFERED ID BEING EMPTY ETC.
             // make a history item here. destination name+time.
+            
+            print("id \(localDelegate.offeredID)")
+            
             let ref = FIRDatabase.database().reference()
             
-            //history saving done here.
+            //history saving done here. grabbing what is not there causing crashes.
             ref.child("users/\(self.localDelegate.offeredID)/rider/offers/accepted/immediate/rider/\(self.localDelegate.offeredID)/").observeSingleEvent(of: .value, with: { snapshot in
                 
                 let dictionary = cellItem.init(snapshot: snapshot).toAnyObject() as! NSDictionary
                 let ourID = FIRAuth.auth()!.currentUser!.uid
-                let date = Date()
-                self.ref.child("users/\(ourID)/history/\(dictionary.value(forKey: "destinationName")!)\(date.description)/").setValue(dictionary)
+                self.ref.child("users/\(ourID)/history/\(dictionary.value(forKey: "destinationName")!)\(dictionary.value(forKey: "date"))/").setValue(dictionary)
             })
 
         }

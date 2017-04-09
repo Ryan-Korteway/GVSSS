@@ -334,8 +334,7 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
             
             //history set up here.
             let ourID = FIRAuth.auth()!.currentUser!.uid
-            let date = Date()
-            topRef.child("users/\(ourID)/history/\(dictionary.value(forKey: "destinationName")!)\(date.description)/").setValue(dictionary)
+            topRef.child("users/\(ourID)/history/\(dictionary.value(forKey: "destinationName")!)\(dictionary.value(forKey: "date"))/").setValue(dictionary)
             
             self.googleMapsView.clear()
             
