@@ -53,13 +53,14 @@ struct cellItem {
     var date: NSString
     
     init(snapshot: FIRDataSnapshot) {
-        uid = snapshot.key
-        let snapshotValue = snapshot.value as! [String: AnyObject] // opening and closing the app causing crashes here for some reason.
+        //uid = snapshot.key
+        let snapshotValue = snapshot.value as! [String: AnyObject]
+        uid = snapshotValue["uid"] as! String ?? snapshot.key 
         name = snapshotValue["name"] as! String
-        venmoID = snapshotValue["venmoID"] as! String //needs to be added automatically with FIRAuth.auth().currentUser.email etc.
+        venmoID = snapshotValue["venmoID"] as! String
         rate = snapshotValue["rate"] as! NSNumber
-        origin = snapshotValue["origin"] as! NSDictionary //should be a dictionary of lats and longs
-        destination = snapshotValue["destination"] as! NSDictionary //should be a dictionary of lats and longs
+        origin = snapshotValue["origin"] as! NSDictionary
+        destination = snapshotValue["destination"] as! NSDictionary
         destinationName = snapshotValue["destinationName"] as! NSString
         accepted = snapshotValue["accepted"] as! NSInteger //if its set to 0, its false/no ride acceptance, else it is 1 and ride accepted.
         repeats = snapshotValue["repeats"] as! NSString

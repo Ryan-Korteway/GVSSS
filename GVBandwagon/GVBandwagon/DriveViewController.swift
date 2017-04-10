@@ -198,7 +198,6 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
             panelVC.mode = "Driver"
             panelVC.goOnlineLabel.isHidden = false
             panelVC.goOnlineSwitch.isHidden = false
-            panelVC.viewReload()
             panelVC.getRating()
             
             // Reposition contents to revel space where "Go Online" switch is:
@@ -289,6 +288,7 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
         print("our start lat and long are \(locationInfo.value(forKey: "lat") as! CLLocationDegrees) \(locationInfo.value(forKey: "long") as! CLLocationDegrees)")
         
         print("our id \(cellInfo["uid"]!)")
+        //cellInfo["uid"] = "myUID" //to comment out later.
         
         let marker = GMSMarker()
         let lat = locationInfo.value(forKey: "lat") as! CLLocationDegrees
@@ -358,8 +358,6 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
             }
         })
         
-        marker.title = "Potential Rider: \(cellInfo["name"])"
-        marker.snippet = "Wants a ride to: (ADDRESS HERE) for $(money here)."
         marker.icon = GMSMarker.markerImage(with: .blue)
         marker.userData = cellInfo //giving each marker a dictionary of the info that set them up for future use.
         marker.map = self.googleMap
