@@ -53,33 +53,6 @@ class DriverPanelViewController: UIViewController {
         localDelegate.PanelViewController = self
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        self.getActiveTrip()
-    }
-    
-    func viewReload() {
-        if(mode == "Driver") {
-            
-            ref.child("users/\(ourid)/driver/totalRiders/").observeSingleEvent(of: .value, with: { snapshot in
-                print("key " + snapshot.key)
-                print("value  \((snapshot.value as? NSInteger)!)")
-                //Removed//self.tripCounterLabel.text = "\((snapshot.value as? NSInteger)!) trips."
-            })
-            
-        } else {
-            
-            ref.child("users/\(ourid)/rider/totalRides/").observeSingleEvent(of: .value, with: { snapshot in
-                print("key " + snapshot.key)
-                print("value  \((snapshot.value as? NSInteger)!)")
-                //Removed//self.tripCounterLabel.text = "\((snapshot.value as? NSInteger)!) trips."
-            })
-        }
-        
-        self.getActiveTrip()
-    }
-    
     func switchIsChanged(mySwitch: UISwitch) {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         

@@ -147,7 +147,6 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
             panelVC.mode = "Ride"
             panelVC.goOnlineSwitch.isHidden = true
             panelVC.goOnlineLabel.isHidden = true
-            panelVC.viewReload()
             panelVC.getRating()
             
             // Reposition contents to fill space where "Go Online" button would be.
