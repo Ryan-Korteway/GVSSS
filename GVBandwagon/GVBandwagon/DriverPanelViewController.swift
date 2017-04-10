@@ -49,7 +49,6 @@ class DriverPanelViewController: UIViewController {
         
         getRating()
         getActiveTrip()
-        viewReload()
         localDelegate.PanelViewController = self
     }
     
