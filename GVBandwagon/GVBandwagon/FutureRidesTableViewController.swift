@@ -7,8 +7,13 @@
 //
 
 import UIKit
+import Firebase
 
 class FutureRidesTableViewController: UITableViewController {
+    
+    let ref = FIRDatabase.database().reference()
+    let ourid = FIRAuth.auth()!.currentUser!.uid
+    var futureRides = [NSDictionary]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -18,6 +23,14 @@ class FutureRidesTableViewController: UITableViewController {
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+        self.getFutureRides()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        print("viwwillappear")
+        self.getFutureRides()
     }
 
     override func didReceiveMemoryWarning() {
@@ -29,24 +42,24 @@ class FutureRidesTableViewController: UITableViewController {
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 0
+        return 1
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        return 0
+        return self.futureRides.count
     }
 
-    /*
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "futureRidesCellId", for: indexPath)
 
         // Configure the cell...
+        let trip = self.futureRides[indexPath.row]
+        cell.textLabel?.text = trip.value(forKey: "destinationName") as! String?
+        cell.detailTextLabel?.text = trip.value(forKey: "date") as! String?
 
         return cell
     }
-    */
-
+ 
     /*
     // Override to support conditional editing of the table view.
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
@@ -91,5 +104,24 @@ class FutureRidesTableViewController: UITableViewController {
         // Pass the selected object to the new view controller.
     }
     */
+    
+    func getFutureRides() {
+        
+        self.ref.child("requests/scheduled/\(self.ourid)/").observeSingleEvent(of: .value, with:{ snapshot in
+            
+            // Clear out the array before appending:
+            self.futureRides.removeAll()
+            
+            for uid in snapshot.children {
+                if let baseDictionary = cellItem.init(snapshot: uid as! FIRDataSnapshot).toAnyObject() as? NSDictionary {
+                    
+                    self.futureRides.append(baseDictionary)
+                }
+            }
+            
+            self.tableView.reloadData()
+            
+        })
+    }
 
 }

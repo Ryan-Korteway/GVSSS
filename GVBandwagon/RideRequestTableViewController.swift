@@ -224,7 +224,10 @@ class RideRequestTableViewController: UITableViewController, UISearchBarDelegate
                         
                         // This is a future or recurring ride:
                         
-                        self.ref.child("users/\(self.currentUser!.uid)/rider/scheduled/\(date)/").setValue(["name": self.currentUser!.displayName!, "uid": self.currentUser!.uid, "venmoID": "none", "origin": ["lat": currentLat, "long": currentLong, "address": addr], "destination": ["latitude": self.destLat, "longitude" : self.destLong], "destinationName": self.destName!, "rate" : newRate, "accepted": 0, "repeats": self.freqArray.description, "date": date])
+                        let now = Date()
+                        let dateNow = now.description
+                        
+                        self.ref.child("requests/scheduled/\(self.currentUser!.uid)/\(dateNow)/").setValue(["name": self.currentUser!.displayName!, "uid": self.currentUser!.uid, "venmoID": "none", "origin": ["lat": currentLat, "long": currentLong, "address": addr], "destination": ["latitude": self.destLat, "longitude" : self.destLong], "destinationName": self.destName!, "rate" : newRate, "accepted": 0, "repeats": self.freqArray.description, "date": date])
                     }
                     
                 }

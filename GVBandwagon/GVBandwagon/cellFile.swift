@@ -53,8 +53,9 @@ struct cellItem {
     var date: NSString
     
     init(snapshot: FIRDataSnapshot) {
-        uid = snapshot.key
+        //uid = snapshot.key
         let snapshotValue = snapshot.value as! [String: AnyObject] // opening and closing the app causing crashes here for some reason.
+        uid = snapshotValue["uid"] as! String
         name = snapshotValue["name"] as! String
         venmoID = snapshotValue["venmoID"] as! String //needs to be added automatically with FIRAuth.auth().currentUser.email etc.
         rate = snapshotValue["rate"] as! NSNumber
