@@ -1470,7 +1470,7 @@
                                             <constraint firstAttribute="height" constant="150" id="k67-rv-7ba"/>
                                         </constraints>
                                         <connections>
-                                            <segue destination="RmS-6R-dmZ" kind="embed" id="qf0-Fs-lwK"/>
+                                            <segue destination="RmS-6R-dmZ" kind="embed" identifier="embedSegue" id="qf0-Fs-lwK"/>
                                         </connections>
                                     </containerView>
                                 </subviews>
@@ -2038,7 +2038,7 @@
             <objects>
                 <navigationController storyboardIdentifier="helpNavControllerStoryboardId" automaticallyAdjustsScrollViewInsets="NO" id="310-Ue-cRZ" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="jCp-Y1-93A">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="jCp-Y1-93A">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -2770,7 +2770,7 @@
         <image name="yellowstar" width="240" height="240"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="qU9-iD-UHd"/>
+        <segue reference="gXi-1e-BDf"/>
         <segue reference="W9u-9l-6Si"/>
     </inferredMetricsTieBreakers>
 </document>

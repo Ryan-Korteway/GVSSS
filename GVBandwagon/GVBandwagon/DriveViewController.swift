@@ -205,6 +205,8 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
             
             //panelVC.contentsView.frame = panelVC.contentsView.frame.offsetBy(dx: 0, dy: -60)
             panelVC.contentsView.frame = CGRect(x: panelVC.contentsView.frame.origin.x, y: 220, width: panelVC.contentsView.frame.width, height: panelVC.contentsView.frame.height)
+            
+            panelVC.scheduledRidesTableVC?.getFutureRides()
         }
     }
     

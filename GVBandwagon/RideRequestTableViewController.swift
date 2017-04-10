@@ -168,9 +168,12 @@ class RideRequestTableViewController: UITableViewController, UISearchBarDelegate
         // or recurring ride:
         var date = "None"
         if (self.dateLabel.alpha == 1) {
-            let formatter = DateFormatter()
-            formatter.dateFormat = "MMM d, h:mm a"
-            date = formatter.string(from: self.datePicker.date)
+            // We want a date down to the second for uniqueness:
+            
+            //let formatter = DateFormatter()
+            //formatter.dateFormat = "MMM d, h:mm a"
+            //date = formatter.string(from: self.datePicker.date)
+            date = self.datePicker.date.description
         }
         
         // Get from places picker:
@@ -214,7 +217,15 @@ class RideRequestTableViewController: UITableViewController, UISearchBarDelegate
                     //added line to handle rerequest data sync issues.
                     self.ref.child("requests/immediate/\(self.currentUser!.uid)/").removeValue()
                     
-                    self.ref.child("requests/immediate/\(self.currentUser!.uid)/").setValue(["name": self.currentUser!.displayName!, "uid": self.currentUser!.uid, "venmoID": "none", "origin": ["lat": currentLat!, "long": currentLong!, "address": addr], "destination": ["latitude": self.destLat, "longitude" : self.destLong], "destinationName": self.destName!, "rate" : newRate, "accepted": 0, "repeats": self.freqArray.description, "date": date]) //TODO still need dynamic date here.
+                    // If alpha is 0 then this is a "Ride Now"
+                    if (self.dateLabel.alpha == 0) {
+                        self.ref.child("requests/immediate/\(self.currentUser!.uid)/").setValue(["name": self.currentUser!.displayName!, "uid": self.currentUser!.uid, "venmoID": "none", "origin": ["lat": currentLat, "long": currentLong, "address": addr], "destination": ["latitude": self.destLat, "longitude" : self.destLong], "destinationName": self.destName!, "rate" : newRate, "accepted": 0, "repeats": self.freqArray.description, "date": date]) //TODO still need dynamic date here.
+                    } else {
+                        
+                        // This is a future or recurring ride:
+                        
+                        self.ref.child("users/\(self.currentUser!.uid)/rider/scheduled/\(date)/").setValue(["name": self.currentUser!.displayName!, "uid": self.currentUser!.uid, "venmoID": "none", "origin": ["lat": currentLat, "long": currentLong, "address": addr], "destination": ["latitude": self.destLat, "longitude" : self.destLong], "destinationName": self.destName!, "rate" : newRate, "accepted": 0, "repeats": self.freqArray.description, "date": date])
+                    }
                     
                 }
             }
@@ -500,7 +511,7 @@ class RideRequestTableViewController: UITableViewController, UISearchBarDelegate
             return
         }
         
-        let userID = FIRAuth.auth()!.currentUser!.uid
+        let userID = self.currentUser?.uid
         
         // make a history item here. destination name+time.
         ref.child("users/\(userID)/rider/offers/accepted/immediate/driver/").observeSingleEvent(of: .value, with: { snapshot in

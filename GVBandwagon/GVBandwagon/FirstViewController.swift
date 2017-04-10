@@ -20,6 +20,7 @@ protocol RideViewDelegate {
 class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notifications, RideViewDelegate {
     
     var localDelegate: AppDelegate!
+    var scheduledRidesDelegate: ScheduledRidesTableViewDelegate?
     
     var placesClient: GMSPlacesClient!
 
@@ -152,6 +153,8 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
             // Note the hard-coded 220-60 (220 original y position):
             
             panelVC.contentsView.frame = CGRect(x: panelVC.contentsView.frame.origin.x, y: 220-60, width: panelVC.contentsView.frame.width, height: panelVC.contentsView.frame.height)
+            
+            panelVC.scheduledRidesTableVC?.getFutureRides()
         }
     }
     
