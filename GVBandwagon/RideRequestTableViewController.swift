@@ -214,12 +214,24 @@ class RideRequestTableViewController: UITableViewController, UISearchBarDelegate
                     
                     let newRate = NSNumber.init(value: Float.init(self.offerTextField.text!)!)
                     
+                    // Create string from frequency array:
+                    var freq = "None"
+                    for day in self.freqArray {
+                        if day != "No" {
+                            if freq == "None" {
+                                freq = ""
+                            }
+                            freq += day + " "
+                        }
+                    }
+                    print("Freq: \(freq)")
+                    
                     //added line to handle rerequest data sync issues.
                     self.ref.child("requests/immediate/\(self.currentUser!.uid)/").removeValue()
                     
                     // If alpha is 0 then this is a "Ride Now"
                     if (self.dateLabel.alpha == 0) {
-                        self.ref.child("requests/immediate/\(self.currentUser!.uid)/").setValue(["name": self.currentUser!.displayName!, "uid": self.currentUser!.uid, "venmoID": "none", "origin": ["lat": currentLat, "long": currentLong, "address": addr], "destination": ["latitude": self.destLat, "longitude" : self.destLong], "destinationName": self.destName!, "rate" : newRate, "accepted": 0, "repeats": self.freqArray.description, "date": date]) //TODO still need dynamic date here.
+                        self.ref.child("requests/immediate/\(self.currentUser!.uid)/").setValue(["name": self.currentUser!.displayName!, "uid": self.currentUser!.uid, "venmoID": "none", "origin": ["lat": currentLat, "long": currentLong, "address": addr], "destination": ["latitude": self.destLat, "longitude" : self.destLong], "destinationName": self.destName!, "rate" : newRate, "accepted": 0, "repeats": freq, "date": date]) //TODO still need dynamic date here.
                     } else {
                         
                         // This is a future or recurring ride:
@@ -227,7 +239,7 @@ class RideRequestTableViewController: UITableViewController, UISearchBarDelegate
                         let now = Date()
                         let dateNow = now.description
                         
-                        self.ref.child("requests/scheduled/\(self.currentUser!.uid)/\(dateNow)/").setValue(["name": self.currentUser!.displayName!, "uid": self.currentUser!.uid, "venmoID": "none", "origin": ["lat": currentLat, "long": currentLong, "address": addr], "destination": ["latitude": self.destLat, "longitude" : self.destLong], "destinationName": self.destName!, "rate" : newRate, "accepted": 0, "repeats": self.freqArray.description, "date": date])
+                        self.ref.child("requests/scheduled/\(self.currentUser!.uid)/\(dateNow)/").setValue(["name": self.currentUser!.displayName!, "uid": self.currentUser!.uid, "venmoID": "none", "origin": ["lat": currentLat, "long": currentLong, "address": addr], "destination": ["latitude": self.destLat, "longitude" : self.destLong], "destinationName": self.destName!, "rate" : newRate, "accepted": 0, "repeats": freq, "date": date])
                     }
                     
                 }

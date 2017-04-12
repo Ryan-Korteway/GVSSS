@@ -40,12 +40,12 @@ class ScheduledRidesTableViewController: UITableViewController {
     
     func getFutureRides() {
         
-        self.ref.child("users/\(self.ourid)/rider/scheduled/").observeSingleEvent(of: .value, with:{ snapshot in
+        self.ref.child("requests/scheduled/\(self.ourid)/").observeSingleEvent(of: .value, with:{ snapshot in
             
             self.futureRides.removeAll()
             
-            for uid in snapshot.children {
-                if let baseDictionary = cellItem.init(snapshot: uid as! FIRDataSnapshot).toAnyObject() as? NSDictionary {
+            for trip in snapshot.children {
+                if let baseDictionary = cellItem.init(snapshot: trip as! FIRDataSnapshot).toAnyObject() as? NSDictionary {
                     
                     self.futureRides.append(baseDictionary)
                 }
