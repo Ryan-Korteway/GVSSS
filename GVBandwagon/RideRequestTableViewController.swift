@@ -554,8 +554,6 @@ class RideRequestTableViewController: UITableViewController, UISearchBarDelegate
             print(day)
         }
         
-        localDelegate.riderStatus = "request"
-        localDelegate.startTimer();
         self.searchController?.view.removeFromSuperview() // A bug in Swift that requires this.
         _ = self.navigationController?.popViewController(animated: true)
     }

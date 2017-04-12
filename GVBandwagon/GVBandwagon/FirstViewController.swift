@@ -325,7 +325,7 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
             let dictionary: NSDictionary = snapshot.value! as! NSDictionary
             ref.child("offers/accepted/immediate/driver/\(cellInfo.value(forKey: "uid")!)").setValue(dictionary) //create an accepted branch of the riders table
             
-            ref.child("offers/accepted/immediate/rider/\(user.uid)").setValue(["name": user.displayName!, "uid": user.uid, "venmoID": "none", "origin": ["lat": self.ourLat, "long": self.ourLong, "address": self.localDelegate.ourAddress!], "destination": dictionary.value(forKey: "destination")!, "rate" : dictionary.value(forKey: "rate"), "accepted": 1, "repeats": "none", "date": dictionary.value(forKey: "date"), "destinationName": dictionary.value(forKey: "destinationName")!])
+            ref.child("offers/accepted/immediate/rider/\(user.uid)").setValue(["name": user.displayName!, "uid": user.uid, "venmoID": "none", "origin": ["lat": self.ourLat, "long": self.ourLong, "address": self.localDelegate.ourAddress ?? "none"], "destination": dictionary.value(forKey: "destination")!, "rate" : dictionary.value(forKey: "rate"), "accepted": 1, "repeats": "none", "date": dictionary.value(forKey: "date"), "destinationName": dictionary.value(forKey: "destinationName")!])
             
             let localDelegate = UIApplication.shared.delegate as! AppDelegate
             localDelegate.riderStatus = "accepted"
@@ -385,6 +385,7 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
             ref.child("users/\(uid)/rider/offers/accepted/immediate/").removeValue()
             localDelegate.riderStatus = "request"
             localDelegate.timer.invalidate()
+            self.infoWindow.acceptButton.alpha = 1
         }
     }
         
