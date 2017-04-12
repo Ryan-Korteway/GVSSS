@@ -102,7 +102,7 @@ class MyHistoryTableViewController: UITableViewController {
         print("destination Name \((cellItem?.destinationName as String?))")
         print("Name and Rate \((cellItem?.name as String?)) \(cellItem!.rate)")
         cell.textLabel?.text = (cellItem!.name) + "\t\t\t$\(cellItem!.rate)"
-        cell.detailTextLabel?.text = (cellItem?.uid as String?); //uid shows destination and
+        cell.detailTextLabel?.text = (cellItem?.destinationName as String?); //uid shows destination and
         //time of trip but it gets cut off because the screen isnt wide enough. anyway to force
         //text wrapping/newlines in storyboard?
         

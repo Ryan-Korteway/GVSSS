@@ -627,6 +627,7 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
                 self.localDelegate.offeredID = "none"
                 self.localDelegate.driverStatus = "request"
                 self.localDelegate.timer.invalidate()
+                self.infoWindow.acceptButton.alpha = 1
             })
         }
     }

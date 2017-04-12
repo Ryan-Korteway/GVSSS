@@ -107,15 +107,17 @@ class FutureRidesTableViewController: UITableViewController {
     
     func getFutureRides() {
         
-        self.ref.child("requests/scheduled/\(self.ourid)/").observeSingleEvent(of: .value, with:{ snapshot in
+        self.ref.child("requests/scheduled/").observeSingleEvent(of: .value, with:{ snapshot in
             
             // Clear out the array before appending:
             self.futureRides.removeAll()
             
             for uid in snapshot.children {
-                if let baseDictionary = cellItem.init(snapshot: uid as! FIRDataSnapshot).toAnyObject() as? NSDictionary {
-                    
-                    self.futureRides.append(baseDictionary)
+                for innerChild in (uid as! FIRDataSnapshot).children{
+                    if let baseDictionary = cellItem.init(snapshot: innerChild as! FIRDataSnapshot).toAnyObject() as? NSDictionary {
+                        print(baseDictionary.value(forKey: "uid") ?? "none")
+                        self.futureRides.append(baseDictionary)
+                    }
                 }
             }
             
