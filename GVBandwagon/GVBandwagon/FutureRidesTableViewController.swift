@@ -44,6 +44,10 @@ class FutureRidesTableViewController: UITableViewController {
         // #warning Incomplete implementation, return the number of sections
         return 1
     }
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 100
+    }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.futureRides.count
@@ -55,7 +59,15 @@ class FutureRidesTableViewController: UITableViewController {
         // Configure the cell...
         let trip = self.futureRides[indexPath.row]
         cell.textLabel?.text = trip.value(forKey: "destinationName") as! String?
-        cell.detailTextLabel?.text = trip.value(forKey: "date") as! String?
+        
+        var subtitle = trip.value(forKey: "date") as! String?
+        if (trip.value(forKey: "repeats") as! String? != "None") {
+            subtitle = trip.value(forKey: "repeats") as! String?
+        }
+        cell.detailTextLabel?.text = subtitle
+        
+        cell.textLabel?.lineBreakMode = .byWordWrapping
+        cell.textLabel?.numberOfLines = 2
 
         return cell
     }
@@ -109,16 +121,21 @@ class FutureRidesTableViewController: UITableViewController {
         
         self.ref.child("requests/scheduled/").observeSingleEvent(of: .value, with:{ snapshot in
             
+            
             // Clear out the array before appending:
             self.futureRides.removeAll()
             
+            
             for uid in snapshot.children {
-                for innerChild in (uid as! FIRDataSnapshot).children{
-                    if let baseDictionary = cellItem.init(snapshot: innerChild as! FIRDataSnapshot).toAnyObject() as? NSDictionary {
-                        print(baseDictionary.value(forKey: "uid") ?? "none")
+                let userID = uid as! FIRDataSnapshot
+                
+                for request in userID.children {
+                    if let baseDictionary = cellItem.init(snapshot: request as! FIRDataSnapshot).toAnyObject() as? NSDictionary {
+                        
                         self.futureRides.append(baseDictionary)
                     }
                 }
+                
             }
             
             self.tableView.reloadData()

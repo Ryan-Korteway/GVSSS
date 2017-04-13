@@ -54,8 +54,8 @@ struct cellItem {
     
     init(snapshot: FIRDataSnapshot) {
         //uid = snapshot.key
-        let snapshotValue = snapshot.value as! [String: AnyObject] // opening and closing the app causing crashes here for some reason.
-        uid = snapshotValue["uid"] as! String
+        let snapshotValue = snapshot.value as! [String: AnyObject]
+        uid = snapshotValue["uid"] as! String ?? snapshot.key 
         name = snapshotValue["name"] as! String
         venmoID = snapshotValue["venmoID"] as! String
         rate = snapshotValue["rate"] as! NSNumber
