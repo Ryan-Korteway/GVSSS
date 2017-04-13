@@ -160,6 +160,9 @@ class DriverPanelViewController: UIViewController {
         } else {
             self.activeTripExists = false
         }
+        
+        //FILLER TEST LINE.
+        self.activeTripExists = true
     }
     
     // Get rating from FB. Return stars based on rounded to nearest whole number:

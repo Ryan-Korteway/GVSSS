@@ -96,6 +96,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var DriveSet = false
     var PanelViewController = UIViewController() 
     
+    let gvbNotification = GVBNotificationDelegate()
+    
     // Overriding init() and putting FIRApp.configure() here to ensure it's configured before
     // the first view controller tries to retreive a reference to it.
     override init() {
@@ -109,6 +111,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         center.setNotificationCategories([categoryAccept, categoryOffer, categoryNothing])
 
         super.init()
+        
+        center.delegate = gvbNotification;
         
         FIRApp.configure()
         // not really needed unless you really need it 

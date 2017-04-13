@@ -27,8 +27,6 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
     var isMessageDisplayed = false
     let locationManager = CLLocationManager()
     
-    let center = UNUserNotificationCenter.current()
-    
     let ref = FIRDatabase.database().reference();
     let userID = FIRAuth.auth()!.currentUser!.uid
     
@@ -61,7 +59,6 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
         } else {
             self.googleMap.clear()
         }
-        
         
         self.ref.child("users/\(FIRAuth.auth()!.currentUser!.uid)/stateVars/driverStatus").observeSingleEvent(of: .value, with: { snapshot in
             
@@ -258,7 +255,7 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
             let identifier = "ride acceptance"
             let request = UNNotificationRequest(identifier: identifier,
                                                 content: content, trigger: trigger)
-            self.center.add(request, withCompletionHandler: { (error) in
+            self.localDelegate.center.add(request, withCompletionHandler: { (error) in
                 
                 if let error = error {
                     
@@ -616,7 +613,7 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
                 let request = UNNotificationRequest(identifier: identifier,
                                                     content: content, trigger: trigger)
                 
-                self.center.add(request, withCompletionHandler: { (error) in
+                self.localDelegate.center.add(request, withCompletionHandler: { (error) in
                     print("adding driver notification")
                     if let error = error {
                         

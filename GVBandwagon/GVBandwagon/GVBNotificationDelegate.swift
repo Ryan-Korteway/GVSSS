@@ -12,8 +12,6 @@ import Firebase
 
 class GVBNotificationDelegate: NSObject, UNUserNotificationCenterDelegate {
     
-    let localDelegate = UIApplication.shared.delegate as! AppDelegate
-    
     func userNotificationCenter(_ center: UNUserNotificationCenter,
                                 willPresent notification: UNNotification,
                                 withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
@@ -25,6 +23,7 @@ class GVBNotificationDelegate: NSObject, UNUserNotificationCenterDelegate {
                                 didReceive response: UNNotificationResponse,
                                 withCompletionHandler completionHandler: @escaping () -> Void) {
         
+        let localDelegate = UIApplication.shared.delegate as! AppDelegate
         
         // THE ACTIONS NEED TO CHANGE THE APP DELEGATES TIMER STATES.
         
