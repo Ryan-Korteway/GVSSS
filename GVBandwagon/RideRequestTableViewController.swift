@@ -30,8 +30,6 @@ class RideRequestTableViewController: UITableViewController, UISearchBarDelegate
     
     var resultsViewController: GMSAutocompleteResultsViewController?
     var searchController: UISearchController?
-    
-    let center = UNUserNotificationCenter.current()
 
     let selectedDateHeight: CGFloat = 180
     let selectedFreqHeight: CGFloat = 150

@@ -44,8 +44,6 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
     var ourLong = 0.0
     var isMessageDisplayed = false
     
-    let center = UNUserNotificationCenter.current()
-    
     // For the Ride Now button
     var shadowLayer: CAShapeLayer!
     
@@ -186,6 +184,8 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
     func ride_offer(item: cellItem) {
         
         print("ride offer being made")
+        
+        self.infoWindow.acceptButton.alpha = 1
         
         let cellInfo: NSDictionary = item.toAnyObject() as! NSDictionary
         let locationInfo: NSDictionary = cellInfo["origin"] as! NSDictionary
@@ -450,7 +450,7 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
                 let request = UNNotificationRequest(identifier: identifier,
                                                     content: content, trigger: trigger)
                 
-                self.center.add(request, withCompletionHandler: { (error) in
+                self.localDelegate.center.add(request, withCompletionHandler: { (error) in
                     print("adding rider notification")
                     if let error = error {
                         print(error.localizedDescription)
