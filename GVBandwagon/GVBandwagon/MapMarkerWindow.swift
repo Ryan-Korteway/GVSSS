@@ -16,6 +16,7 @@ class MapMarkerWindow: UIView {
     let acceptButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 20))
     let declineButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 20))
     let offerButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 20))
+    let detailsButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 20))
     
     var windowType = "Rider"
     
@@ -113,6 +114,13 @@ class MapMarkerWindow: UIView {
         declineButton.setTitleColor(UIColor.white, for: .normal)
         declineButton.titleLabel?.textAlignment = .center
         declineButton.setTitle("Decline", for: .normal)
+        
+        // Details Button:
+        detailsButton.center = CGPoint(x: 50, y: 75)
+        detailsButton.setTitleColor(UIColor.white, for: .normal)
+        detailsButton.setTitle("Details", for: .normal)
+        detailsButton.titleLabel?.textAlignment = .center
+        
     }
     
     override func updateConstraints() {
@@ -123,5 +131,15 @@ class MapMarkerWindow: UIView {
         //self.addSubview(acceptButton)
         
         //acceptButton.topAnchor.constraint(equalTo: margins.topAnchor, constant: 90).isActive = true
+    }
+    
+    func setDetailsButton() {
+        self.acceptButton.removeFromSuperview()
+        self.addSubview(self.detailsButton)
+    }
+    
+    func removeDetailsButton() {
+        self.detailsButton.removeFromSuperview()
+        self.addSubview(self.acceptButton)
     }
 }

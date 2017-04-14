@@ -370,7 +370,9 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
         ride_accept(item: baseDictionary) //local cell assignment might be bad/fail here.
         infoWindow.removeFromSuperview()
         
-        self.infoWindow.acceptButton.alpha = 0
+        //self.infoWindow.acceptButton.alpha = 0
+        self.infoWindow.setDetailsButton()
+        //set target for details button
     }
     
     func declineTapped(button: UIButton) -> Void {
@@ -385,7 +387,9 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
             ref.child("users/\(uid)/rider/offers/accepted/immediate/").removeValue()
             localDelegate.riderStatus = "request"
             localDelegate.timer.invalidate()
-            self.infoWindow.acceptButton.alpha = 1
+            //self.infoWindow.acceptButton.alpha = 1
+            self.infoWindow.removeDetailsButton()
+            //set target for details button
         }
     }
         
