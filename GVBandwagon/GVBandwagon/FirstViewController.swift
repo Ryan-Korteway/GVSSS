@@ -17,6 +17,7 @@ protocol RideViewDelegate {
 }
 
 //TODO: Each viewDidLoad, check didLoadMapsYet and set googleMapsView = persisted map.  
+//TODO: how to set immediateRideAccepted to false properly? Specifically for driver?
 class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notifications, RideViewDelegate {
     
     var localDelegate: AppDelegate!
@@ -46,6 +47,8 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
     
     // For the Ride Now button
     var shadowLayer: CAShapeLayer!
+    
+    var immediateRideAccepted = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -252,6 +255,8 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
                 })
                 // End get riders current place
                 
+                nextVC.immediateRideAccepted = self.immediateRideAccepted
+                
             }
         } else if segue.identifier == "toRequestRideSegue" {
             if let nextVC = segue.destination as? RideRequestTableViewController {
@@ -372,7 +377,7 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
         
         //self.infoWindow.acceptButton.alpha = 0
         self.infoWindow.setDetailsButton()
-        //set target for details button
+        self.infoWindow.detailsButton.addTarget(self, action: #selector(detailsTapped(button:)), for: .touchUpInside)
     }
     
     func declineTapped(button: UIButton) -> Void {
@@ -389,13 +394,23 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
             localDelegate.timer.invalidate()
             //self.infoWindow.acceptButton.alpha = 1
             self.infoWindow.removeDetailsButton()
-            //set target for details button
+            self.infoWindow.detailsButton.addTarget(self, action: #selector(detailsTapped(button:)), for: .touchUpInside)
         }
+        self.immediateRideAccepted = false
+    }
+    
+    func detailsTapped(button: UIButton) -> Void {
+        // TODO: Only for driver though: Check first if both parties have accepted.
+        // If not, pop up notification saying "We're still waiting for the
+        // rider to accept your offer."
+        self.performSegue(withIdentifier: "riderAcceptsSegue", sender: self)
     }
         
     func fillWithAcceptance(item: cellItem) {
         let cellInfo = item.toAnyObject() as! NSDictionary
         let locationInfo: NSDictionary = cellInfo["origin"] as! NSDictionary
+        
+        self.immediateRideAccepted = true
         
         let marker = GMSMarker()
         marker.icon = UIImage(named: "iconmonstr-car-1-48")

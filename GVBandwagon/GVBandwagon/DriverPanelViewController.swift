@@ -91,7 +91,7 @@ class DriverPanelViewController: UIViewController {
     @IBAction func activeTripTapped(_ sender: Any) {
         // Check if there is one, if not do nothing.
         
-        if (!activeTripExists) {
+        if (!self.activeTripExists) {
             return
         }
         
@@ -152,17 +152,16 @@ class DriverPanelViewController: UIViewController {
             self.activeTripLabel.text = dest
             
             print("Dest for label: \(dest)")
+            
+            // If active trip exists then
+            if (dest != "No active trip") {
+                self.activeTripExists = true
+            } else {
+                self.activeTripExists = false
+            }
+            
         })
         
-        // If active trip exists then
-        if (dest != "No active trip" && dest != "") {
-            self.activeTripExists = true
-        } else {
-            self.activeTripExists = false
-        }
-        
-        //TODO: For testing only. Above logic isn't working right.
-        self.activeTripExists = true
     }
     
     // Get rating from FB. Return stars based on rounded to nearest whole number:

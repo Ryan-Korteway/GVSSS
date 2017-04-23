@@ -43,6 +43,7 @@ class RideSummaryTableViewController: UITableViewController {
     var informationDictionary: NSDictionary = [:]
     
     var mode = "none"
+    var immediateRideAccepted = false
     
     let ref = FIRDatabase.database().reference()
     
@@ -84,36 +85,24 @@ class RideSummaryTableViewController: UITableViewController {
         // We can use UID of driver/rider in the users profile to pull the appropriate information for this view controller.
         
         // TODO: pull drivers make/model/color and pass to next VC in prepareForSegue
+        // TODO: Nav bar is disappearing when going into rate driver then coming back out.
         
         if(informationDictionary.count > 0 ) {
         
             print("our uid: \(informationDictionary.value(forKey: "uid")!)")
             //pull information down fresh/correctly from firebase.
             
-            nameLabel.text = informationDictionary.value(forKey: "name") as! String?
             rateLabel.text = "\(informationDictionary.value(forKey: "rate")!)"
             
-            if(paymentText == "Request Payment") {
-                //driver side so pull riders ratings
-                ref.child("users/\(informationDictionary.value(forKey: "uid")!)/rider/rating").observeSingleEvent(of: .value, with: { snapshot in
-                    self.ratingLabel.text = "\((snapshot.value! as? NSInteger)!)"
-                })
-            } else {
-                //riders side so pull drivers ratings
-                ref.child("users/\(informationDictionary.value(forKey: "uid")!)/driver/rating").observeSingleEvent(of: .value, with: { snapshot in
-                    self.ratingLabel.text = "\((snapshot.value! as? NSInteger)!)"
-                })
-            }
+            // Get driver/rider specific information:
+            self.getUserData()
             
-            ref.child("users/\(informationDictionary.value(forKey: "uid")!)/phone").observeSingleEvent(of: .value, with: { snapshot in
-                print("our phone: \(snapshot.value! as? NSString)")
-                self.phoneLabel.text = "\((snapshot.value! as? NSString)!)"
-            })
-        
+            // Origin address
             print("address \(localAddress)")
             let originDict = informationDictionary.value(forKey: "origin") as! NSDictionary
             originStreetLabel.text = originDict.value(forKey: "address") as! String!
             
+            // Dest address
             destStreetLabel.text = informationDictionary.value(forKey: "destinationName") as! String?
         }
         
@@ -123,6 +112,33 @@ class RideSummaryTableViewController: UITableViewController {
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+    }
+    
+    func getUserData() {
+        
+        if (self.immediateRideAccepted) {
+            self.nameLabel.text = informationDictionary.value(forKey: "name") as! String?
+            // Rating:
+            if(paymentText == "Request Payment") {
+                // Driver's side so pull riders ratings
+                ref.child("users/\(informationDictionary.value(forKey: "uid")!)/rider/rating").observeSingleEvent(of: .value, with: { snapshot in
+                    self.ratingLabel.text = "\((snapshot.value! as? NSInteger)!)"
+                })
+            } else {
+                // Rider's side so pull drivers ratings
+                ref.child("users/\(informationDictionary.value(forKey: "uid")!)/driver/rating").observeSingleEvent(of: .value, with: { snapshot in
+                    self.ratingLabel.text = "\((snapshot.value! as? NSInteger)!)"
+                })
+            }
+            
+            // Phone number
+            ref.child("users/\(informationDictionary.value(forKey: "uid")!)/phone").observeSingleEvent(of: .value, with: { snapshot in
+                print("our phone: \(snapshot.value! as? NSString)")
+                self.phoneLabel.text = "\((snapshot.value! as? NSString)!)"
+            })
+        } else {
+            self.nameLabel.text = "Nobody yet!"
+        }
     }
 
     override func didReceiveMemoryWarning() {
