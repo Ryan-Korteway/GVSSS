@@ -57,25 +57,47 @@ class GVBNotificationDelegate: NSObject, UNUserNotificationCenterDelegate {
             localDelegate.changeMode(mode: "driver")
             print("ride offered") //this one is if you hit the snooze button
             
-        case "accept":
+        case "accept": //paths are off but the actions themselves work. to fix on my own at some point. need to also change statuses etc.
             
             //here we would accept the riders offer. doing so by making their offer as true, before deleting the whole branch, and making a new branch called accepted, which would contain the necessary info for the rider and his updated lats/longs
             
             let user = FIRAuth.auth()!.currentUser!
             
+            let topRef = FIRDatabase.database().reference()
+            
+            topRef.child("requests/immediate/\(user.uid)").removeValue()
+            
             let ref = FIRDatabase.database().reference().child("users/\(user.uid)/rider/")
             
             ref.child("offers/immediate/\(notification.userInfo["uid"]!)/accepted").setValue(1); //set the accepted drivers accepted value to 1.
 
-            ref.child("accepted/immediate/").setValue(notification.userInfo) //create an accepted branch of the riders table
+            ref.child("offers/immediate/\(notification.userInfo["uid"]!)").observeSingleEvent(of: .value, with: { snapshot in
+                let dictionary: NSDictionary = snapshot.value! as! NSDictionary
+                ref.child("offers/accepted/immediate/driver/\(notification.userInfo["uid"]!)").setValue(dictionary) //create an accepted branch of the riders table
+                
+                let localDelegate = UIApplication.shared.delegate as! AppDelegate
+                localDelegate.riderStatus = "accepted"
+                
+                let newOrigin = ["lat": localDelegate.ourlat, "long": localDelegate.ourlong, "address": localDelegate.ourAddress] as [String : Any]
+                
+                ref.child("offers/accepted/immediate/rider/\(user.uid)").setValue(["name": user.displayName!, "uid": user.uid, "venmoID": "none", "origin": newOrigin, "destination": dictionary.value(forKey: "destination")! as! NSDictionary, "rate" : dictionary.value(forKey: "rate") as! NSString, "accepted": 1, "repeats": "none", "date": dictionary.value(forKey: "date") as! NSString, "destinationName": dictionary.value(forKey: "destinationName")! as! NSString])
+                
+                print("we have accepted")
+                
+                ref.child("offers/immediate/").removeValue() //remove the offers immediate branch from the riders account so that the drivers are able to observe the destruction and if they were selected or not.
             
-            ref.child("offers/immediate/").removeValue() //remove the offers immediate branch from the riders account so that the drivers are able to observe the destruction and if they were selected or not.
+                //history set up here.
+                let ourID = FIRAuth.auth()!.currentUser!.uid
+                topRef.child("users/\(ourID)/history/\(dictionary.value(forKey: "destinationName")!)\(dictionary.value(forKey: "date"))/").setValue(dictionary)
+                
+//            ref.child("accepted/immediate/").setValue(notification.userInfo) //create an accepted branch of the riders table
+//            
+//            ref.child("offers/immediate/").removeValue() //remove the offers immediate branch from the riders account so that the drivers are able to observe the destruction and if they were selected or not.
             
             localDelegate.changeRiderStatus(status: "accepted")
             
-            //if accepted, then the driver knows to start a timer to update the lat longs in the users rider offers acepted path.
-            
-            print("ride accepted")  //this one is the delete button.
+                print("ride accepted")  //this one is the delete button.
+            })
         case "dismiss":
             print("notification dismissed")
         default:

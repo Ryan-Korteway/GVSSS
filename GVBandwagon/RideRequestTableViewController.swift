@@ -230,6 +230,7 @@ class RideRequestTableViewController: UITableViewController, UISearchBarDelegate
                     // If alpha is 0 then this is a "Ride Now"
                     if (self.dateLabel.alpha == 0) {
                         self.ref.child("requests/immediate/\(self.currentUser!.uid)/").setValue(["name": self.currentUser!.displayName!, "uid": self.currentUser!.uid, "venmoID": "none", "origin": ["lat": currentLat, "long": currentLong, "address": addr], "destination": ["latitude": self.destLat, "longitude" : self.destLong], "destinationName": self.destName!, "rate" : newRate, "accepted": 0, "repeats": freq, "date": date]) //TODO still need dynamic date here.
+                        self.localDelegate.startTimer()
                     } else {
                         
                         // This is a future or recurring ride:

@@ -46,6 +46,8 @@ class MyHistoryTableViewController: UITableViewController {
     var testDictionary : [String : cellItem] = [:]
     var dictionaryKeys : [String] = []
     
+    var toShare: [cellItem] = []
+    
     override func viewDidLoad() {
         //testDictionary["filler"] = cellItem
         super.viewDidLoad()
@@ -149,15 +151,22 @@ class MyHistoryTableViewController: UITableViewController {
     }
     */
 
-    /*
+    
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
+        if segue.destination is historySummaryViewController {
+            print("within the if")
+            if( toShare.count > 0){
+                print("sharing the dictionary")
+                (segue.destination as! historySummaryViewController).informationDictionary = toShare[0].toAnyObject() as! NSDictionary
+            }
+        }
     }
-    */
+
     
     @IBAction func onDoneTapped(_ sender: Any) {
         self.navigationController?.dismiss(animated: true, completion: nil)
@@ -170,5 +179,13 @@ class MyHistoryTableViewController: UITableViewController {
     
     func requestPayment() -> Void {
         
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        print("appending item")
+        print(testDictionary[dictionaryKeys[indexPath.row]]!)
+        toShare.append(testDictionary[dictionaryKeys[indexPath.row]]!)
+        print(toShare.count)
+        self.performSegue(withIdentifier: "toHistoryDetail", sender: self)
     }
 }
