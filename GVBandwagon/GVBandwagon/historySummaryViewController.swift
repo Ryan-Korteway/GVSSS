@@ -16,31 +16,18 @@ class historySummaryViewController: UITableViewController {
     
     let storage = FIRStorage.storage()
     
-    let PROFILE_IMAGE = 0
-    let USER = 1
+    let DATE = 0
+    let DESTINATION = 1
     let ORIGIN = 2
-    let DESTINATION = 3
-    let RATE = 4
-    let RATE_USER = 5
-    let COMPLETE_RIDE = 6
-    let BUTTONS = 7
+    let NAME = 3
     
-    @IBOutlet var nameLabel: UILabel!
-    @IBOutlet var phoneLabel: UILabel!
-    @IBOutlet var ratingLabel: UILabel!
-    @IBOutlet var originStreetLabel: UILabel!
-    @IBOutlet var destStreetLabel: UILabel!
-    @IBOutlet var rateLabel: UILabel!
-    @IBOutlet var paymentButton: UIButton!
-    @IBOutlet var cancelRideButton: UIButton!
-    @IBOutlet var completeRideButton: UIButton!
-    @IBOutlet weak var profileImageView: UIImageView!
-    @IBOutlet weak var vehicleDataLabel: UILabel!
-    @IBOutlet weak var rateUserLabel: UILabel!
+
+    @IBOutlet var driverTextField: UITextField!
+    @IBOutlet var riderTextField: UITextField!
+    @IBOutlet var dateTextField: UITextField!
+    @IBOutlet var destTextField: UITextField!
+    @IBOutlet var originTextField: UITextField!
     
-    var vehicleImage: UIImage?
-    
-    var paymentText = "Request Payment"
     var informationDictionary: NSDictionary = [:]
     
     var mode = "none"
@@ -48,15 +35,9 @@ class historySummaryViewController: UITableViewController {
     let ref = FIRDatabase.database().reference()
     
     var localLat : CLLocationDegrees = 0.0
-    
     var localLong :  CLLocationDegrees = 0.0
     
     var localAddress : String = ""
-    
-    // For the buttons
-    var shadowLayer: CAShapeLayer!
-    var paymentShadowLayer: CAShapeLayer!
-    var completeShadowLayer: CAShapeLayer!
     
     let localDelegate = UIApplication.shared.delegate as! AppDelegate
     
@@ -77,31 +58,21 @@ class historySummaryViewController: UITableViewController {
             print("our uid: \(informationDictionary.value(forKey: "uid")!)")
             //pull information down fresh/correctly from firebase.
             
-            nameLabel.text = informationDictionary.value(forKey: "name") as! String?
-            rateLabel.text = "\(informationDictionary.value(forKey: "rate")!)"
+            //rateLabel.text = "\(informationDictionary.value(forKey: "rate")!)"
             
-            if(paymentText == "Request Payment") {
-                //driver side so pull riders ratings
-                ref.child("users/\(informationDictionary.value(forKey: "uid")!)/rider/rating").observeSingleEvent(of: .value, with: { snapshot in
-                    self.ratingLabel.text = "\((snapshot.value! as? NSInteger)!)"
-                })
-            } else {
-                //riders side so pull drivers ratings
-                ref.child("users/\(informationDictionary.value(forKey: "uid")!)/driver/rating").observeSingleEvent(of: .value, with: { snapshot in
-                    self.ratingLabel.text = "\((snapshot.value! as? NSInteger)!)"
-                })
-            }
+            self.driverTextField.text = informationDictionary.value(forKey: "driverName") as! String?
+            self.riderTextField.text = informationDictionary.value(forKey: "riderName") as! String?
             
             ref.child("users/\(informationDictionary.value(forKey: "uid")!)/phone").observeSingleEvent(of: .value, with: { snapshot in
                 print("our phone: \(snapshot.value! as? NSString)")
-                self.phoneLabel.text = "\((snapshot.value! as? NSString)!)"
+                //self.phoneLabel.text = "\((snapshot.value! as? NSString)!)"
             })
             
             print("address \(localAddress)")
             let originDict = informationDictionary.value(forKey: "origin") as! NSDictionary
-            originStreetLabel.text = originDict.value(forKey: "address") as! String!
+            originTextField.text = originDict.value(forKey: "address") as! String!
             
-            destStreetLabel.text = informationDictionary.value(forKey: "destinationName") as! String?
+            destTextField.text = informationDictionary.value(forKey: "destinationName") as! String?
         }
         
         
@@ -120,7 +91,7 @@ class historySummaryViewController: UITableViewController {
     // MARK: - Table view data source
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        if section == USER {
+        if section == NAME {
             if paymentText == "Request Payment" {
                 return "Rider"
             } else {
@@ -130,9 +101,8 @@ class historySummaryViewController: UITableViewController {
             return "Origin"
         } else if section == DESTINATION {
             return "Destination"
-        } else if section == RATE
-        {
-            return "Rate"
+        } else if section == DATE {
+            return "Date"
         } else {
             return ""
         }

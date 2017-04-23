@@ -446,6 +446,8 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
                 let dictionary = cellItem.init(snapshot: snapshot).toAnyObject() as! NSDictionary
                 let ourID = FIRAuth.auth()!.currentUser!.uid
                 self.ref.child("users/\(ourID)/history/\(dictionary.value(forKey: "destinationName")!)\(dictionary.value(forKey: "date"))/").setValue(dictionary)
+                
+                // add rider/driver name to thi
             })
 
         }
