@@ -11,12 +11,14 @@ import UIKit
 class VehicleDataTableViewController: UITableViewController {
 
     @IBOutlet weak var vehicleImageView: UIImageView!
+    var vehicleImage = UIImage()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.configureVehicleImage()
-
+        self.vehicleImageView.image = vehicleImage
+        
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 

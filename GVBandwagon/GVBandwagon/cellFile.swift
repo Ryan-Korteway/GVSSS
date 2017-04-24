@@ -42,7 +42,8 @@ import Firebase
 struct cellItem {
     
     let uid: String
-    let name: String
+    let riderName: String
+    let driverName: String
     let venmoID: String
     let origin: NSDictionary
     let destination: NSDictionary //going to need destination strings added to struct at some point.
@@ -56,7 +57,8 @@ struct cellItem {
         //uid = snapshot.key
         let snapshotValue = snapshot.value as! [String: AnyObject]
         uid = snapshotValue["uid"] as! String ?? snapshot.key 
-        name = snapshotValue["name"] as! String
+        riderName = snapshotValue["riderName"] as! String
+        driverName = snapshotValue["driverName"] as! String
         venmoID = snapshotValue["venmoID"] as! String
         rate = snapshotValue["rate"] as! NSNumber
         origin = snapshotValue["origin"] as! NSDictionary
@@ -69,7 +71,8 @@ struct cellItem {
     
     init(start: NSDictionary) {
         uid = start.value(forKey: "uid") as! String
-        name = start.value(forKey: "name") as! String
+        riderName = start.value(forKey: "riderName") as! String
+        driverName = start.value(forKey: "driverName") as! String
         venmoID = start.value(forKey: "venmoID") as! String //needs to be added automatically with FIRAuth.auth().currentUser.email etc.
         rate = start.value(forKey: "rate") as! NSNumber
         origin = start.value(forKey: "origin") as! NSDictionary //should be a dictionary of lats and longs
@@ -83,7 +86,8 @@ struct cellItem {
     // removed duplicate key: "rate": rate,
     func toAnyObject() -> Any {
         return [
-            "name": name,
+            "riderName": riderName,
+            "driverName": driverName,
             "uid": uid,
             "venmoID": venmoID,
             "rate": rate,

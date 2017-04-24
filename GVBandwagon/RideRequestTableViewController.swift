@@ -229,7 +229,7 @@ class RideRequestTableViewController: UITableViewController, UISearchBarDelegate
                     
                     // If alpha is 0 then this is a "Ride Now"
                     if (self.dateLabel.alpha == 0) {
-                        self.ref.child("requests/immediate/\(self.currentUser!.uid)/").setValue(["name": self.currentUser!.displayName!, "uid": self.currentUser!.uid, "venmoID": "none", "origin": ["lat": currentLat, "long": currentLong, "address": addr], "destination": ["latitude": self.destLat, "longitude" : self.destLong], "destinationName": self.destName!, "rate" : newRate, "accepted": 0, "repeats": freq, "date": date]) //TODO still need dynamic date here.
+                        self.ref.child("requests/immediate/\(self.currentUser!.uid)/").setValue(["riderName": self.currentUser!.displayName!, "driverName": "None", "uid": self.currentUser!.uid, "venmoID": "none", "origin": ["lat": currentLat, "long": currentLong, "address": addr], "destination": ["latitude": self.destLat, "longitude" : self.destLong], "destinationName": self.destName!, "rate" : newRate, "accepted": 0, "repeats": freq, "date": date]) //TODO still need dynamic date here.
                         self.localDelegate.startTimer()
                     } else {
                         
@@ -238,7 +238,7 @@ class RideRequestTableViewController: UITableViewController, UISearchBarDelegate
                         let now = Date()
                         let dateNow = now.description
                         
-                        self.ref.child("requests/scheduled/\(self.currentUser!.uid)/\(dateNow)/").setValue(["name": self.currentUser!.displayName!, "uid": self.currentUser!.uid, "venmoID": "none", "origin": ["lat": currentLat, "long": currentLong, "address": addr], "destination": ["latitude": self.destLat, "longitude" : self.destLong], "destinationName": self.destName!, "rate" : newRate, "accepted": 0, "repeats": freq, "date": date])
+                        self.ref.child("requests/scheduled/\(self.currentUser!.uid)/\(dateNow)/").setValue(["riderName": self.currentUser!.displayName!, "driverName": "None", "uid": self.currentUser!.uid, "venmoID": "none", "origin": ["lat": currentLat, "long": currentLong, "address": addr], "destination": ["latitude": self.destLat, "longitude" : self.destLong], "destinationName": self.destName!, "rate" : newRate, "accepted": 0, "repeats": freq, "date": date])
                     }
                     
                 }
@@ -507,7 +507,13 @@ class RideRequestTableViewController: UITableViewController, UISearchBarDelegate
         print("Send: Place attributions: \(destination.attributions)")
         self.destLat = destination.coordinate.latitude
         self.destLong = destination.coordinate.longitude
-        self.destName = destination.formattedAddress as NSString!
+        
+        // FB string cannot contain pound sign among others:
+        var destAddr = destination.formattedAddress!
+        if (destAddr.characters.contains("#")) {
+            destAddr = destAddr.replacingOccurrences(of: "#", with: "Num")
+        }
+        self.destName = destAddr as NSString!
     }
     
     @IBAction func onSubmitTapped(_ sender: Any) {
@@ -534,7 +540,8 @@ class RideRequestTableViewController: UITableViewController, UISearchBarDelegate
             } else {
                 for item in snapshot.children {
                     print((item as! FIRDataSnapshot).key)
-                let dictionary = cellItem.init(snapshot: item as! FIRDataSnapshot).toAnyObject() as! NSDictionary
+                let dictionary = cellItem.init(snapshot: item as! FIRDataSnapshot).toAnyObject() as! NSMutableDictionary
+                dictionary["date"] = Date().description
                 self.ref.child("users/\(userID)/history/\(dictionary.value(forKey: "destinationName")!)\(dictionary.value(forKey: "date"))/").setValue(dictionary)
                 }
             }

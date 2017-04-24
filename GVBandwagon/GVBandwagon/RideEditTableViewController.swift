@@ -1,28 +1,24 @@
 //
-//  ScheduledRidesTableViewController.swift
+//  RideEditTableViewController.swift
 //  GVBandwagon
 //
-//  Created by Nicolas Heady on 3/29/17.
+//  Created by Nicolas Heady on 4/24/17.
 //  Copyright © 2017 Nicolas Heady. All rights reserved.
 //
 
 import UIKit
-import Firebase
 
-protocol ScheduledRidesTableViewDelegate {
-    func getFutureRies()
-}
+class RideEditTableViewController: UITableViewController {
 
-class ScheduledRidesTableViewController: UITableViewController {
+    @IBOutlet var destTextField: UITextField!
+    @IBOutlet var originTextField: UITextField!
+    @IBOutlet var dateTextField: UITextField!
+    @IBOutlet var freqLabel: UILabel!
+    @IBOutlet var offerTextField: UITextField!
+    @IBOutlet var cancelButton: UIButton!
     
-    let ref = FIRDatabase.database().reference()
-    let ourid = FIRAuth.auth()!.currentUser!.uid
+    var dict: NSDictionary?
     
-    var scheduledRides = ["Allendale", "Downtown", "Meijer"]
-    var futureRides = [NSDictionary]()
-    
-    var toShareIndex = 0
-
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -32,73 +28,55 @@ class ScheduledRidesTableViewController: UITableViewController {
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
         
-        self.getFutureRides()
+        let originDict = dict?.value(forKey: "origin") as! NSDictionary
+        
+        self.originTextField.text = originDict.value(forKey: "address") as? String
+        self.destTextField.text = self.dict?.value(forKey: "destinationName") as? String
+        self.dateTextField.text = self.dict?.value(forKey: "date") as? String
+        self.freqLabel.text = self.dict?.value(forKey: "repeats") as? String
+        
+        // Get rate:
+        let rate = self.dict?.value(forKey: "rate") as? NSNumber
+        let rateString = String(describing: rate!)
+        self.offerTextField.text = rateString
     }
 
+    @IBAction func cancelTapped(_ sender: Any) {
+        // Cancel ride
+    }
+    
+    @IBAction func onDoneTapped(_ sender: UIBarButtonItem) {
+        self.navigationController?.dismiss(animated: true, completion: nil)
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
-    func getFutureRides() {
-        
-        self.ref.child("requests/scheduled/\(self.ourid)/").observeSingleEvent(of: .value, with:{ snapshot in
-            
-            self.futureRides.removeAll()
-            
-            for trip in snapshot.children {
-                if let baseDictionary = cellItem.init(snapshot: trip as! FIRDataSnapshot).toAnyObject() as? NSDictionary {
-                    
-                    self.futureRides.append(baseDictionary)
-                }
-            }
-            
-            self.tableView.reloadData()
-
-        })
-        
-    }
 
     // MARK: - Table view data source
-    
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        //segue to details
-        self.toShareIndex = indexPath.row
-        self.performSegue(withIdentifier: "presentDetailsSegue", sender: self)
-    }
 
+    /*
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 1
+        return 6
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return self.futureRides.count
+        return 0
     }
+     */
 
+    /*
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "scheduledRidesCellId", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
 
         // Configure the cell...
-        let trip = self.futureRides[indexPath.row]
-        
-        // We only want address and city to be displayed in infoWindow:
-        let addrText = trip.value(forKey: "destinationName") as! String
-        let addrArray = addrText.components(separatedBy: ", ")
-        var addrArray2 = ["One"]
-        var i = 0
-        while (i < 1) {
-            addrArray2[i] = addrArray[i]
-            i = i + 1
-        }
-        
-        cell.textLabel?.text = addrArray2.joined()
-        cell.detailTextLabel?.text = trip.value(forKey: "date") as! String?
 
         return cell
     }
-    
+    */
 
     /*
     // Override to support conditional editing of the table view.
@@ -135,17 +113,14 @@ class ScheduledRidesTableViewController: UITableViewController {
     }
     */
 
+    /*
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "presentDetailsSegue" {
-            if let navVC = segue.destination as? UINavigationController {
-                if let detailsVC = navVC.childViewControllers[0] as? RideEditTableViewController {
-                    detailsVC.dict = self.futureRides[toShareIndex]
-                }
-            }
-        }
+        // Get the new view controller using segue.destinationViewController.
+        // Pass the selected object to the new view controller.
     }
+    */
 
 }

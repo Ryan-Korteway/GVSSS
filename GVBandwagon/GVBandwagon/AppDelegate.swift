@@ -476,7 +476,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 
                 let content = UNMutableNotificationContent()
                 content.title = "New Driver Offer"
-                content.body = "Would you like to accept \(localCell.name)'s offer?"
+                content.body = "Would you like to accept \(localCell.driverName)'s offer?"
                 content.sound = UNNotificationSound.default()
                 content.categoryIdentifier = "accept_category"
                 content.userInfo = localCell.toAnyObject() as! [AnyHashable : Any] //compiler forced the conversion.
@@ -511,7 +511,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     
                     let content = UNMutableNotificationContent()
                     content.title = "New White list Rider Request"
-                    content.body = "Would you like to give \(localCell.name) a ride?"
+                    content.body = "Would you like to give \(localCell.riderName) a ride?"
                     content.sound = UNNotificationSound.default()
                     content.categoryIdentifier = "offer_category"
                     content.userInfo = localCell.toAnyObject() as! [AnyHashable : Any] //compiler forced the conversion.
@@ -729,7 +729,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                         print("rider view controller not ready yet.")
                         
                     } else {
-                            (self.firstViewController as! FirstViewController).ride_offer(item: cellItem.init(snapshot: snapshot))
+                        print("\nAppDelegate calling ride_offer.\n")
+                        (self.firstViewController as! FirstViewController).ride_offer(item: cellItem.init(snapshot: snapshot))
                     }
                     
                 }
@@ -743,7 +744,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 }
                 
             })
-        } //no else for status == request because request is the base which means we dont have any position to advertise or any pins to recreate
+        } else {
+            // When the rider view is reloaded, this will get called to check for offers:
+            
+            ref.child("users/\(userID)/rider/offers/immediate").observe( .childAdded, with: { snapshot in
+                
+                if (snapshot.value as? [String: AnyObject]) != nil {
+                    print("\n\n offer OBSERVED!! \n\n")
+                    
+                    print("\nAppDelegate calling ride_offer.\n")
+                    (self.firstViewController as! FirstViewController).ride_offer(item: cellItem.init(snapshot: snapshot))
+                }
+                
+            })
+        }
     }
 }
 

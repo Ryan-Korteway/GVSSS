@@ -32,7 +32,7 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
     
     // initialize and keep a marker and a custom infowindow
     var tappedMarker = GMSMarker()
-    var infoWindow = MapMarkerWindow(frame: CGRect(x: 0, y: 0, width: 200, height: 100), type: "Rider", name: "Name", dest: "Destination", rate: "$5")
+    var infoWindow = MapMarkerWindow(frame: CGRect(x: 0, y: 0, width: 200, height: 120), type: "Rider", name: "Name", dest: "Destination", rate: "$5")
     
     var baseDictionary: NSDictionary = [:]
     
@@ -186,7 +186,7 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
     
     func ride_offer(item: cellItem) {
         
-        print("ride offer being made")
+        print("\nRide offer being made for rider\n")
         
         self.infoWindow.acceptButton.alpha = 1
         
@@ -201,10 +201,10 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
         print("Lat and Long: \(lat) : \(long)")
 
         marker.position = CLLocationCoordinate2D(latitude: lat, longitude: long)
-        //marker.title = "Driver: \(cellInfo["name"])"
+        //marker.title = "Driver: \(cellInfo["driverName"])"
         //marker.snippet = "Close enough to Grand Valley."
-        marker.map = self.googleMapsView
         marker.userData = cellInfo
+        marker.map = self.googleMapsView
         
         print("our driver uid \(cellInfo["uid"]!)")
         
@@ -281,7 +281,7 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
         
         let location = CLLocationCoordinate2D(latitude: locationDictionary.value(forKey: "lat") as! CLLocationDegrees, longitude: locationDictionary.value(forKey: "long") as! CLLocationDegrees)
         
-        let fullname = baseDictionary.value(forKey: "name") as? String ?? "no_name"
+        let fullname = baseDictionary.value(forKey: "driverName") as? String ?? "no_name"
         let nameArray = fullname.components(separatedBy: " ")
         
         let name = nameArray[0] // changes to name to make it only show first name.
@@ -292,8 +292,18 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
         tappedMarker.icon = UIImage(named: "iconmonstr-car-1-48")
         
         infoWindow.removeFromSuperview()
-        infoWindow.destLabel.text = destination
-        infoWindow.rateLabel.text = rate
+        
+        // We only want address and city to be displayed in infoWindow:
+        let addrArray = destination.components(separatedBy:", ")
+        var addrArray2 = ["One", "Two"]
+        var i = 0
+        while (i < 2) {
+            addrArray2[i] = addrArray[i]
+            i = i + 1
+        }
+        
+        infoWindow.destTextView.text = addrArray2.joined(separator:"\n")
+        infoWindow.rateLabel.text = "$" + rate
         infoWindow.windowType = "Accept"
         infoWindow.nameLabel.text = name
         
@@ -313,6 +323,8 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
     func ride_accept(item: NSDictionary) { //all map set ups/marker creations may need to be in their own functions in ride and drive
         //view controllers so that upon the map being reloaded, it can be repopulated with the correct data given the current user state.
         
+        print("\nride_accept called for rider\n")
+        
         let user = FIRAuth.auth()!.currentUser!
         let cellInfo: NSDictionary = item
         let ref = FIRDatabase.database().reference().child("users/\(user.uid)/rider/")
@@ -330,7 +342,7 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
             let dictionary: NSDictionary = snapshot.value! as! NSDictionary
             ref.child("offers/accepted/immediate/driver/\(cellInfo.value(forKey: "uid")!)").setValue(dictionary) //create an accepted branch of the riders table
             
-            ref.child("offers/accepted/immediate/rider/\(user.uid)").setValue(["name": user.displayName!, "uid": user.uid, "venmoID": "none", "origin": ["lat": self.ourLat, "long": self.ourLong, "address": self.localDelegate.ourAddress ?? "none"], "destination": dictionary.value(forKey: "destination")!, "rate" : dictionary.value(forKey: "rate"), "accepted": 1, "repeats": "none", "date": dictionary.value(forKey: "date"), "destinationName": dictionary.value(forKey: "destinationName")!])
+            ref.child("offers/accepted/immediate/rider/\(user.uid)").setValue(["riderName": user.displayName!, "driverName": dictionary.value(forKey: "driverName"), "uid": user.uid, "venmoID": "none", "origin": ["lat": self.ourLat, "long": self.ourLong, "address": self.localDelegate.ourAddress ?? "none"], "destination": dictionary.value(forKey: "destination")!, "rate" : dictionary.value(forKey: "rate"), "accepted": 1, "repeats": "none", "date": dictionary.value(forKey: "date"), "destinationName": dictionary.value(forKey: "destinationName")!])
             
             let localDelegate = UIApplication.shared.delegate as! AppDelegate
             localDelegate.riderStatus = "accepted"
@@ -341,7 +353,10 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
             
             //history set up here.
             let ourID = FIRAuth.auth()!.currentUser!.uid
-            topRef.child("users/\(ourID)/history/\(dictionary.value(forKey: "destinationName")!)\(dictionary.value(forKey: "date"))/").setValue(dictionary)
+            // Set date for history entry:
+            let historyDictionary = dictionary as! NSMutableDictionary
+            historyDictionary["date"] = Date().description
+            topRef.child("users/\(ourID)/history/\(dictionary.value(forKey: "date")!)/").setValue(historyDictionary)
             
             self.googleMapsView.clear()
             
@@ -349,8 +364,6 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
             localDelegate.startRiderMapObservers()
             
         })
-        
-        print("\nride_accept was called!\n")
         
     }
     
@@ -378,6 +391,14 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
         //self.infoWindow.acceptButton.alpha = 0
         self.infoWindow.setDetailsButton()
         self.infoWindow.detailsButton.addTarget(self, action: #selector(detailsTapped(button:)), for: .touchUpInside)
+        
+        // Get active trip and populate in User Panel
+        if let drawerVC = self.localDelegate.drawerViewController as? CustomKGDrawerViewController {
+            if let panelVC = drawerVC.rightViewController as? DriverPanelViewController {
+                print("Got to panelVC!!")
+                panelVC.getActiveTrip()
+            }
+        }
     }
     
     func declineTapped(button: UIButton) -> Void {
@@ -403,10 +424,13 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
         // TODO: Only for driver though: Check first if both parties have accepted.
         // If not, pop up notification saying "We're still waiting for the
         // rider to accept your offer."
+        self.infoWindow.removeFromSuperview()
         self.performSegue(withIdentifier: "riderAcceptsSegue", sender: self)
     }
         
     func fillWithAcceptance(item: cellItem) {
+        print("\nfill with acceptance called for rider\n")
+        
         let cellInfo = item.toAnyObject() as! NSDictionary
         let locationInfo: NSDictionary = cellInfo["origin"] as! NSDictionary
         
@@ -421,7 +445,7 @@ class FirstViewController: UIViewController, GMSMapViewDelegate, rider_notificat
         print("locations = \(locValue.latitude) \(locValue.longitude)")
         
         marker.position = CLLocationCoordinate2D(latitude: lat, longitude: long)
-        marker.title = "Driver: \(cellInfo["name"])"
+        marker.title = "Driver: \(cellInfo["driverName"])"
         marker.map = self.googleMapsView
         marker.userData = cellInfo
         

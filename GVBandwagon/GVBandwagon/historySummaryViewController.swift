@@ -63,6 +63,8 @@ class historySummaryViewController: UITableViewController {
             self.driverTextField.text = informationDictionary.value(forKey: "driverName") as! String?
             self.riderTextField.text = informationDictionary.value(forKey: "riderName") as! String?
             
+            self.dateTextField.text = informationDictionary.value(forKey: "date") as! String?
+            
             ref.child("users/\(informationDictionary.value(forKey: "uid")!)/phone").observeSingleEvent(of: .value, with: { snapshot in
                 print("our phone: \(snapshot.value! as? NSString)")
                 //self.phoneLabel.text = "\((snapshot.value! as? NSString)!)"
@@ -70,9 +72,11 @@ class historySummaryViewController: UITableViewController {
             
             print("address \(localAddress)")
             let originDict = informationDictionary.value(forKey: "origin") as! NSDictionary
-            originTextField.text = originDict.value(forKey: "address") as! String!
+            let originText = originDict.value(forKey: "address") as! String!
+            originTextField.text = originText?.components(separatedBy: ", ").joined(separator: "\n")
             
-            destTextField.text = informationDictionary.value(forKey: "destinationName") as! String?
+            let destText = informationDictionary.value(forKey: "destinationName") as! String?
+            destTextField.text = destText?.components(separatedBy: ", ").joined(separator: "\n")
         }
         
         
@@ -90,21 +94,11 @@ class historySummaryViewController: UITableViewController {
     
     // MARK: - Table view data source
     
-    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        if section == NAME {
-            if paymentText == "Request Payment" {
-                return "Rider"
-            } else {
-                return "Driver"
-            }
-        } else if section == ORIGIN {
-            return "Origin"
-        } else if section == DESTINATION {
-            return "Destination"
-        } else if section == DATE {
-            return "Date"
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if (indexPath.section) == ORIGIN || (indexPath.section) == DESTINATION {
+            return 100
         } else {
-            return ""
+            return 50
         }
     }
     

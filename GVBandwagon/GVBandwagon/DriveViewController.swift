@@ -22,7 +22,7 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
     
     // initialize and keep a marker and a custom infowindow
     var tappedMarker = GMSMarker()
-    var infoWindow = MapMarkerWindow(frame: CGRect(x: 0, y: 0, width: 200, height: 100), type: "Driver", name: "Name", dest: "Destination", rate: "?")
+    var infoWindow = MapMarkerWindow(frame: CGRect(x: 0, y: 0, width: 200, height: 120), type: "Driver", name: "Name", dest: "Destination", rate: "?")
     
     var isMessageDisplayed = false
     let locationManager = CLLocationManager()
@@ -220,7 +220,7 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
     }
     
     func ride_accept(item: cellItem) {
-        print("Ride offer accepted (potentially).")
+        print("\nRide offer accepted (potentially) on drivers view.\n")
         
         let ref = FIRDatabase.database().reference()
         let cellInfo: NSDictionary = item.toAnyObject() as! NSDictionary
@@ -276,7 +276,7 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
         
         //make a pin and an observer that watches for changes to that pin to specifically watch? for updates?...
         
-        print("ride request being made")
+        print("\nRide request being made on driver view.\n")
         
         let cellInfo: NSDictionary = item.toAnyObject() as! NSDictionary
         let locationInfo: NSDictionary = cellInfo["origin"] as! NSDictionary
@@ -303,7 +303,7 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
                 }
             })
         
-        //marker.title = "Potential Rider: \(cellInfo["name"])"
+        //marker.title = "Potential Rider: \(cellInfo["riderName"])"
         //marker.snippet = "Close enough to Grand Valley."
         marker.icon = GMSMarker.markerImage(with: .green)
         marker.userData = cellInfo //giving each marker a dictionary of the info that set them up for future use.
@@ -386,7 +386,7 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
         
         let location = CLLocationCoordinate2D(latitude: locationDictionary.value(forKey: "lat") as! CLLocationDegrees, longitude: locationDictionary.value(forKey: "long") as! CLLocationDegrees)
         
-        let fullname = baseDictionary.value(forKey: "name") as? String ?? "no_name"
+        let fullname = baseDictionary.value(forKey: "riderName") as? String ?? "no_name"
         let nameArray = fullname.components(separatedBy: " ")
         
         let name = nameArray[0] // changes to name to make it only show first name.
@@ -396,9 +396,18 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
         tappedMarker = marker
         infoWindow.removeFromSuperview()
         
-        // Reuse same infoWindow so we can disable "offer" button.
-        infoWindow.destLabel.text = destination
-        infoWindow.rateLabel.text = rate
+        
+        // We only want address and city to be displayed in infoWindow:
+        let addrArray = destination.components(separatedBy:", ")
+        var addrArray2 = ["One", "Two"]
+        var i = 0
+        while (i < 2) {
+            addrArray2[i] = addrArray[i]
+            i = i + 1
+        }
+        
+        infoWindow.destTextView.text = addrArray2.joined(separator:"\n")
+        infoWindow.rateLabel.text = "$" + rate
         infoWindow.windowType = "Offer"
         infoWindow.nameLabel.text = name
         
@@ -433,21 +442,30 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
     
     func acceptTapped(button: UIButton) -> Void {
         
-        if(localDelegate.offeredID != "none") { // CHECK ON OFFER DOUBLE TAP CRASH!! COULD BE OFFERED ID BEING EMPTY ETC.
+        if(localDelegate.offeredID != "none") { // TODO: CHECK ON OFFER DOUBLE TAP CRASH!! COULD BE OFFERED ID BEING EMPTY ETC.
             // make a history item here. destination name+time.
             
             print("id \(localDelegate.offeredID)")
             
             let ref = FIRDatabase.database().reference()
             
-            //history saving done here. grabbing what is not there causing crashes.
+            // We use the snapsho.value != nil to check if there is an active ride we
+            // need to add to history first:
+            
             ref.child("users/\(self.localDelegate.offeredID)/rider/offers/accepted/immediate/rider/\(self.localDelegate.offeredID)/").observeSingleEvent(of: .value, with: { snapshot in
                 
-                let dictionary = cellItem.init(snapshot: snapshot).toAnyObject() as! NSDictionary
-                let ourID = FIRAuth.auth()!.currentUser!.uid
-                self.ref.child("users/\(ourID)/history/\(dictionary.value(forKey: "destinationName")!)\(dictionary.value(forKey: "date"))/").setValue(dictionary)
-                
-                // add rider/driver name to thi
+                if (snapshot.value as? [String: AnyObject]) != nil {
+                    
+                    let dictionary = cellItem.init(snapshot: snapshot).toAnyObject() as! NSMutableDictionary
+                    
+                    let ourID = FIRAuth.auth()!.currentUser!.uid
+                    
+                    // Update date entry before storing into history:
+                    dictionary["date"] = Date().description
+                    self.ref.child("users/\(ourID)/history/\(dictionary.value(forKey: "date"))/").setValue(dictionary)
+                    
+                }
+            
             })
 
         }
@@ -485,7 +503,8 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
                 
             } else { 
                 ref.child("\(user.uid)").setValue(
-                    ["name": user.displayName!,
+                    ["driverName": user.displayName!,
+                     "riderName": self.baseDictionary.value(forKey: "riderName"),
                      "uid": user.uid,
                      "venmoID": self.localDelegate.getVenmoID(),
                      //"origin": self.baseDictionary.value(forKey: "origin"),
@@ -557,6 +576,8 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
     }
     
     func fillWithAcceptance(item: cellItem) {
+        print("\nfill with acceptance called for driver\n")
+        
         let cellInfo = item.toAnyObject() as! NSDictionary
         
         if((cellInfo["uid"]! as! NSString) as String == userID) {
@@ -571,7 +592,7 @@ class DriveViewController: UIViewController, GMSMapViewDelegate, driver_notifica
             marker.position = CLLocationCoordinate2D(latitude: lat, longitude: long)
             marker.userData = cellInfo
             baseDictionary = marker.userData as! NSDictionary
-            marker.title = "Rider: \(cellInfo["name"])"
+            marker.title = "Rider: \(cellInfo["riderName"])"
             marker.map = self.googleMap
             
             print("in acceptance, we are watching: \(cellInfo["uid"]!)")

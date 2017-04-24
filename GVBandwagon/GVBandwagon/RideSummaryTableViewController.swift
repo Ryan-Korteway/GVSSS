@@ -37,7 +37,7 @@ class RideSummaryTableViewController: UITableViewController {
     @IBOutlet weak var vehicleDataLabel: UILabel!
     @IBOutlet weak var rateUserLabel: UILabel!
     
-    var vehicleImage: UIImage?
+    var vehicleImage = UIImage()
     
     var paymentText = "Request Payment"
     var informationDictionary: NSDictionary = [:]
@@ -84,9 +84,6 @@ class RideSummaryTableViewController: UITableViewController {
         // Need to pull and fill all information from firebase. Use self.paymentText for check if here from Ride or Drive.
         // We can use UID of driver/rider in the users profile to pull the appropriate information for this view controller.
         
-        // TODO: pull drivers make/model/color and pass to next VC in prepareForSegue
-        // TODO: Nav bar is disappearing when going into rate driver then coming back out.
-        
         if(informationDictionary.count > 0 ) {
         
             print("our uid: \(informationDictionary.value(forKey: "uid")!)")
@@ -117,18 +114,19 @@ class RideSummaryTableViewController: UITableViewController {
     func getUserData() {
         
         if (self.immediateRideAccepted) {
-            self.nameLabel.text = informationDictionary.value(forKey: "name") as! String?
-            // Rating:
+        
             if(paymentText == "Request Payment") {
                 // Driver's side so pull riders ratings
                 ref.child("users/\(informationDictionary.value(forKey: "uid")!)/rider/rating").observeSingleEvent(of: .value, with: { snapshot in
                     self.ratingLabel.text = "\((snapshot.value! as? NSInteger)!)"
                 })
+                self.nameLabel.text = informationDictionary.value(forKey: "riderName") as! String?
             } else {
                 // Rider's side so pull drivers ratings
                 ref.child("users/\(informationDictionary.value(forKey: "uid")!)/driver/rating").observeSingleEvent(of: .value, with: { snapshot in
                     self.ratingLabel.text = "\((snapshot.value! as? NSInteger)!)"
                 })
+                self.nameLabel.text = informationDictionary.value(forKey: "driverName") as! String?
             }
             
             // Phone number
@@ -234,15 +232,16 @@ class RideSummaryTableViewController: UITableViewController {
     }
     */
 
-    /*
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+        if (segue.identifier == "toVehicleDataSegue") {
+            if let vehicleDataVC = segue.destination as? VehicleDataTableViewController {
+                vehicleDataVC.vehicleImage = self.vehicleImage
+            }
+        }
     }
-    */
     
     @IBAction func onPaymentTapped(_ sender: Any) {
         
@@ -366,29 +365,45 @@ class RideSummaryTableViewController: UITableViewController {
         profileImageView.clipsToBounds = true
         
         // Get image from FB if it exists:
+        self.getProfilePicFromFB()
     }
     
     func getProfilePicFromFB() {
         
         // Will get driver or riders UID and store here depending who's watching this VC:
-        var userID: String?
+        var otherUsersID: String?
         
-        // TODO: Right way to get UIDs? What happens if there's no vehicle photo at this FB location? (For riders).
+        // This is drivers view, pull riders UID:
+        if (self.paymentText == "Request Payment") {
+            self.ref.child("users/\(informationDictionary.value(forKey: "uid")!)/rider/driver/uid").observeSingleEvent(of: .value, with: { snapshot in
+                //self.ratingLabel.text = "\((snapshot.value! as? NSInteger)!)"
+                otherUsersID = snapshot.value as? String
+                self.setImages(otherUID: otherUsersID!)
+            })
+            
+        } else {
+            // If rider's side pull drivers UID
+            self.ref.child("users/\(informationDictionary.value(forKey: "uid")!)/rider/offers/accepted/immediate/driver").observeSingleEvent(of: .value, with: { snapshot in
+                for item in snapshot.children {
+                    if let child = item as? FIRDataSnapshot {
+                        print("snapshot child was a FIRDataSnapshot")
+                        otherUsersID = child.key
+                        print("Child key: \(child.key)")
+                        self.setImages(otherUID: otherUsersID!)
+                    }
+                }
+            })
+        }
         
-        // If rider's side drivers photos
-        self.ref.child("users/\(informationDictionary.value(forKey: "uid")!)/driver/uid").observeSingleEvent(of: .value, with: { snapshot in
-            //self.ratingLabel.text = "\((snapshot.value! as? NSInteger)!)"
-            userID = snapshot.value as? String
-        })
-        
-        // else pull Rider's photo
-        
+    }
+    
+    func setImages(otherUID: String) {
         // Image references
         let storageRef = storage.reference()
         
         // Create a reference to 'images/profilepic.jpg'
-        let profileImageRef = storageRef.child("images/\(userID)/profilepic.jpg")
-        let vehicleImageRef = storageRef.child("images/\(userID)/vehiclepic.jpg")
+        let profileImageRef = storageRef.child("images/\(otherUID)/profilepic.jpg")
+        let vehicleImageRef = storageRef.child("images/\(otherUID)/vehiclepic.jpg")
         
         // Download in memory with a maximum allowed size of 1MB (1 * 1024 * 1024 bytes)
         profileImageRef.data(withMaxSize: 1 * 1024 * 1024) { data, error in
@@ -407,7 +422,7 @@ class RideSummaryTableViewController: UITableViewController {
                 print("Error occurred: \(error.localizedDescription)")
             } else {
                 let image = UIImage(data: data!)
-                self.vehicleImage = image
+                self.vehicleImage = image!
             }
         }
     }

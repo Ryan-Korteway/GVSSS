@@ -11,7 +11,7 @@ import UIKit
 class MapMarkerWindow: UIView {
     
     let nameLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 200, height: 20))
-    let destLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 200, height: 20))
+    let destTextView = UITextView(frame: CGRect(x: 0, y: 0, width: 200, height: 40))
     let rateLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 100, height: 20))
     let acceptButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 20))
     let declineButton = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 20))
@@ -45,7 +45,7 @@ class MapMarkerWindow: UIView {
         }
         
         self.nameLabel.text = name
-        self.destLabel.text = dest
+        self.destTextView.text = dest
         self.rateLabel.text = rate
     }
     
@@ -60,7 +60,8 @@ class MapMarkerWindow: UIView {
         super.draw(rect)
         
         self.addSubview(nameLabel) //didn't put offer button into the subview which is why it didn't appear.
-        self.addSubview(destLabel)
+        //self.addSubview(destLabel)
+        self.addSubview(destTextView)
         self.addSubview(rateLabel)
         self.addSubview(acceptButton)
         self.addSubview(declineButton)
@@ -77,26 +78,20 @@ class MapMarkerWindow: UIView {
         nameLabel.textAlignment = .center
         
         
-        destLabel.center = CGPoint(x: 100, y: 30)
-        //destLabel.leadingAnchor.constraint(equalTo: margins.leadingAnchor).isActive = true
-        //destLabel.trailingAnchor.constraint(equalTo: margins.trailingAnchor).isActive = true
-        //destLabel.topAnchor.constraint(equalTo: margins.topAnchor, constant: 30).isActive = true
+        destTextView.center = CGPoint(x: 100, y: 40)
+        destTextView.textColor = UIColor.white
+        destTextView.textAlignment = .center
+        destTextView.backgroundColor = UIColor.clear
+
         
-        //let y = NSLayoutConstraint(item: destLabel, attribute: .topMargin, relatedBy: .equal, toItem: nameLabel, attribute: .bottomMargin, multiplier: 1.0, constant: 0)
-        //self.addConstraint(y)
-        
-        destLabel.textColor = UIColor.white
-        destLabel.textAlignment = .center
-        
-        
-        rateLabel.center = CGPoint(x: 100, y: 50)
+        rateLabel.center = CGPoint(x: 100, y: 70)
         //rateLabel.leadingAnchor.constraint(equalTo: margins.leadingAnchor).isActive = true
         //rateLabel.trailingAnchor.constraint(equalTo: margins.trailingAnchor).isActive = true
         //rateLabel.topAnchor.constraint(equalTo: margins.topAnchor, constant: 60).isActive = true
         rateLabel.textColor = UIColor.white
         rateLabel.textAlignment = .center
         
-        acceptButton.center = CGPoint(x: 50, y: 75)
+        acceptButton.center = CGPoint(x: 50, y: 95)
         //acceptButton.leadingAnchor.constraint(equalTo: margins.leadingAnchor).isActive = true
         //acceptButton.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 2).isActive = true
         //acceptButton.topAnchor.constraint(equalTo: margins.topAnchor, constant: 90).isActive = true
@@ -108,7 +103,7 @@ class MapMarkerWindow: UIView {
         acceptButton.setTitle(self.windowType, for: .normal)
         acceptButton.titleLabel?.textAlignment = .center
         
-        declineButton.center = CGPoint(x: 150, y: 75)
+        declineButton.center = CGPoint(x: 150, y: 95)
         //declineButton.trailingAnchor.constraint(equalTo: margins.trailingAnchor).isActive = true
         //declineButton.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 0.5)
         declineButton.setTitleColor(UIColor.white, for: .normal)
@@ -116,7 +111,7 @@ class MapMarkerWindow: UIView {
         declineButton.setTitle("Decline", for: .normal)
         
         // Details Button:
-        detailsButton.center = CGPoint(x: 50, y: 75)
+        detailsButton.center = CGPoint(x: 50, y: 95)
         detailsButton.setTitleColor(UIColor.white, for: .normal)
         detailsButton.setTitle("Details", for: .normal)
         detailsButton.titleLabel?.textAlignment = .center
